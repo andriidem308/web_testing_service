@@ -17,9 +17,9 @@ $dark-hover: #4d4d4d;
 $action: #efaf00;
 $action-hover: #ffc32f;
 
-$danger: #ab1010;
+$danger: #b22637;
 $danger-light: #fdc8c8;
-$danger-hover: #c91212;
+$danger-hover: #d23446;
 $success: #27aa23;
 $success-hover: #24bb1f;
 $primary: #23537e;
@@ -475,6 +475,15 @@ h1, h2, h3, h4, h5 {
 
         align-items: center;
         justify-content: space-between;
+    }
+
+    .rounded-tile {
+        padding: 4px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+        color: $light-hover;
     }
 }
 
