@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="column">
+            <h2>Sign Up as a Student</h2>
+
+            <form class="auth-form card" action="">
+                <input class="pretty-input" type="text" placeholder="First name">
+                <input class="pretty-input" type="text" placeholder="Last name">
+                <input class="pretty-input" type="text" placeholder="Username">
+                <input class="pretty-input" type="text" placeholder="Email">
+                <select class="pretty-input">
+                    <option value selected>Select your group</option>
+                    <option value="Group-1">Group-1</option>
+                    <option value="Group-2">Group-2</option>
+                    <option value="Group-3">Group-3</option>
+                    <option value="Group-4">Group-4</option>
+                </select>
+                <input class="pretty-input" type="text" placeholder="Password">
+                <input class="pretty-input" type="text" placeholder="Password Confirmation">
+
+                <div class="buttons-row">
+                    <button class="pretty-button primary">Sign up</button>
+                </div>
+
+            </form>
+
+            <div class="message card">
+                Already have an account? <a href="">Login</a>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+

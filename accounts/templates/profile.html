@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>My account</h1>
+    <div class="account-card card">
+        <div class="account-header">
+            <a href=""><i class="fa-regular fa-pen-to-square"></i></a>
+        </div>
+        <div class="account-bio">
+            <h2>Bio</h2>
+            <p><b>First name: </b><span>Andrii</span></p>
+            <p><b>Last name: </b><span>Demchenko</span></p>
+            <p><b>Group: </b><span>Computer Mathematics - 1</span></p>
+        </div>
+        <br>
+        <div class="account-credentials">
+            <h2>Credentials</h2>
+            <p><b>Username: </b><span>andriidem308</span></p>
+            <p><b>Email: </b><span>andriidem308@gmail.com</span></p>
+        </div>
+
+        <div class="buttons-row">
+            <button class="pretty-button primary">Change Password</button>
+            <button class="pretty-button danger">Logout</button>
+        </div>
+
+    </div>
+
+
+{% endblock %}

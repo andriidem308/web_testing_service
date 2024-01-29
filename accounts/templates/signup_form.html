@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="auth-form signup">
+
+        {% if user_type  == 'teacher' %}
+            <h2>Sign up as Teacher</h2>
+        {% else %}
+            <h2>Sign up as Student</h2>
+        {% endif %}
+        <br>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {{ form }}
+            <div class="buttons-row">
+                <button type="submit" class="btn">Sign Up</button>
+                <a href="{% url 'login' %}">
+                    <button class="btn" type="button">Login</button>
+                </a>
+                <a href="{% url 'home' %}">
+                    <button class="btn" type="button">Homepage</button>
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+{% endblock %}

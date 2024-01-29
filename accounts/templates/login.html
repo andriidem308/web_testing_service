@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="column">
+            <h2>Login</h2>
+
+            <form class="auth-form card" action="">
+                <input class="pretty-input" type="text" placeholder="Username">
+                <input class="pretty-input" type="text" placeholder="Password">
+
+                <div class="buttons-row">
+                    <button class="pretty-button primary">Login</button>
+                </div>
+
+            </form>
+
+            <div class="message card">
+                New to us? Sign up as a
+                <a href="{% url 'signup_teacher' %}">Teacher</a>
+                or
+                <a href="{% url 'signup_student' %}">Student</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
