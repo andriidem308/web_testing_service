@@ -1,29 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="auth-form signup">
+    <div class="auth-container">
+        <div class="column">
+            {% if user_type  == 'teacher' %}
+                <h2>Sign up as Teacher</h2>
+            {% elif user_type == 'student' %}
+                <h2>Sign up as Student</h2>
+            {% endif %}
 
-        {% if user_type  == 'teacher' %}
-            <h2>Sign up as Teacher</h2>
-        {% else %}
-            <h2>Sign up as Student</h2>
-        {% endif %}
-        <br>
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            {{ form }}
-            <div class="buttons-row">
-                <button type="submit" class="btn">Sign Up</button>
-                <a href="{% url 'login' %}">
-                    <button class="btn" type="button">Login</button>
-                </a>
-                <a href="{% url 'home' %}">
-                    <button class="btn" type="button">Homepage</button>
-                </a>
+            <form class="auth-form card" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <div class="buttons-row">
+                    <button class="pretty-button primary" type="submit">Sign up</button>
+                </div>
+            </form>
+
+            <div class="message card">
+                {% if user_type  == 'teacher' %}
+                    Are you a student? Sign up as <a href="{% url 'signup' user_type='student' %}">Student</a>
+                {% elif user_type == 'student' %}
+                    Are you a teacher? Sign up as <a href="{% url 'signup' user_type='teacher' %}">Teacher</a>
+                {% endif %}
             </div>
 
-        </form>
-
+            <div class="message card">
+                Already have an account? <a href="{% url 'login' %}">Login</a>
+            </div>
+        </div>
     </div>
 {% endblock %}

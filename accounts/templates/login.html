@@ -5,12 +5,13 @@
         <div class="column">
             <h2>Login</h2>
 
-            <form class="auth-form card" action="">
-                <input class="pretty-input" type="text" placeholder="Username">
-                <input class="pretty-input" type="text" placeholder="Password">
+            <form class="auth-form card" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ form.username }}
+                {{ form.password }}
 
                 <div class="buttons-row">
-                    <button class="pretty-button primary">Login</button>
+                    <button class="pretty-button primary" type="submit">Login</button>
                 </div>
 
             </form>
@@ -24,5 +25,3 @@
         </div>
     </div>
 {% endblock %}
-
-

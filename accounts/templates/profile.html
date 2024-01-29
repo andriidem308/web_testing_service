@@ -8,15 +8,17 @@
         </div>
         <div class="account-bio">
             <h2>Bio</h2>
-            <p><b>First name: </b><span>Andrii</span></p>
-            <p><b>Last name: </b><span>Demchenko</span></p>
-            <p><b>Group: </b><span>Computer Mathematics - 1</span></p>
+            <p><b>First name: </b><span>{{ user.first_name }}</span></p>
+            <p><b>Last name: </b><span>{{ user.last_name }}</span></p>
+            {% if user_type == 'student'%}
+            <p><b>Group: </b><span>{{ person.group }}</span></p>
+            {% endif %}
         </div>
         <br>
         <div class="account-credentials">
             <h2>Credentials</h2>
-            <p><b>Username: </b><span>andriidem308</span></p>
-            <p><b>Email: </b><span>andriidem308@gmail.com</span></p>
+            <p><b>Username: </b><span>{{ user.username }}</span></p>
+            <p><b>Email: </b><span>{{ user.email }}</span></p>
         </div>
 
         <div class="buttons-row">

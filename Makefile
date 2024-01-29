@@ -6,6 +6,12 @@ run:
 makemigrations:
 	$(MANAGE) makemigrations
 
+migrate_acc:
+	$(MANAGE) makemigrations accounts
+
+migrate_main:
+	$(MANAGE) makemigrations main
+
 migrate:
 	$(MANAGE) migrate
 

@@ -1,17 +1,47 @@
 from django.db import models
 
-# from accounts.models import Student, Teacher
-#
-#
-# class Group(models.Model):
-#     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=255, unique=True)
-#
-#     class Meta:
-#         ordering = ('name', )
-#
-#     def __str__(self):
-#         return self.name
+from accounts.models import User
+
+
+class Teacher(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user._is_teacher = True
+
+    class Meta:
+        ordering = ['user__last_name', 'user__first_name']
+
+    def __str__(self):
+        return self.user.get_full_name()
+
+
+class Group(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        ordering = ('name', )
+
+    def __str__(self):
+        return self.name
+
+
+class Student(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user._student = True
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['user__last_name', 'user__first_name']
+
+    def __str__(self):
+        return self.user.get_full_name()
+
+    def get_group(self):
+        return self.group
+
+    def get_group_name(self):
+        return self.group.name
+
 #
 #
 # class Problem(models.Model):
