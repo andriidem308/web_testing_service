@@ -487,7 +487,6 @@ h1, h2, h3, h4, h5 {
     flex-direction: row;
     justify-content: stretch;
 
-
     .attachments {
         display: flex;
         flex-direction: column;
@@ -569,6 +568,9 @@ h1, h2, h3, h4, h5 {
     min-height: 75vh;
 
     .description {
+        overflow-wrap: break-word;
+        max-width: 660px;
+
         padding: 20px 0;
         height: 100%;
 

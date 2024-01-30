@@ -63,7 +63,6 @@ class SignUpForm(UserCreationForm):
     @transaction.atomic
     def save(self, user_type, commit=True):
         user = super().save(commit=False)
-
         if user_type == 'student':
             user._is_student = True
             user.save()

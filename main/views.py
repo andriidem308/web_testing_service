@@ -75,6 +75,13 @@ class GroupCreateView(CreateView):
         kwargs['teacher'] = teacher
         return kwargs
 
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = GroupCreateForm(teacher=teacher)
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
+
     def post(self, request, *args, **kwargs):
         user = request.user
         teacher = Teacher.objects.get(user=user)
@@ -110,6 +117,13 @@ class LectureCreateView(CreateView):
     model = Lecture
     form_class = LectureCreateForm
     template_name = 'lectures/lecture_add.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = LectureCreateForm(teacher=teacher)
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user

@@ -3,23 +3,19 @@
 {% block content %}
     <div class="lecture-container">
         <div class="lecture-description card">
-            <h1 class="title" id="title">Lecture</h1>
+            <h1 class="title" id="title">{{ lecture.headline }}</h1>
             <div class="created">
                 <div class="created-by">
-                    <div class="author" id="author">Author</div>
+                    <div class="author" id="author">{{ lecture.teacher.user.first_name }} {{ lecture.teacher.user.last_name }}</div>
                     <div class="separator-dot">•</div>
-                    <div class="date-created" id="date-created">Sep 25, 2023</div>
+                    <div class="date-created" id="date-created">{{ lecture.date_created }}</div>
                 </div>
             </div>
 
             <hr>
             <div class="description" id="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+                {{ lecture.content }}
             </div>
-
             <br>
             <hr>
         </div>
