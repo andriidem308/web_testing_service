@@ -156,10 +156,13 @@ class ProblemCreateView(CreateView):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher, request.POST)
+        print(form.errors)
         if form.is_valid():
+            print('a')
             form.save()
             return redirect('problems')
         else:
+            print(form.data)
             context = {'form': form, 'user': user}
             return render(request, self.template_name, context)
 
