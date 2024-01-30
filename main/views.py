@@ -4,7 +4,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
-    LectureCreateForm, LectureUpdateForm,
+    LectureCreateForm, LectureUpdateForm, ProblemCreateForm,
 )
 from main.models import (
     Student, Teacher, Group, Lecture, Problem
@@ -141,29 +141,27 @@ class ProblemView(DetailView):
 
 
 class ProblemCreateView(CreateView):
-    # model = Problem
-    # form_class = ProblemCreateForm
-    # template_name = 'problems/problem_add.html'
+    model = Problem
+    form_class = ProblemCreateForm
+    template_name = 'problems/problem_add.html'
 
     def get(self, request, *args, **kwargs):
-        pass
-        # user = self.request.user
-        # teacher = Teacher.objects.get(user=user)
-        # form = ProblemCreateForm(teacher=teacher)
-        # context = {'form': form, 'teacher': teacher}
-        # return render(request, self.template_name, context)
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = ProblemCreateForm(teacher=teacher)
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        pass
-        # user = self.request.user
-        # teacher = Teacher.objects.get(user=user)
-        # form = ProblemCreateForm(teacher, request.POST)
-        # if form.is_valid():
-        #     form.save()
-        #     return redirect('problems')
-        # else:
-        #     context = {'form': form, 'user': user}
-        #     return render(request, self.template_name, context)
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = ProblemCreateForm(teacher, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('problems')
+        else:
+            context = {'form': form, 'user': user}
+            return render(request, self.template_name, context)
 
 
 class ProblemUpdateView(UpdateView):

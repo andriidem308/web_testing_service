@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="page-title">New Problem</h2>
+    <form class="problem-container" method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="problem-description card">
+            {{ form.headline }}
+            <div class="created">
+                <div class="due-date">
+                    <div><b>Due date:</b> <span>{{ form.deadline }}</span></div>
+                </div>
+
+            </div>
+            <div class="max-points"><b>{{ form.max_points }}</b></div>
+
+            <hr>
+            <div class="description" id="description">
+                {{ form.content }}
+            </div>
+
+            <br>
+            <hr>
+        </div>
+        <div class="problem-input">
+            <div class="problem-actions card">
+                <button class="pretty-button success" type="submit">Save</button>
+                <button class="pretty-button danger">Delete</button>
+            </div>
+
+            <div class="attachments card">
+                <h3>Attachments</h3>
+                <label class="files-input" for="files-input"><i class="fa-solid fa-upload"></i> Choose File</label>
+                <input type="file" id="files-input" style="display:none;" multiple="multiple"
+                       onchange="displayFileName()"/>
+
+                <div class="attachments-content" id="selectedFiles">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('files-input');
+            const selectedFiles = document.getElementById('selectedFiles');
+
+            if (fileInput.files.length > 0) {
+                console.log(fileInput.files)
+
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const attachment = document.createElement("a");
+                    attachment.textContent = fileInput.files[i].name;
+                    attachment.classList.add('attachment');
+
+
+                    selectedFiles.appendChild(attachment);
+                }
+            }
+        }
+    </script>
+{% endblock %}
