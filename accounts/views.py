@@ -1,12 +1,11 @@
 from django.shortcuts import redirect, render
-from django.views.generic import TemplateView
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView as BaseLoginView, PasswordChangeView as BasePasswordChangeView
+from django.contrib.auth.views import LoginView as BaseLoginView
 
 from accounts.models import User
-from main.models import Teacher, Student, Group
-from main.forms import teacher_forms, student_forms, common_forms
+from main.models import Teacher, Student
+from main import forms, student_forms, teacher_forms
 
 
 # Create your views here.
@@ -32,7 +31,7 @@ def _login(request):
 
 class LoginView(BaseLoginView):
     model = User
-    form_class = common_forms.AuthenticationForm
+    form_class = forms.AuthenticationForm
     template_name = 'login.html'
 
 
@@ -68,18 +67,18 @@ class SignUpStudentView(CreateView):
 
 class SignUpView(CreateView):
     model = User
-    form_class = common_forms.SignUpForm
-    template_name = 'signup_form.html'
+    form_class = forms.SignUpForm
+    template_name = 'signup.html'
 
     def get(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
-        form = common_forms.SignUpForm(user_type=user_type)
+        form = forms.SignUpForm(user_type=user_type)
         context = {'form': form, 'user_type': user_type}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
-        form = common_forms.SignUpForm(request.POST, user_type=user_type)
+        form = forms.SignUpForm(request.POST, user_type=user_type)
         if form.is_valid():
             user = form.save(user_type)
             login(self.request, user)

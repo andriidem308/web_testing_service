@@ -1,8 +1,9 @@
-<div class="logo"><a href="">Web Testing Service</a></div>
+<div class="logo"><a href="{% url 'home' %}">Web Testing Service</a></div>
 
 <ul class="navigation">
-    <li><a href="{% url 'students:lectures' %}">Lectures</a></li>
-    <li><a href="{% url 'students:problems' %}">Problems</a></li>
+    <li><a href="{% url 'lectures' %}">Lectures</a></li>
+    <li><a href="{% url 'problems' %}">Problems</a></li>
+    <li><a href="{% url 'groups' %}">Groups</a></li>
     <li><a href="">Tests</a></li>
 </ul>
 
@@ -25,8 +26,15 @@
             </li>
         </ul>
     </li>
-{#    <li><a href=""><i class="fa-solid fa-bell"></i></a></li>#}
+
 {#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
-    <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
-{#    <li><a href=""><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>#}
+    {% if user.is_authenticated %}
+        <li><a href=""><i class="fa-solid fa-bell"></i></a></li>
+        <li><a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+        <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
+    {% else %}
+        <li><a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a></li>
+    {% endif %}
+
+
 </ul>

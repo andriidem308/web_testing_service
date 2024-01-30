@@ -18,9 +18,9 @@
 
             <div class="message card">
                 New to us? Sign up as a
-                <a href="{% url 'signup_teacher' %}">Teacher</a>
+                <a href="{% url 'signup' user_type='teacher' %}">Teacher</a>
                 or
-                <a href="{% url 'signup_student' %}">Student</a>
+                <a href="{% url 'signup' user_type='student' %}">Student</a>
             </div>
         </div>
     </div>

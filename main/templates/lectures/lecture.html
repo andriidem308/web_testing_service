@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="lecture-container">
+        <div class="lecture-description card">
+            <h1 class="title" id="title">Lecture</h1>
+            <div class="created">
+                <div class="created-by">
+                    <div class="author" id="author">Author</div>
+                    <div class="separator-dot">•</div>
+                    <div class="date-created" id="date-created">Sep 25, 2023</div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="description" id="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+            </div>
+
+            <br>
+            <hr>
+        </div>
+
+        <div class="lecture-side">
+            <div class="attachments card">
+                <h3>Attachments</h3>
+                <div class="attachments-content">
+                    <a download href="/media/lectures/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_1.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Att2.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_3.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_4.pdf</div>
+                    </a>
+                </div>
+            </div>
+            <div class="comments card">
+                <h3>Leave a comment</h3>
+                <textarea class="pretty-textarea" name="" id="" cols="30" rows="10"></textarea>
+                <button class="pretty-button primary">Comment</button>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

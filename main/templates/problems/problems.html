@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'problem' pk=1 %}">Problem</a>
+    <a href="{% url 'problem_edit' pk=1 %}">Problem Edit</a>
+    <a href="{% url 'problem_add' %}">Problem Add</a>
+    <a href="{% url 'problem_take' pk=1 %}">Problem Take</a>
+{% endblock %}
+

@@ -42,8 +42,37 @@ class Student(models.Model):
     def get_group_name(self):
         return self.group.name
 
-#
-#
+
+class Article(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group)
+
+    headline = models.CharField(max_length=255)
+    content = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now_add=True)
+
+    # attachments = models.ManyToManyField(Attachment)
+    # comments = models.ManyToManyField(Comment)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.headline
+
+
+class Problem(Article):
+    max_points = models.FloatField()
+    # max_execution_time = models.FloatField()
+    deadline = models.DateTimeField()
+    # test_file = models.FileField(upload_to='/media/problems/test_files', null=True)
+
+
+class Lecture(Article):
+    pass
+
+
 # class Problem(models.Model):
 #     pass
 #     # teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)

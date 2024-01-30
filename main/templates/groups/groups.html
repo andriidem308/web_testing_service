@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'group' pk=1 %}">Group</a>
+    <a href="{% url 'group_add' %}">Group Add</a>
+    <a href="{% url 'group_edit' pk=1 %}">Group Edit</a>
+
+    {% for group in groups %}
+        <div class="card">
+            <a href="{% url 'group' pk=group.pk %}">
+                <div class="group-name">Name: {{ group.name }}</div>
+                <div class="group-teacher">Teacher: {{ group.teacher }}</div>
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+
+
+

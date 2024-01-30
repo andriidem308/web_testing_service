@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="page-title">New Lecture</h2>
+    <form class="lecture-container" method="post" enctype="multipart/form-data" novalidate >
+        {% csrf_token %}
+        <div class="lecture-description card">
+            {{ form.headline}}
+
+            <hr>
+            <div class="description" id="description">
+                {{ form.content}}
+            </div>
+
+            <br>
+            <hr>
+        </div>
+
+        <div class="lecture-side">
+            <div class="lecture-actions card">
+                <button class="pretty-button success" type="submit">Save</button>
+                <button class="pretty-button danger">Delete</button>
+            </div>
+
+            <div class="attachments card">
+                <h3>Attachments</h3>
+                <label class="files-input" for="files-input"><i class="fa-solid fa-upload"></i> Choose File</label>
+                <input type="file" id="files-input" style="display:none;" multiple="multiple" onchange="displayFileName()" />
+
+                <div class="attachments-content" id="selectedFiles">
+
+                    {#                    <input class="pretty-input" type="file" multiple="multiple">#}
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <script>
+        // Function to display selected file name
+        function displayFileName() {
+            const fileInput = document.getElementById('files-input');
+            const selectedFiles = document.getElementById('selectedFiles');
+            // Check if a file is selected
+
+            {#<a download href="/media/lectures/CV_Andrii_Demchenko1.pdf" class="attachment">#}
+            {#    <div class="attachment-name">Att2.pdf</div>#}
+            {#</a>#}
+
+            if (fileInput.files.length > 0) {
+                console.log(fileInput.files)
+
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    {#const attachmentName = document.createElement('div');#}
+                    {#attachmentName.classList.add('attachment-name');#}
+                    {#attachmentName.textContent = fileInput.files[i].name;#}
+
+                    const attachment = document.createElement("a");
+                    {#attachment.setAttribute('download', null);#}
+                    attachment.textContent = fileInput.files[i].name;
+                    attachment.classList.add('attachment');
+                    {#attachment.appendChild(attachmentName);#}
+
+                    {#const attachmentName = document.createElement('div');#}
+                    {#attachmentName.classList.add('attachment-name');#}
+                    {#attachmentName.textContent = fileInput.files[i].name;#}
+                    {##}
+                    {#const attachment = document.createElement("a");#}
+                    {#attachment.setAttribute('download', null);#}
+                    {#attachment.classList.add('attachment');#}
+                    {#attachment.appendChild(attachmentName);#}
+
+                    selectedFiles.appendChild(attachment);
+                }
+            }
+
+
+        }
+    </script>
+{% endblock %}
