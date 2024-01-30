@@ -472,6 +472,19 @@ h1, h2, h3, h4, h5 {
 
 .problem-input {
   text-align: center;
+
+  .pretty-textarea {
+    margin: 10px;
+    max-width: 300px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    resize: none;
+
+    &:hover {
+      outline: $dark auto 1px;
+    }
+  }
 }
 
 .problem-solution {
@@ -491,6 +504,7 @@ h1, h2, h3, h4, h5 {
     color: $light-hover;
   }
 }
+
 
 .comments {
   .pretty-textarea {
