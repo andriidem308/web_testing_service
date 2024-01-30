@@ -396,6 +396,19 @@ h1, h2, h3, h4, h5 {
   flex-direction: row;
   min-height: 75vh;
 
+  .pretty-textarea {
+    margin: 10px;
+    max-width: 300px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    resize: none;
+
+    &:hover {
+      outline: $dark auto 1px;
+    }
+  }
+
   .attachments {
     display: flex;
     flex-direction: column;
