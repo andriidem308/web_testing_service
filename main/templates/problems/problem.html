@@ -3,23 +3,23 @@
 {% block content %}
     <div class="problem-container">
         <div class="problem-description card">
-            <h1 class="title" id="title">Headline</h1>
+            <h1 class="title" id="title">{{ problem.headline }}</h1>
             <div class="created">
                 <div class="created-by">
-                    <div class="author" id="author">Author</div>
+                    <div class="author" id="author">{{ problem.teacher.user.get_full_name }}</div>
                     <div class="separator-dot">•</div>
-                    <div class="date-created" id="date-created">Sep 25, 2023</div>
+                    <div class="date-created" id="date-created">{{ date_created }}</div>
                 </div>
                 <div class="due-date">
-                    <div><b>Due date:</b> <span>Dec 21, 2023</span></div>
+                    <div><b>Due date:</b> <span>{{ deadline }}</span></div>
                 </div>
 
             </div>
-            <div class="max-points"><b>5 points</b></div>
+            <div class="max-points"><b>Points: {{ problem.max_points }}</b></div>
 
             <hr>
             <div class="description" id="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cupiditate exercitationem magnam minus nobis perferendis quia quis rem sint suscipit temporibus tenetur ullam, voluptate voluptates voluptatibus! Aspernatur, eos, maiores. Quasi!
+                {{ problem.content }}
             </div>
             <div class="attachments">
                 <h3>Attachments</h3>

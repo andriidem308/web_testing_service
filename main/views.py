@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
@@ -138,6 +140,13 @@ class ProblemView(DetailView):
     model = Problem
     context_object_name = 'problem'
     template_name = 'problems/problem.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context['date_created'] = self.object.date_created.strftime('%d/%m/%Y, %H:%M')
+        context['deadline'] = self.object.deadline.strftime('%d/%m/%Y, %H:%M')
+        return self.render_to_response(context)
 
 
 class ProblemCreateView(CreateView):

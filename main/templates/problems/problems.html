@@ -5,5 +5,18 @@
     <a href="{% url 'problem_edit' pk=1 %}">Problem Edit</a>
     <a href="{% url 'problem_add' %}">Problem Add</a>
     <a href="{% url 'problem_take' pk=1 %}">Problem Take</a>
+
+    {% for problem in problems %}
+        <div class="problem-card card">
+            <a href="{% url 'problem' pk=problem.pk %}">
+                <div class="problem-name">Headline: {{ problem.headline }}</div>
+                <div class="problem-teacher">Teacher: {{ problem.teacher }}</div>
+                <div class="problem-content">Due data: {{ problem.deadline }}</div>
+                <div class="problem-content">{{ problem.max_points }} Points</div>
+                <div class="problem-content">{{ problem.max_execution_time }} ms</div>
+                <div class="problem-content">{{ problem.content }}</div>
+            </a>
+        </div>
+    {% endfor %}
 {% endblock %}
 
