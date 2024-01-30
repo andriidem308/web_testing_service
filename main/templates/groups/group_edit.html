@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2 class="page-title">New group</h2>
-    <form class="group-container" method="post" enctype="multipart/form-data" novalidate >
+    <form class="group-container" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="group-description card">
             {{ form.name }}
@@ -13,6 +13,5 @@
                 <button type="submit" class="pretty-button success">Create</button>
             </div>
         </div>
-
     </form>
 {% endblock %}

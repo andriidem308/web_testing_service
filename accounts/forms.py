@@ -1,12 +1,25 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from web_testing_service.settings import SECRET_KEY_TEACHER
 from main.models import Student, Teacher, Group
 
 User = get_user_model()
+
+
+class AuthenticationForm(BaseAuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        # 'autocomplete': 'off',
+        'class': 'pretty-input',
+        'placeholder': 'Username',
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        # 'autocomplete': 'off',
+        'class': 'pretty-input',
+        'placeholder': 'Password',
+    }))
 
 
 class SignUpForm(UserCreationForm):
@@ -26,7 +39,7 @@ class SignUpForm(UserCreationForm):
     secret_key = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Access key'}),
         label='', required=False)
-    group = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'custom-class-for-group'}),
+    group = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'pretty-input'}),
                                    queryset=Group.objects.all(), label='', empty_label='Select Group', required=False)
 
     class Meta(UserCreationForm.Meta):
@@ -47,12 +60,10 @@ class SignUpForm(UserCreationForm):
     @transaction.atomic
     def save(self, user_type, commit=True):
         user = super().save(commit=False)
-        print(f'u: {user_type}')
-
         if user_type == 'student':
             user._is_student = True
             user.save()
-            student = Student.objects.create(user=user)
+            student = Student.objects.create(user=user, group=self.cleaned_data['group'])
         elif user_type == 'teacher':
             user._is_teacher = True
             user.save()

@@ -1,7 +1,6 @@
 from django.urls import path, include
 # from main.views import index
 from main.views import *
-from main import student_views, teacher_views
 
 urlpatterns = [
     path('', index, name='home'),
@@ -21,28 +20,4 @@ urlpatterns = [
     path('groups/add/', GroupCreateView.as_view(), name='group_add'),
     path('groups/<int:pk>/', GroupView.as_view(), name='group'),
     path('groups/<int:pk>/edit', GroupUpdateView.as_view(), name='group_edit'),
-
-    # path(
-    #     'teacher/',
-    #     include(
-    #         ([
-    #             path('problems/', teacher_views.problem_list, name='problem_list'),
-    #         ], 'main'),
-    #         namespace='teachers'
-    #     )
-    # ),
-    # path(
-    #     'student/',
-    #     include(
-    #         ([
-    #             path('problems/', student_views.problems, name='problems'),
-    #             path('problem/', student_views.problem, name='problem'),
-    #             path('lectures/', student_views.lectures, name='lectures'),
-    #             path('lecture/', student_views.lecture, name='lecture'),
-    #         ], 'main'),
-    #         namespace='students'
-    #     )
-    # ),
-
-    # path('')
 ]

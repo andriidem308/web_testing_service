@@ -1,23 +1,14 @@
-from django.shortcuts import render
-
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, FileResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
-
-from main.models import *
-from accounts.models import *
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
     LectureCreateForm, LectureUpdateForm,
 )
-
-# def index(request):
-#     return render(request, 'index.html')
+from main.models import (
+    Student, Teacher, Group, Lecture, Problem
+)
 
 
 def index(request):
@@ -42,14 +33,6 @@ def problem_edit(request, pk):
 
 def problem_take(request, pk):
     return render(request, 'problems/problem_take.html')
-
-
-def lectures(request):
-    return render(request, 'lectures/lectures.html')
-
-
-def lecture_add(request):
-    return render(request, 'lectures/lecture_add.html')
 
 
 class GroupListView(ListView):
@@ -144,21 +127,48 @@ class LectureUpdateView(UpdateView):
     success_url = reverse_lazy('lectures')
 
 
-def lecture(request, pk):
-    return render(request, 'lectures/lecture.html')
+# TODO: Problem views
+class ProblemListView(ListView):
+    model = Problem
+    context_object_name = 'problems'
+    template_name = 'problems/problems.html'
 
 
-def lecture_edit(request, pk):
-    return render(request, 'lectures/lecture_edit.html')
+class ProblemView(DetailView):
+    model = Problem
+    context_object_name = 'problem'
+    template_name = 'problems/problem.html'
 
 
-def groups(request):
-    return render(request, 'groups/groups.html')
+class ProblemCreateView(CreateView):
+    # model = Problem
+    # form_class = ProblemCreateForm
+    # template_name = 'problems/problem_add.html'
+
+    def get(self, request, *args, **kwargs):
+        pass
+        # user = self.request.user
+        # teacher = Teacher.objects.get(user=user)
+        # form = ProblemCreateForm(teacher=teacher)
+        # context = {'form': form, 'teacher': teacher}
+        # return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        pass
+        # user = self.request.user
+        # teacher = Teacher.objects.get(user=user)
+        # form = ProblemCreateForm(teacher, request.POST)
+        # if form.is_valid():
+        #     form.save()
+        #     return redirect('problems')
+        # else:
+        #     context = {'form': form, 'user': user}
+        #     return render(request, self.template_name, context)
 
 
-def group_add(request):
-    return render(request, 'groups/group_add.html')
-
-
-def group(request, pk):
-    return render(request, 'groups/group.html')
+class ProblemUpdateView(UpdateView):
+    pass
+    # model = Problem
+    # form_class = ProblemUpdateForm
+    # template_name = 'problems/problem_edit.html'
+    # success_url = reverse_lazy('problems')
