@@ -64,17 +64,14 @@ class LectureUpdateForm(forms.ModelForm):
         fields = ['headline', 'content', ]
 
 
-# TODO: Problem forms
-
 class ProblemCreateForm(forms.ModelForm):
     headline = forms.CharField(max_length=255,
                                widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
-    # max_points = forms.FloatField(widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Max points"}))
-    # max_execution_time = forms.FloatField(widget=forms.TextInput(
-    #     attrs={'class': 'pretty-input', 'placeholder': "Max execution time"}))
-    max_points = forms.FloatField(widget=forms.NumberInput())
-    max_execution_time = forms.FloatField(widget=forms.NumberInput())
+    max_points = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'Max points'}))
+    max_execution_time = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'Max execution time (ms)', 'min': 0, 'step': 100}))
 
     deadline = forms.DateTimeField(
         input_formats=['%Y-%m-%d %H:00:00'],
@@ -97,4 +94,20 @@ class ProblemCreateForm(forms.ModelForm):
 
 
 class ProblemUpdateForm(forms.ModelForm):
-    pass
+    headline = forms.CharField(max_length=255,
+                               widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
+    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
+
+    max_points = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'Max points'}))
+    max_execution_time = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'Max execution time (ms)', 'min': 0, 'step': 100}))
+
+    deadline = forms.DateTimeField(
+        input_formats=['%Y-%m-%d %H:00:00'],
+        widget=TimePicker(attrs={'autocomplete': 'off'})
+    )
+
+    class Meta:
+        model = Problem
+        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]

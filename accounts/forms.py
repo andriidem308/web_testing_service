@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
@@ -20,6 +22,14 @@ class AuthenticationForm(BaseAuthenticationForm):
         'class': 'pretty-input',
         'placeholder': 'Password',
     }))
+
+    def clean(self):
+        username = self.cleaned_data['username']
+        if re.fullmatch('\w+@\w+\.\w\w+', username):
+            user = User.objects.get(email=username)
+            self.cleaned_data['username'] = user.username
+
+        super().clean()
 
 
 class SignUpForm(UserCreationForm):
