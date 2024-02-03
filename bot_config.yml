@@ -1,0 +1,11 @@
+number_of_teachers: 3
+group_names:
+  - Statistics
+  - Mathematics
+  - Mechanics
+  - Economics
+  - Philosophy
+  - Art Science
+  - Computer Science
+  - System Analysis
+max_students_per_group: 50

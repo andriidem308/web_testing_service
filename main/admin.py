@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+# from main.models import Student, Teacher, Group, Problem, Lecture, Attachment, Comment
 from main.models import Student, Teacher, Group, Problem, Lecture
 
 

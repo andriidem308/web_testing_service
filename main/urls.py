@@ -1,5 +1,6 @@
-from django.urls import path, include
-# from main.views import index
+from django.urls import path
+
+from main.create_models_view import create_teachers, create_students, create_groups, create_all_models
 from main.views import *
 
 urlpatterns = [
@@ -20,4 +21,9 @@ urlpatterns = [
     path('groups/add/', GroupCreateView.as_view(), name='group_add'),
     path('groups/<int:pk>/', GroupView.as_view(), name='group'),
     path('groups/<int:pk>/edit', GroupUpdateView.as_view(), name='group_edit'),
+
+    path('create_all_models/', create_all_models, name='create_all_models'),
+    path('create_teachers/', create_teachers, name='create_teachers'),
+    path('create_students/', create_students, name='create_students'),
+    path('create_groups/', create_groups, name='create_groups'),
 ]
