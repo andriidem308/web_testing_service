@@ -103,6 +103,28 @@ class LectureView(DetailView):
     context_object_name = 'lecture'
     template_name = 'lectures/lecture.html'
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+
+        comment_form, comments = comment_method(self.object, self.request)
+
+        context['comment_form'] = comment_form
+        context['comments'] = comments
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        comment_form, comments = comment_method(self.object, self.request)
+        context = self.get_context_data(object=self.object)
+
+        context['comment_form'] = comment_form
+        context['comments'] = comments
+
+        return redirect('lecture', pk=self.object.pk)
+
 
 class LectureCreateView(CreateView):
     model = Lecture
