@@ -1,6 +1,6 @@
 from django import forms
 
-from main.models import Lecture, Group, Problem, Comment
+from main.models import Lecture, Group, Problem, Comment, Attachment
 from main.utils.widget import TimePicker
 
 
@@ -111,6 +111,27 @@ class ProblemUpdateForm(forms.ModelForm):
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]
+
+
+class AttachmentForm(forms.ModelForm):
+
+    def __init__(self, teacher, *args, **kwargs):
+        super(AttachmentForm, self).__init__(*args, **kwargs)
+        self.teacher = teacher
+
+    class Meta:
+        model = Attachment
+        fields = ['content', ]
+        widgets = {
+            'content': forms.TextInput(attrs={
+                "name": "images",
+                "type": "File",
+                "class": "form-control",
+                "multiple": "True",
+                "style": "display: none;",
+                'onchange': 'displayFileName()',
+            })
+        }
 
 
 class CommentForm(forms.ModelForm):

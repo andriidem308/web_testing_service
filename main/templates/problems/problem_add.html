@@ -24,26 +24,28 @@
             <hr>
         </div>
         <div class="problem-input">
-            <div class="problem-actions card">
+            <div class="problem-actions">
                 <button class="pretty-button success" type="submit">Save</button>
                 <button class="pretty-button danger">Delete</button>
             </div>
-
-            <div class="attachments card">
-                <h3>Attachments</h3>
-                <label class="files-input" for="files-input"><i class="fa-solid fa-upload"></i> Choose File</label>
-                <input type="file" id="files-input" style="display:none;" multiple="multiple"
-                       onchange="displayFileName()"/>
-
-                <div class="attachments-content" id="selectedFiles">
-                </div>
-            </div>
+{#            <div class="attachments card">#}
+{#                <h3>Attachments</h3>#}
+{#                <label class="files-input" for="id_content"><i class="fa-solid fa-upload"></i> Choose File</label>#}
+{#                {{ attachment_form.content  }}#}
+{#                <div class="attachments-content" id="selectedFiles">#}
+{#                    {% for attachment in attachments %}#}
+{#                        <a download href="/media/lectures/attachments/{{ attachment.content }}" class="attachment">#}
+{#                            <div class="attachment-name">{{ attachment.content }}</div>#}
+{#                        </a>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
         </div>
     </form>
 
     <script>
         function displayFileName() {
-            const fileInput = document.getElementById('files-input');
+            const fileInput = document.getElementById('id_content');
             const selectedFiles = document.getElementById('selectedFiles');
 
             if (fileInput.files.length > 0) {
