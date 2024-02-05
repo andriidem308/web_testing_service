@@ -13,6 +13,9 @@ from main.models import (
 )
 
 
+def test(request):
+    return render(request, 'test.html')
+
 def index(request):
     return render(request, 'index.html')
 
@@ -134,6 +137,14 @@ class ProblemListView(ListView):
     model = Problem
     context_object_name = 'problems'
     template_name = 'problems/problems.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        problems_list = context['object_list']
+        for p in problems_list:
+            p.date_created = p.date_created.strftime('%d/%m/%Y, %H:%M')
+            p.deadline = p.deadline.strftime('%d/%m/%Y, %H:%M')
+        return context
 
 
 class ProblemView(DetailView):

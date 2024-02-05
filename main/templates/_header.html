@@ -1,40 +1,50 @@
-<div class="logo"><a href="{% url 'home' %}">Web Testing Service</a></div>
+{% load static %}
 
-<ul class="navigation">
-    <li><a href="{% url 'lectures' %}">Lectures</a></li>
-    <li><a href="{% url 'problems' %}">Problems</a></li>
-    <li><a href="{% url 'groups' %}">Groups</a></li>
-    <li><a href="">Tests</a></li>
-</ul>
+<header>
+    <div class="logo">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'img/logo.png' %}" alt="">
+            <img src="{% static 'img/logo_text.png' %}" alt="">
+        </a>
+    </div>
 
-<ul class="side-navigation">
-    <li>
-        <a href=""><i class="fa-solid fa-bars"></i></a>
-        <ul class="sub-menu">
-            <!-- Your vertical menu items go here -->
-            <li>
-                <a href="https://mechmat.knu.ua/" class="icon-link"><i class="navigation-icon fa-solid fa-building-un"></i>
-                    Faculty</a>
-            </li>
-            <li>
-                <a href="https://mechmat.knu.ua/golovna/fakul-tet/biblioteka/" class="icon-link"><i class="navigation-icon fas fa-thin fa-book"></i>
-                    Library</a>
-            </li>
-            <li>
-                <a href="https://github.com/andriidem308/django_eolimp"><i class="navigation-icon fa-brands fa-github"></i>
-                    Github</a>
-            </li>
-        </ul>
-    </li>
+    <ul class="navigation">
+        <li><a href="{% url 'lectures' %}">Lectures</a></li>
+        <li><a href="{% url 'problems' %}">Problems</a></li>
+        <li><a href="{% url 'groups' %}">Groups</a></li>
+        <li><a href="">Tests</a></li>
+    </ul>
 
-{#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
-    {% if user.is_authenticated %}
-        <li><a href=""><i class="fa-solid fa-bell"></i></a></li>
-        <li><a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
-        <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
-    {% else %}
-        <li><a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a></li>
-    {% endif %}
+    <ul class="side-navigation">
+        <li>
+            <a href=""><i class="fa-solid fa-bars"></i></a>
+            <ul class="sub-menu">
+                <!-- Your vertical menu items go here -->
+                <li>
+                    <a href="https://mechmat.knu.ua/" class="icon-link"><i class="navigation-icon fa-solid fa-building-un"></i>
+                        Faculty</a>
+                </li>
+                <li>
+                    <a href="https://mechmat.knu.ua/golovna/fakul-tet/biblioteka/" class="icon-link"><i class="navigation-icon fas fa-thin fa-book"></i>
+                        Library</a>
+                </li>
+                <li>
+                    <a href="https://github.com/andriidem308/django_eolimp"><i class="navigation-icon fa-brands fa-github"></i>
+                        Github</a>
+                </li>
+            </ul>
+        </li>
+
+        {#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
+        {% if user.is_authenticated %}
+            <li><a href=""><i class="fa-solid fa-bell"></i></a></li>
+            <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
+            <li><a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a></li>
+        {% endif %}
 
 
-</ul>
+    </ul>
+</header>
+
