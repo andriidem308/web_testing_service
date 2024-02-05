@@ -1,6 +1,6 @@
 from django import forms
 
-from main.models import Lecture, Group, Problem
+from main.models import Lecture, Group, Problem, Comment
 from main.utils.widget import TimePicker
 
 
@@ -111,3 +111,12 @@ class ProblemUpdateForm(forms.ModelForm):
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content', ]
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'pretty-textarea'}),
+        }

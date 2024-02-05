@@ -92,15 +92,15 @@ class TestFile(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    article = GenericForeignKey('content_type', 'object_id')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     content = models.TextField()
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.article} | {self.user.get_full_name()} | {self.date_created}'
 
 
 class Solution(models.Model):
