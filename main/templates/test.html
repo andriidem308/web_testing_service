@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="article-container">
+
+        <div class="left">
+            <div class="content card">
+                <h1 class="title" id="title">Headline</h1>
+                <div class="created">
+                    <div class="created-by">
+                        <div class="author" id="author">Andrii Demchenko</div>
+                        <div class="separator-dot">•</div>
+                        <div class="date-created" id="date-created">03/02/2024, 14:00</div>
+                    </div>
+                    <div class="due-date">
+                        <div><b>Due date:</b> <span>03/02/2024, 14:00</span></div>
+                    </div>
+
+                </div>
+                <div class="max-points"><b>Points: 5</b></div>
+
+                <hr>
+                <div class="description" id="description">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab architecto at consectetur cum distinctio dolorem eos eum ex facilis id labore minus nesciunt, odio officia officiis omnis optio porro sunt!
+
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="actions">
+                <button class="pretty-button success" type="submit">Save</button>
+                <button class="pretty-button danger">Delete</button>
+            </div>
+            <div class="solution card">
+                <div class="solution-headline">
+                    <h3>Your solution</h3>
+                    <h4 class="rounded-tile danger">None</h4>
+                    {#                    <h4 class="success-text">Taken</h4>#}
+                </div>
+                <button class="pretty-button action">Add solution</button>
+                <button class="pretty-button primary">Mark as completed</button>
+            </div>
+            <div class="attachments card">
+                <h3>Attachments</h3>
+                <div class="attachments-content">
+                    <a download href="/media/lectures/attachments/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_1.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/attachments/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_2.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/attachments/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_3.pdf</div>
+                    </a>
+                    <a download href="/media/lectures/attachments/CV_Andrii_Demchenko1.pdf" class="attachment">
+                        <div class="attachment-name">Attachment_4.pdf</div>
+                    </a>
+                </div>
+            </div>
+            <div class="comments card">
+                <h3>Leave a comment</h3>
+                <textarea class="pretty-textarea" name="" id="" cols="30" rows="10"></textarea>
+                <button class="pretty-button primary">Comment</button>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

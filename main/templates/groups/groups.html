@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="filter"></div>
+
+    <h1>Groups</h1>
     <a href="{% url 'group' pk=1 %}">Group</a>
     <a href="{% url 'group_add' %}">Group Add</a>
     <a href="{% url 'group_edit' pk=1 %}">Group Edit</a>
@@ -8,7 +11,7 @@
     {% for group in groups %}
         <div class="card">
             <a href="{% url 'group' pk=group.pk %}">
-                <div class="group-name">Name: {{ group.name }}</div>
+                <h2 class="group-name">{{ group.name }}</h2>
                 <div class="group-teacher">Teacher: {{ group.teacher }}</div>
             </a>
         </div>

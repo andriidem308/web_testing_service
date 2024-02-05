@@ -14,15 +14,15 @@
 
     <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
 
-    <link href="{% sass_src 'style.scss' %}" rel="stylesheet" type="text/css">
+    <link href="{% sass_src 'styles/style.scss' %}" rel="stylesheet" type="text/css">
 
     <title>Document</title>
 </head>
 <body>
 
-<header>
+<div>
     {% include '_header.html' with user=user %}
-</header>
+</div>
 <main>
     {% block content %}
 
@@ -33,11 +33,11 @@
 
 </aside>
 
-{#<script>#}
-{#    // Reload the page every 3 seconds (3000 milliseconds)#}
-{#    setInterval(function() {#}
-{#        location.reload();#}
-{#    }, 1000);#}
-{#</script>#}
+<script>
+    // Reload the page every 3 seconds (3000 milliseconds)
+    setInterval(function() {
+        location.reload();
+    }, 1000);
+</script>
 </body>
 </html>

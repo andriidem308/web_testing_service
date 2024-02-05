@@ -9,7 +9,8 @@
 }
 
 $light: #fffdfa;
-$light-hover: #f0f0f0;
+$light: #f2f2f2;
+$light-hover: #ebebeb;
 $grey: #c9c9c9;
 $grey-hover: #989898;
 $dark: #363636;
@@ -23,7 +24,8 @@ $success: #27aa23;
 $success-hover: #24bb1f;
 $primary: #23537e;
 $primary-hover: #326fa2;
-$nav-height: 50px;
+
+$nav-height: 60px;
 
 @mixin common-style($bg-color, $text-color: $light) {
   background-color: $bg-color !important;
@@ -84,7 +86,6 @@ body {
 header {
   width: 100%;
   height: $nav-height;
-  line-height: $nav-height;
   padding: 0 6%;
   background-color: $primary;
   display: flex;
@@ -106,7 +107,29 @@ header {
 }
 
 .logo {
-  flex: 1 1 0px;
+  flex: 1 1 0;
+
+  display: flex;
+  align-items: center;
+
+
+  a {
+    img {
+      height: 2.22222222rem;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+}
+
+.navigation {
+  flex: 2 1 0;
+}
+.side-navigation {
+  flex: 1 1 0;
 }
 
 .navigation,
@@ -114,8 +137,10 @@ header {
   display: flex;
   justify-content: space-between;
   align-content: center;
+
+  line-height: $nav-height;
   height: 100%;
-  flex: 1 1 0px;
+  //flex: 1 1 0;
 }
 
 .side-navigation {
@@ -204,10 +229,6 @@ main {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-}
-
-.testblock {
-  background-color: #6b9430;
 }
 
 /* -------------- ASIDE -------------- */
@@ -521,6 +542,18 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+
+
+.problem-card {
+  max-height: 20rem;
+  aspect-ratio: 1/5;
+
+  * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* -------------- LECTURE -------------- */
 
 .lecture-card {
@@ -786,4 +819,37 @@ h1, h2, h3, h4, h5 {
 }
 
 @media (max-width: 576px) {
+}
+
+
+
+.article-container {
+
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+
+  .left, .right {
+    flex: 1 1 0;
+    max-width: 40rem;
+
+  }
+
+  .left {
+
+  }
+
+  .right {
+
+    .actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      margin-top: 30px;
+    }
+
+  }
+
 }
