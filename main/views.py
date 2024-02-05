@@ -4,6 +4,9 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
+from main.services.article_service import comment_method
+
+
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
     LectureCreateForm, LectureUpdateForm, ProblemCreateForm,
@@ -144,9 +147,27 @@ class ProblemView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
+
+        comment_form, comments = comment_method(self.object, self.request)
+
         context['date_created'] = self.object.date_created.strftime('%d/%m/%Y, %H:%M')
         context['deadline'] = self.object.deadline.strftime('%d/%m/%Y, %H:%M')
+        context['comment_form'] = comment_form
+        context['comments'] = comments
+
         return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        comment_form, comments = comment_method(self.object, self.request)
+        context = self.get_context_data(object=self.object)
+        context['date_created'] = self.object.date_created.strftime('%d/%m/%Y, %H:%M')
+        context['deadline'] = self.object.deadline.strftime('%d/%m/%Y, %H:%M')
+        context['comment_form'] = comment_form
+        context['comments'] = comments
+
+        return redirect('problem', pk=self.object.pk)
 
 
 class ProblemCreateView(CreateView):

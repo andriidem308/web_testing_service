@@ -52,12 +52,18 @@
                 <button class="pretty-button action">Add solution</button>
                 <button class="pretty-button primary">Mark as completed</button>
             </div>
-            <div class="comments card">
-                <h3>Leave a comment</h3>
-                <textarea class="pretty-textarea" name="" id="" cols="30" rows="10"></textarea>
-                <button class="pretty-button primary">Comment</button>
-            </div>
-        </div>
 
+            <form method="POST" class="comments card">
+                {% csrf_token %}
+                <h3>Leave a comment</h3>
+                {{ comment_form.content  }}
+                <button class="pretty-button primary">Comment</button>
+            </form>
+        </div>
     </div>
+
+    {% for comment in comments %}
+        <div>{{ comment }}</div>
+    {% endfor %}
+
 {% endblock %}
