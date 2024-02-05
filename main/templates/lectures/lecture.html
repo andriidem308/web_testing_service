@@ -6,7 +6,8 @@
             <h1 class="title" id="title">{{ lecture.headline }}</h1>
             <div class="created">
                 <div class="created-by">
-                    <div class="author" id="author">{{ lecture.teacher.user.first_name }} {{ lecture.teacher.user.last_name }}</div>
+                    <div class="author"
+                         id="author">{{ lecture.teacher.user.first_name }} {{ lecture.teacher.user.last_name }}</div>
                     <div class="separator-dot">•</div>
                     <div class="date-created" id="date-created">{{ lecture.date_created }}</div>
                 </div>
@@ -38,12 +39,17 @@
                     </a>
                 </div>
             </div>
-            <div class="comments card">
+            <form method="POST" class="comments card">
+                {% csrf_token %}
                 <h3>Leave a comment</h3>
-                <textarea class="pretty-textarea" name="" id="" cols="30" rows="10"></textarea>
+                {{ comment_form.content }}
                 <button class="pretty-button primary">Comment</button>
-            </div>
+            </form>
         </div>
-
     </div>
+
+    {% for comment in comments %}
+        <div>{{ comment }}</div>
+    {% endfor %}
+
 {% endblock %}
