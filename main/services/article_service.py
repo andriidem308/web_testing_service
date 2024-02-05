@@ -1,7 +1,7 @@
-from main.models import Problem, Lecture, Comment
+from main.models import Problem, Lecture, Comment, Attachment, Teacher
 from typing import List
 
-from main.forms import CommentForm
+from main.forms import CommentForm, AttachmentForm
 
 
 def problem_all() -> List[Problem]:
@@ -20,6 +20,22 @@ def lecture_find(lecture_id: int) -> Lecture:
     return Problem.objects.get(id=lecture_id)
 
 
+def attachment_method(article, request):
+    attachments = Attachment.objects.filter(article=article)
+    teacher = Teacher.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        attachment_form = AttachmentForm(teacher=teacher, data=request.POST)
+        if attachment_form.is_valid():
+            new_attachment: Attachment = attachment_form.save(commit=False)
+            new_attachment.article = article
+            new_attachment.teacher = Teacher.objects.get(user=request.user)
+            new_attachment.save()
+    else:
+        attachment_form = AttachmentForm(teacher=teacher)
+    return attachment_form, attachments
+
+
 def comment_method(article, request):
     comments = Comment.objects.filter(article=article)
 
@@ -28,12 +44,9 @@ def comment_method(article, request):
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment: Comment = comment_form.save(commit=False)
-            print('ccc')
             new_comment.article = article
             new_comment.user = request.user
-            print('aaaaa')
             new_comment.save()
-            print('bbbb')
     else:
         comment_form = CommentForm()
     return comment_form, comments

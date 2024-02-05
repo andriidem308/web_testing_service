@@ -4,15 +4,14 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
-from main.services.article_service import comment_method
-
+from main.services.article_service import comment_method, attachment_method
 
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
-    LectureCreateForm, LectureUpdateForm, ProblemCreateForm,
+    LectureCreateForm, LectureUpdateForm, ProblemCreateForm, AttachmentForm,
 )
 from main.models import (
-    Student, Teacher, Group, Lecture, Problem
+    Student, Teacher, Group, Lecture, Problem, Attachment
 )
 
 
@@ -161,22 +160,26 @@ class ProblemView(DetailView):
 
         comment_form, comments = comment_method(self.object, self.request)
 
-        context['date_created'] = self.object.date_created.strftime('%d/%m/%Y, %H:%M')
-        context['deadline'] = self.object.deadline.strftime('%d/%m/%Y, %H:%M')
-        context['comment_form'] = comment_form
-        context['comments'] = comments
+        context.update({
+            'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
+            'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
+            'comment_form': comment_form,
+            'comments': comments,
+        })
 
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-
         comment_form, comments = comment_method(self.object, self.request)
         context = self.get_context_data(object=self.object)
-        context['date_created'] = self.object.date_created.strftime('%d/%m/%Y, %H:%M')
-        context['deadline'] = self.object.deadline.strftime('%d/%m/%Y, %H:%M')
-        context['comment_form'] = comment_form
-        context['comments'] = comments
+
+        context.update({
+            'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
+            'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
+            'comment_form': comment_form,
+            'comments': comments,
+        })
 
         return redirect('problem', pk=self.object.pk)
 
@@ -190,20 +193,20 @@ class ProblemCreateView(CreateView):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher=teacher)
-        context = {'form': form, 'teacher': teacher}
+        context = {
+            'form': form,
+            'teacher': teacher,
+        }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher, request.POST)
-        print(form.errors)
         if form.is_valid():
-            print('a')
             form.save()
             return redirect('problems')
         else:
-            print(form.data)
             context = {'form': form, 'user': user}
             return render(request, self.template_name, context)
 
