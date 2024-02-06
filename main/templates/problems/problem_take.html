@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <h1>Add solution for {{ problem.headline }}</h1>
+        <div><b>Problem description:</b></div>
+        <div>Problem description: {{ problem.content }}</div>
+        {{ form.solution_code }}
+        <br>
+        <button class="pretty-button success">Save</button>
+    </form>
+
+{% endblock %}

@@ -20,27 +20,19 @@
                 {{ form.content }}
             </div>
 
+            <div>{{ form.test_file }}</div>
             <br>
             <hr>
         </div>
+
+        {% if user.is_authenticated %}
         <div class="problem-input">
             <div class="problem-actions">
                 <button class="pretty-button success" type="submit">Save</button>
                 <button class="pretty-button danger">Delete</button>
             </div>
-{#            <div class="attachments card">#}
-{#                <h3>Attachments</h3>#}
-{#                <label class="files-input" for="id_content"><i class="fa-solid fa-upload"></i> Choose File</label>#}
-{#                {{ attachment_form.content  }}#}
-{#                <div class="attachments-content" id="selectedFiles">#}
-{#                    {% for attachment in attachments %}#}
-{#                        <a download href="/media/lectures/attachments/{{ attachment.content }}" class="attachment">#}
-{#                            <div class="attachment-name">{{ attachment.content }}</div>#}
-{#                        </a>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#            </div>#}
         </div>
+        {% endif %}
     </form>
 
     <script>

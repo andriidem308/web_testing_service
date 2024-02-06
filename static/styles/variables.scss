@@ -1,0 +1,117 @@
+$light: #fffdfa;
+$light: #f2f2f2;
+$light-hover: #ebebeb;
+$grey: #c9c9c9;
+$grey-hover: #989898;
+$dark: #363636;
+$dark-hover: #4d4d4d;
+$action: #efaf00;
+$action-hover: #ffc32f;
+$danger: #b22637;
+$danger-light: #fdc8c8;
+$danger-hover: #d23446;
+$success: #27aa23;
+$success-hover: #24bb1f;
+$primary: #23537e;
+$primary-hover: #326fa2;
+
+$nav-height: 60px;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+}
+
+@mixin common-style($bg-color, $text-color: $light) {
+  background-color: $bg-color !important;
+  color: $text-color !important;
+
+  &:hover {
+    background-color: darken($bg-color, 10%) !important;
+    color: $text-color !important;
+  }
+}
+
+.danger {
+  @include common-style($danger);
+}
+
+.danger-text {
+  color: $danger !important;
+}
+
+.success {
+  @include common-style($success);
+}
+
+.success-text {
+  color: $success !important;
+}
+
+.dark {
+  @include common-style($dark, $light);
+}
+
+.light {
+  @include common-style($light, $dark);
+}
+
+.action {
+  @include common-style($action);
+}
+
+.primary {
+  @include common-style($primary);
+}
+
+/* -------------- BODY -------------- */
+
+body {
+  background-color: $light;
+  min-width: 320px;
+  font-family: 'Inter', sans-serif;
+
+  * {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+a {
+  color: $dark;
+
+  &:hover {
+    color: $dark-hover;
+  }
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 10px 0;
+}
+
+.pretty-button {
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.3s ease-out;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  color: $light;
+}
+
+.rounded-tile {
+  padding: 0.25rem 1rem;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: $light;
+}

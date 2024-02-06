@@ -1,6 +1,7 @@
 from django import forms
+from django.utils import timezone
 
-from main.models import Lecture, Group, Problem, Comment, Attachment
+from main.models import Lecture, Group, Problem, Comment, Attachment, Solution
 from main.utils.widget import TimePicker
 
 
@@ -78,13 +79,15 @@ class ProblemCreateForm(forms.ModelForm):
         widget=TimePicker(attrs={'autocomplete': 'off'})
     )
 
+    test_file = forms.FileField()
+
     def __init__(self, teacher, *args, **kwargs):
         super(ProblemCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
 
     class Meta:
         model = Problem
-        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]
+        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
 
     def save(self, **kwargs):
         instance = super(ProblemCreateForm, self).save(commit=False)
@@ -111,6 +114,26 @@ class ProblemUpdateForm(forms.ModelForm):
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]
+
+    def save(self, **kwargs):
+        instance = super(ProblemUpdateForm, self).save(commit=False)
+        instance.date_updated = timezone.now()
+        instance.save()
+        return instance
+
+
+
+class ProblemTakeForm(forms.ModelForm):
+    solution_code = forms.CharField(widget=forms.Textarea(), label='')
+
+    def __init__(self, problem, student, *args, **kwargs):
+        super(ProblemTakeForm, self).__init__(*args, **kwargs)
+        self.problem = problem
+        self.student = student
+
+    class Meta:
+        model = Solution
+        fields = ['solution_code']
 
 
 class AttachmentForm(forms.ModelForm):
