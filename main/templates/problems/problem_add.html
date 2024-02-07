@@ -1,57 +1,6 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="page-title">New Problem</h1>
-    <form class="problem-container" method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
-        <div class="problem-description card">
-            {{ form.headline }}
-            <div class="created">
-                <div class="due-date">
-                    <div><b>Due date:</b> <span>{{ form.deadline }}</span></div>
-                </div>
-
-            </div>
-            <div class="max-points"><b>{{ form.max_points }}</b></div>
-            <div class="max-execution-time"><b>{{ form.max_execution_time }}</b></div>
-
-            <hr>
-            <div class="description" id="description">
-                {{ form.content }}
-            </div>
-
-            <div>{{ form.test_file }}</div>
-            <br>
-            <hr>
-        </div>
-
-        {% if user.is_authenticated %}
-        <div class="problem-input">
-            <div class="problem-actions">
-                <button class="pretty-button success" type="submit">Save</button>
-                <button class="pretty-button danger">Delete</button>
-            </div>
-        </div>
-        {% endif %}
-    </form>
-
-    <script>
-        function displayFileName() {
-            const fileInput = document.getElementById('id_content');
-            const selectedFiles = document.getElementById('selectedFiles');
-
-            if (fileInput.files.length > 0) {
-                console.log(fileInput.files)
-
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const attachment = document.createElement("a");
-                    attachment.textContent = fileInput.files[i].name;
-                    attachment.classList.add('attachment');
-
-
-                    selectedFiles.appendChild(attachment);
-                }
-            }
-        }
-    </script>
+    {% include '_article_add.html' with form=form headline='New problem' type='problem' %}
 {% endblock %}

@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="page-title">New group</h2>
-    <form class="group-container" method="post" enctype="multipart/form-data" novalidate >
+    <h1 class="page-title">New group</h1>
+    <form class="group-container card" method="post" enctype="multipart/form-data" novalidate >
         {% csrf_token %}
-        <div class="group-description card">
+        <div class="group-description">
             {{ form.name }}
         </div>
 
-        <div class="group-side">
-            <div class="group-actions card">
+        <div class="group-bottom">
+            <div class="group-actions">
                 <button type="submit" class="pretty-button success">Create</button>
+                <button type="submit" class="pretty-button danger">Cancel</button>
             </div>
         </div>
-
     </form>
 {% endblock %}

@@ -67,19 +67,19 @@ class LectureUpdateForm(forms.ModelForm):
 
 class ProblemCreateForm(forms.ModelForm):
     headline = forms.CharField(max_length=255,
-                               widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
+                               widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': ""}))
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
     max_points = forms.FloatField(widget=forms.NumberInput(
-        attrs={'class': 'pretty-input', 'placeholder': 'Max points'}))
+        attrs={'class': 'pretty-input', 'placeholder': ''}))
     max_execution_time = forms.FloatField(widget=forms.NumberInput(
-        attrs={'class': 'pretty-input', 'placeholder': 'Max execution time (ms)', 'min': 0, 'step': 100}))
+        attrs={'class': 'pretty-input', 'placeholder': '', 'min': 0, 'step': 100}))
 
     deadline = forms.DateTimeField(
         input_formats=['%Y-%m-%d %H:00:00'],
         widget=TimePicker(attrs={'autocomplete': 'off'})
     )
 
-    test_file = forms.FileField()
+    test_file = forms.TextInput()
 
     def __init__(self, teacher, *args, **kwargs):
         super(ProblemCreateForm, self).__init__(*args, **kwargs)
@@ -88,6 +88,14 @@ class ProblemCreateForm(forms.ModelForm):
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
+        widgets = {
+            'test_file': forms.TextInput(attrs={
+                "type": "File",
+                "class": "form-control",
+                "style": "display: none;",
+                'onchange': 'displayFileName()',
+            })
+        }
 
     def save(self, **kwargs):
         instance = super(ProblemCreateForm, self).save(commit=False)
@@ -111,6 +119,8 @@ class ProblemUpdateForm(forms.ModelForm):
         widget=TimePicker(attrs={'autocomplete': 'off'})
     )
 
+    test_file = forms.TextInput()
+
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
@@ -125,27 +135,16 @@ class ProblemUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProblemUpdateForm, self).__init__(*args, **kwargs)
-        print(args)
-        print(kwargs)
-
-        instance = kwargs.get('instance')
-        if instance:
-            print(instance.deadline)
-            print(instance.test_file)
-            print(instance.date_updated)
 
     def save(self, **kwargs):
         instance = super(ProblemUpdateForm, self).save(commit=False)
         instance.date_updated = timezone.now()
-        print("--- test_file ---")
-        print(instance.test_file)
         instance.save()
         return instance
 
 
-
 class ProblemTakeForm(forms.ModelForm):
-    solution_code = forms.CharField(widget=forms.Textarea(), label='')
+    solution_code = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}), label='')
 
     def __init__(self, problem, student, *args, **kwargs):
         super(ProblemTakeForm, self).__init__(*args, **kwargs)

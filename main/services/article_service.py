@@ -57,6 +57,11 @@ def attachment_method(article, request):
     return attachment_form, attachments
 
 
+def get_comments(article):
+    comments = Comment.objects.filter(article=article).order_by('-date_created')
+    return comments
+
+
 def comment_method(article, request):
     comments = Comment.objects.filter(article=article).order_by('-date_created')
 

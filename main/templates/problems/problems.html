@@ -1,43 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="filter"></div>
-
-    <div class="list-top-row">
-        <h1>Problems</h1>
-        <a class='add-problem pretty-button primary' href="{% url 'problem_add' %}">
-            <i class="fa-solid fa-plus"></i>New problem</a>
-    </div>
-
-    {% for problem in problems %}
-        <a class="problem-card card" href="{% url 'problem' pk=problem.pk %}">
-                <div class="problem-top-row">
-                    <h2>{{ problem.headline }}</h2>
-                </div>
-
-                <div class="created">
-                    <div class="created-by">
-                        <div class="author" id="author">{{ problem.teacher.user.get_full_name }}</div>
-                        <div class="separator-dot">•</div>
-                        <div class="date-created" id="date-created">{{ problem.date_created|date:'d/m/Y H:i' }}</div>
-                        {% if problem.date_updated|date:'d/m/Y, H:i' != problem.date_created|date:'d/m/Y, H:i' %}
-                            <div class="updated">(edited {{ problem.date_updated|date:'d/m/Y, H:i' }})</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="due-date">
-                        <div><b>Due date:</b> <span>{{ problem.deadline|date:'d/m/Y H:i' }}</span></div>
-                    </div>
-                </div>
-
-                <div class="problem-content">{{ problem.max_points }} Points</div>
-                <div class="problem-content">{{ problem.max_execution_time }} ms</div>
-                <div class="problem-content">{{ problem.content }}</div>
-
-        </a>
-    {% endfor %}
-
-    {% include '_pagination.html' with items=problems %}
-
+    {% include '_base_list.html' with items=problems list_name='Problems' add_url='problem_add' object_name='problem' %}
 {% endblock %}
 

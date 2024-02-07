@@ -1,57 +1,6 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="page-title">New Lecture</h2>
-    <form class="lecture-container" method="post" enctype="multipart/form-data" novalidate >
-        {% csrf_token %}
-        <div class="lecture-description card">
-            {{ form.headline}}
-
-            <hr>
-            <div class="description" id="description">
-                {{ form.content}}
-            </div>
-
-            <br>
-            <hr>
-        </div>
-
-        <div class="lecture-side">
-            <div class="lecture-actions card">
-                <button class="pretty-button success" type="submit">Save</button>
-                <button class="pretty-button danger">Delete</button>
-            </div>
-
-            <div class="attachments card">
-                <h3>Attachments</h3>
-                <label class="files-input" for="files-input"><i class="fa-solid fa-upload"></i> Choose File</label>
-                <input type="file" id="files-input" style="display:none;" multiple="multiple" onchange="displayFileName()" />
-
-                <div class="attachments-content" id="selectedFiles">
-
-                    {#                    <input class="pretty-input" type="file" multiple="multiple">#}
-                </div>
-            </div>
-        </div>
-
-    </form>
-
-    <script>
-        function displayFileName() {
-            const fileInput = document.getElementById('files-input');
-            const selectedFiles = document.getElementById('selectedFiles');
-
-            if (fileInput.files.length > 0) {
-                console.log(fileInput.files)
-
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const attachment = document.createElement("a");
-                    attachment.textContent = fileInput.files[i].name;
-                    attachment.classList.add('attachment');
-
-                    selectedFiles.appendChild(attachment);
-                }
-            }
-        }
-    </script>
+    {% include '_article_add.html' with form=form headline='New lecture' type='lecture' %}
 {% endblock %}

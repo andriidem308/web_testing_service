@@ -12,7 +12,7 @@ from main.models import (
 )
 from main.services import article_service
 from main.services.code_solver import test_student_solution
-from main.services.users_service import get_teacher, get_student
+from main.services.users_service import get_teacher, get_student, get_students_by_group
 from main.services import paginate_service
 
 from web_testing_service.settings import MEDIA_URL
@@ -193,6 +193,51 @@ class LectureUpdateView(UpdateView):
     template_name = 'lectures/lecture_edit.html'
     success_url = reverse_lazy('lectures')
 
+    # TODO: uncomment and implement
+    # def get(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     comments = article_service.get_comments(self.object)
+    #
+    #     teacher = get_teacher(self.request.user)
+    #     student = get_student(self.request.user)
+    #
+    #     context = self.get_context_data(object=self.object)
+    #
+    #     context.update({
+    #         'date_created': self.object.date_created,
+    #         'deadline': self.object.deadline,
+    #         'comments': comments,
+    #         'teacher': teacher,
+    #         'student': student,
+    #         'MEDIA_URL': MEDIA_URL,
+    #     })
+    #
+    #     return self.render_to_response(context)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     comments = article_service.get_comments(self.object)
+    #
+    #     user = self.request.user
+    #     teacher = get_teacher(user)
+    #     form = self.get_form()
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('problem', pk=self.object.pk)
+    #     else:
+    #         context = self.get_context_data(object=self.object)
+    #         context.update({
+    #             'user': user,
+    #             'form': form,
+    #             'date_created': self.object.date_created,
+    #             'deadline': self.object.deadline,
+    #             'comments': comments,
+    #             'teacher': teacher,
+    #             'errors': form.errors,
+    #         })
+    #         return render(request, self.template_name, context)
+
 
 class LectureDeleteView(DeleteView):
     model = Lecture
@@ -291,28 +336,17 @@ class ProblemCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher, request.POST, request.FILES)
 
+        print(form.errors)
+
         if form.is_valid():
             form.save()
-            return redirect('problem', pk=self.object.pk)
+            return redirect('problems')
         else:
-            comment_form, comments = article_service.comment_method(self.object, self.request)
-            context = self.get_context_data(problem=self.object)
-
-            context.update({
-                'user': user,
-                'form': form,
-                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
-                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
-                'comment_form': comment_form,
-                'comments': comments,
-                'MEDIA_URL': MEDIA_URL,
-            })
+            context = {'form': form, 'teacher': teacher}
             return render(request, self.template_name, context)
 
 
@@ -324,7 +358,7 @@ class ProblemUpdateView(UpdateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        _, comments = article_service.comment_method(self.object, self.request)
+        comments = article_service.get_comments(self.object)
 
         teacher = get_teacher(self.request.user)
         student = get_student(self.request.user)
@@ -344,7 +378,7 @@ class ProblemUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        _, comments = article_service.comment_method(self.object, self.request)
+        comments = article_service.get_comments(self.object)
 
         user = self.request.user
         teacher = get_teacher(user)
@@ -362,9 +396,6 @@ class ProblemUpdateView(UpdateView):
                 'deadline': self.object.deadline,
                 'comments': comments,
                 'teacher': teacher,
-                # 'solution': solution,
-                # 'test_filename': test_filename,
-                'MEDIA_URL': MEDIA_URL,
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
@@ -402,7 +433,7 @@ class ProblemTakeView(CreateView):
         form = ProblemTakeForm(problem, student, request.POST)
         if form.is_valid():
             solution = form.save(commit=False)
-            solution.problem_view = problem
+            solution.problem = problem
             solution.student = student
 
             test_file = problem.test_file

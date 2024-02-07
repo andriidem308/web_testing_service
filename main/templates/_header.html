@@ -19,7 +19,6 @@
         <li>
             <a href=""><i class="fa-solid fa-bars"></i></a>
             <ul class="sub-menu">
-                <!-- Your vertical menu items go here -->
                 <li>
                     <a href="https://mechmat.knu.ua/" class="icon-link"><i class="navigation-icon fa-solid fa-building-un"></i>
                         Faculty</a>
@@ -37,7 +36,7 @@
 
         {#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
         {% if user.is_authenticated %}
-            <li><a href=""><i class="fa-solid fa-bell"></i></a></li>
+{#            <li><a href=""><i class="fa-solid fa-bell"></i></a></li>#}
             <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
             <li><a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
         {% else %}
