@@ -20,10 +20,13 @@ from django.urls import path, include
 
 from web_testing_service.settings import MEDIA_URL, MEDIA_ROOT
 
+from web_testing_service.api import api
+
 urlpatterns = [
 
     path('', include('main.urls')),
     path('', include('accounts.urls')),
+    path('api/', api.urls),
 
     path('admin/', admin.site.urls),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
