@@ -1,19 +1,5 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="filter"></div>
-
-    <div class="list-top-row">
-        <h1>Groups</h1>
-        <a class='add-group pretty-button primary' href="{% url 'group_add' %}">
-            <i class="fa-solid fa-plus"></i>New group</a>
-    </div>
-    {% for group in groups %}
-        <a class="card" href="{% url 'group' pk=group.pk %}">
-            <h2 class="group-name">{{ group.name }}</h2>
-            <div class="group-teacher">Teacher: {{ group.teacher }}</div>
-        </a>
-    {% endfor %}
-
-    {% include '_pagination.html' with items=groups %}
+    {% include '_base_list.html' with items=groups list_name='Group' add_url='group_add' object_name='group' %}
 {% endblock %}
