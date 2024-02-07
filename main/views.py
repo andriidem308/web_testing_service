@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
 
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
@@ -31,7 +31,12 @@ class GroupListView(ListView):
     model = Group
     context_object_name = 'groups'
     template_name = 'groups/groups.html'
-    paginate_by = 5
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('name')
+        return queryset
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -45,7 +50,7 @@ class GroupView(DetailView):
     model = Group
     context_object_name = 'group'
     template_name = 'groups/group.html'
-    paginate_by = 3
+    paginate_by = 12
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -92,11 +97,24 @@ class GroupUpdateView(UpdateView):
     success_url = reverse_lazy('groups')
 
 
+class GroupDeleteView(DeleteView):
+    model = Group
+    success_url = reverse_lazy('groups')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
 class LectureListView(ListView):
     model = Lecture
     context_object_name = 'lectures'
     template_name = 'lectures/lectures.html'
-    paginate_by = 5
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('-date_updated')
+        return queryset
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -176,11 +194,24 @@ class LectureUpdateView(UpdateView):
     success_url = reverse_lazy('lectures')
 
 
+class LectureDeleteView(DeleteView):
+    model = Lecture
+    success_url = reverse_lazy('lectures')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
 class ProblemListView(ListView):
     model = Problem
     context_object_name = 'problems'
     template_name = 'problems/problems.html'
-    paginate_by = 3
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('-date_updated')
+        return queryset
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -260,15 +291,28 @@ class ProblemCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
-            return redirect('problems')
+            return redirect('problem', pk=self.object.pk)
         else:
-            context = {'form': form, 'user': user}
+            comment_form, comments = article_service.comment_method(self.object, self.request)
+            context = self.get_context_data(problem=self.object)
+
+            context.update({
+                'user': user,
+                'form': form,
+                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
+                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
+                'comment_form': comment_form,
+                'comments': comments,
+                'MEDIA_URL': MEDIA_URL,
+            })
             return render(request, self.template_name, context)
 
 
@@ -277,6 +321,61 @@ class ProblemUpdateView(UpdateView):
     form_class = ProblemUpdateForm
     template_name = 'problems/problem_edit.html'
     success_url = reverse_lazy('problems')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        _, comments = article_service.comment_method(self.object, self.request)
+
+        teacher = get_teacher(self.request.user)
+        student = get_student(self.request.user)
+
+        context = self.get_context_data(object=self.object)
+
+        context.update({
+            'date_created': self.object.date_created,
+            'deadline': self.object.deadline,
+            'comments': comments,
+            'teacher': teacher,
+            'student': student,
+            'MEDIA_URL': MEDIA_URL,
+        })
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        _, comments = article_service.comment_method(self.object, self.request)
+
+        user = self.request.user
+        teacher = get_teacher(user)
+        form = self.get_form()
+
+        if form.is_valid():
+            form.save()
+            return redirect('problem', pk=self.object.pk)
+        else:
+            context = self.get_context_data(object=self.object)
+            context.update({
+                'user': user,
+                'form': form,
+                'date_created': self.object.date_created,
+                'deadline': self.object.deadline,
+                'comments': comments,
+                'teacher': teacher,
+                # 'solution': solution,
+                # 'test_filename': test_filename,
+                'MEDIA_URL': MEDIA_URL,
+                'errors': form.errors,
+            })
+            return render(request, self.template_name, context)
+
+
+class ProblemDeleteView(DeleteView):
+    model = Problem
+    success_url = reverse_lazy('problems')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
 class ProblemTakeView(CreateView):
