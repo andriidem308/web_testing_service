@@ -1,18 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <a href="{% url 'lecture' pk=1 %}">Lecture</a>
-    <a href="{% url 'lecture_edit' pk=1 %}">Lecture Edit</a>
-    <a href="{% url 'lecture_add' %}">Lecture Add</a>
+    <div class="top-row">
+        <h1>Lectures</h1>
+        <a class='add-lecture pretty-button primary' href="{% url 'lecture_add' %}">
+            <i class="fa-solid fa-plus"></i>New lecture</a>
+    </div>
+
     {% for lecture in lectures %}
-        <div class="lecture-card card">
-            <a href="{% url 'lecture' pk=lecture.pk %}">
-                <div class="lecture-name">Headline: {{ lecture.headline }}</div>
-                <div class="lecture-teacher">Teacher: {{ lecture.teacher }}</div>
-                <div class="lecture-content">{{ lecture.content }}</div>
-            </a>
-        </div>
+        <a class="lecture-card card" href="{% url 'lecture' pk=lecture.pk %}">
+            <div class="lecture-name">Headline: {{ lecture.headline }}</div>
+            <div class="lecture-teacher">Teacher: {{ lecture.teacher }}</div>
+            <div class="lecture-content">{{ lecture.content }}</div>
+        </a>
     {% endfor %}
+
+    {% include '_pagination.html' with items=lectures %}
 {% endblock %}
 
 

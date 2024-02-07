@@ -1,0 +1,42 @@
+{% load sass_tags  %}
+<link rel="stylesheet" href="{% sass_src 'styles/pagination.scss' %}">
+<div class="pagination">
+    <span class="step-links">
+        {% if items.has_previous %}
+            <a href="?page=1"><i class="fa-solid fa-angles-left"></i></a>
+            <a href="?page={{ items.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a>
+            <a href="?page=1">1</a>
+
+            {% if items.previous_page_number|add:-1 > 1 %}
+                <a href="?page={{ items.previous_page_number|add:-1 }}">...</a>
+            {% endif %}
+
+            {% if items.previous_page_number > 1 %}
+                <a href="?page={{ items.previous_page_number }}">{{ items.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+
+
+
+        <span class="current">
+            {{ items.number }}
+        </span>
+
+        {% if items.has_next %}
+
+
+            {% if items.next_page_number < items.paginator.num_pages %}
+                <a href="?page={{ items.next_page_number }}">{{ items.next_page_number }}</a>
+
+            {% endif %}
+
+            {% if items.next_page_number|add:1 < items.paginator.num_pages %}
+                <a href="?page={{ items.next_page_number|add:1 }}">...</a>
+            {% endif %}
+
+            <a href="?page={{ items.paginator.num_pages }}">{{ items.paginator.num_pages }}</a>
+            <a href="?page={{ items.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a>
+            <a href="?page={{ items.paginator.num_pages }}"><i class="fa-solid fa-angles-right"></i></a>
+        {% endif %}
+    </span>
+</div>

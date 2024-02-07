@@ -5,4 +5,15 @@
         <h2 class="group-name">Group Name: {{ group.name}}</h2>
         <div class="group-teacher">Teacher: {{ group.teacher }}</div>
     </div>
+
+    <div class="students">
+        <ul>
+            {% for student in students %}
+                <li>{{ student.user.first_name }} {{ student.user.last_name }}</li>
+            {% endfor %}
+        </ul>
+
+        {% include '_pagination.html' with items=students %}
+
+    </div>
 {% endblock %}

@@ -62,8 +62,10 @@ class Article(models.Model):
 
 class Problem(Article):
     max_points = models.FloatField()
-    max_execution_time = models.FloatField()
+    max_execution_time = models.IntegerField()
     deadline = models.DateTimeField()
+
+    test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
 
 class Lecture(Article):

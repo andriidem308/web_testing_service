@@ -1,4 +1,4 @@
-from main.models import Problem, Lecture, Comment, Attachment, Teacher
+from main.models import Problem, Lecture, Comment, Attachment, Teacher, Solution
 from typing import List
 
 from main.forms import CommentForm, AttachmentForm
@@ -8,16 +8,37 @@ def problem_all() -> List[Problem]:
     return Problem.objects.all()
 
 
+def problems_by_teacher(teacher) -> Lecture:
+    return Problem.objects.filter(teacher=teacher)
+
+
 def problem_find(problem_id: int) -> Problem:
-    return Problem.objects.get(id=problem_id)
+    problem = Problem.objects.filter(id=problem_id) or []
+    if problem:
+        problem = problem[0]
+    return problem
+
+
+def solution_find(problem, student):
+    solution = Solution.objects.filter(student=student, problem=problem.id) or []
+    if solution:
+        solution = solution[0]
+    return solution
 
 
 def lecture_all() -> List[Lecture]:
     return Lecture.objects.all()
 
 
+def lectures_by_teacher(teacher) -> List[Lecture]:
+    return Lecture.objects.filter(teacher=teacher)
+
+
 def lecture_find(lecture_id: int) -> Lecture:
-    return Problem.objects.get(id=lecture_id)
+    lecture = Lecture.objects.filter(id=lecture_id) or []
+    if lecture:
+        lecture = lecture[0]
+    return lecture
 
 
 def attachment_method(article, request):
@@ -37,7 +58,7 @@ def attachment_method(article, request):
 
 
 def comment_method(article, request):
-    comments = Comment.objects.filter(article=article)
+    comments = Comment.objects.filter(article=article).order_by('-date_created')
 
     if request.method == 'POST':
 
