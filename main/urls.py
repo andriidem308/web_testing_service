@@ -11,6 +11,7 @@ urlpatterns = [
     path('problems/add/', ProblemCreateView.as_view(), name='problem_add'),
     path('problems/<int:pk>/', ProblemView.as_view(), name='problem'),
     path('problems/<int:pk>/edit/', ProblemUpdateView.as_view(), name='problem_edit'),
+    path('problems/<int:pk>/delete/', ProblemDeleteView.as_view(), name='problem_delete'),
     # path('problems/<int:pk>/edit/', problem_edit, name='problem_edit'),
     path('problems/<int:pk>/take/', ProblemTakeView.as_view(), name='problem_take'),
 
@@ -18,11 +19,13 @@ urlpatterns = [
     path('lectures/add/', LectureCreateView.as_view(), name='lecture_add'),
     path('lectures/<int:pk>/', LectureView.as_view(), name='lecture'),
     path('lectures/<int:pk>/edit/', LectureUpdateView.as_view(), name='lecture_edit'),
+    path('lectures/<int:pk>/delete/', LectureDeleteView.as_view(), name='lecture_delete'),
 
     path('groups/', GroupListView.as_view(), name='groups'),
     path('groups/add/', GroupCreateView.as_view(), name='group_add'),
     path('groups/<int:pk>/', GroupView.as_view(), name='group'),
-    path('groups/<int:pk>/edit', GroupUpdateView.as_view(), name='group_edit'),
+    path('groups/<int:pk>/edit/', GroupUpdateView.as_view(), name='group_edit'),
+    path('groups/<int:pk>/delete/', GroupDeleteView.as_view(), name='group_delete'),
 
     path('create_all_models/', create_all_models, name='create_all_models'),
     path('create_teachers/', create_teachers, name='create_teachers'),

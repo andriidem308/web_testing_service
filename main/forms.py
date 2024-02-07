@@ -102,8 +102,8 @@ class ProblemUpdateForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
     max_points = forms.FloatField(widget=forms.NumberInput(
-        attrs={'class': 'pretty-input', 'placeholder': 'Max points'}))
-    max_execution_time = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'Max points', 'min': 0}))
+    max_execution_time = forms.IntegerField(widget=forms.NumberInput(
         attrs={'class': 'pretty-input', 'placeholder': 'Max execution time (ms)', 'min': 0, 'step': 100}))
 
     deadline = forms.DateTimeField(
@@ -113,11 +113,32 @@ class ProblemUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Problem
-        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline',]
+        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
+        widgets = {
+            'test_file': forms.TextInput(attrs={
+                "type": "File",
+                "class": "form-control",
+                "style": "display: none;",
+                'onchange': 'displayFileName()',
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProblemUpdateForm, self).__init__(*args, **kwargs)
+        print(args)
+        print(kwargs)
+
+        instance = kwargs.get('instance')
+        if instance:
+            print(instance.deadline)
+            print(instance.test_file)
+            print(instance.date_updated)
 
     def save(self, **kwargs):
         instance = super(ProblemUpdateForm, self).save(commit=False)
         instance.date_updated = timezone.now()
+        print("--- test_file ---")
+        print(instance.test_file)
         instance.save()
         return instance
 

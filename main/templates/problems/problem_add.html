@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="page-title">New Problem</h2>
+    <h1 class="page-title">New Problem</h1>
     <form class="problem-container" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="problem-description card">
