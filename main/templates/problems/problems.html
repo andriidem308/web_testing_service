@@ -3,35 +3,41 @@
 {% block content %}
     <div class="filter"></div>
 
-    <h1>Problems</h1>
-
-    <a href="{% url 'problem' pk=1 %}">Problem</a>
-    <a href="{% url 'problem_edit' pk=1 %}">Problem Edit</a>
-    <a href="{% url 'problem_add' %}">Problem Add</a>
-    <a href="{% url 'problem_take' pk=1 %}">Problem Take</a>
-
+    <div class="list-top-row">
+        <h1>Problems</h1>
+        <a class='add-problem pretty-button primary' href="{% url 'problem_add' %}">
+            <i class="fa-solid fa-plus"></i>New problem</a>
+    </div>
 
     {% for problem in problems %}
-        <div class="problem-card card">
-            <a href="{% url 'problem' pk=problem.pk %}">
-                <h2>{{ problem.headline }}</h2>
+        <a class="problem-card card" href="{% url 'problem' pk=problem.pk %}">
+                <div class="problem-top-row">
+                    <h2>{{ problem.headline }}</h2>
+                </div>
+
                 <div class="created">
                     <div class="created-by">
                         <div class="author" id="author">{{ problem.teacher.user.get_full_name }}</div>
                         <div class="separator-dot">•</div>
-                        <div class="date-created" id="date-created">{{ problem.date_created }}</div>
-                    </div>
-                    <div class="due-date">
-                        <div><b>Due date:</b> <span>{{ problem.deadline }}</span></div>
+                        <div class="date-created" id="date-created">{{ problem.date_created|date:'d/m/Y H:i' }}</div>
+                        {% if problem.date_updated|date:'d/m/Y, H:i' != problem.date_created|date:'d/m/Y, H:i' %}
+                            <div class="updated">(edited {{ problem.date_updated|date:'d/m/Y, H:i' }})</div>
+                        {% endif %}
                     </div>
 
+                    <div class="due-date">
+                        <div><b>Due date:</b> <span>{{ problem.deadline|date:'d/m/Y H:i' }}</span></div>
+                    </div>
                 </div>
 
                 <div class="problem-content">{{ problem.max_points }} Points</div>
                 <div class="problem-content">{{ problem.max_execution_time }} ms</div>
                 <div class="problem-content">{{ problem.content }}</div>
-            </a>
-        </div>
+
+        </a>
     {% endfor %}
+
+    {% include '_pagination.html' with items=problems %}
+
 {% endblock %}
 

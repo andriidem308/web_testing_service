@@ -1,0 +1,136 @@
+{% load sass_tags  %}
+{% load static %}
+
+<script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
+
+
+<link href="{% sass_src 'styles/article.scss' %}" rel="stylesheet" type="text/css">
+
+<div class="article-container">
+    <div class="article-box">
+        <div class="article-fields card">
+            <div class="article-fields-top">
+                <div class="top-row">
+                    <h1 class="headline" id="headline">{{ article.headline }}</h1>
+
+                    {% if teacher %}
+                    <div class="edit-actions">
+                        {% if problem %}
+                            <a class="action-hover" href="{% url 'problem_edit' pk=article.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
+                        {% elif lecture %}
+                            <a class="action-hover" href="{% url 'lecture_edit' pk=article.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
+                        {% endif %}
+                        <a class="action-hover"><i class="fa-solid fa-trash-can"></i></a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="created-row">
+                    <div class="teacher">{{ article.teacher.user.get_full_name}}</div>
+                    <div class="separator">•</div>
+                    <div class="created">{{ article.date_created|date:'d/m/Y, H:i' }}</div>
+                    {% if article.date_updated|date:'d/m/Y, H:i' != article.date_created|date:'d/m/Y, H:i' %}
+                        <div class="updated">(edited {{ article.date_updated|date:'d/m/Y, H:i' }})</div>
+                    {% endif %}
+
+                </div>
+
+                {% if problem %}
+                    <div class="due-date">
+                        <b>Due date:</b> {{ article.deadline|date:'d/m/Y, H:i'}}
+                    </div>
+
+                    <div class="article-values">
+                    <div class="max-points"><b>Points:</b> {{ article.max_points }}</div>
+                    <div class="max-execution-time"><b>Max execution time:</b> {{ article.max_execution_time }}ms</div>
+                </div>
+                {% endif %}
+                <hr>
+
+                <div class="article-content">
+                    {{ article.content }}
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                    Create a script which will take 3 string variables x, y and z and will return them reversed in separate lines
+                </div>
+            </div>
+            <div class="article-fields-bottom">
+                <hr>
+                {% if teacher and problem %}
+                <div class="test-file">
+                    <a class="test-file-tile" download="{{ article.test_file }}" href="{{ MEDIA_URL }}{{ article.test_file }}">
+                        <i class="fa-solid fa-download"></i>
+                        <b>{{ test_filename }}</b>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="article-right">
+            {% if student and problem %}
+                <div class="article-solutions card">
+                    <div class="solution-headline">
+                        <h3>Your solution</h3>
+                        {% if solution %}
+                            <h4 class="rounded-tile success">Taken</h4>
+                        {% else %}
+                            <h4 class="rounded-tile danger">None</h4>
+                        {% endif %}
+                    </div>
+                    {% if solution %}
+                        <div class="solution-score">
+                            <div class="rounded-tile action score">{{ solution.score }}/{{ article.max_points }}</div>
+                            <div class="taken">
+                                <div class="taken-time">{{ solution.date_solved|date:'H:i'}}</div>
+                                <div class="taken-date">{{ solution.date_solved|date:'d/m/Y'}}</div>
+                            </div>
+                            <div class="checked">
+                                {% if solution.checked %}
+                                    <i class="fa-solid fa-square-check success-text"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-square-xmark danger-text"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <form class="leave-comment card" method="POST">
+                    {% csrf_token %}
+                    <h3>Leave a comment</h3>
+                    {{ comment_form.content  }}
+                    <button class="pretty-button primary">Comment</button>
+                </form>
+            {% endif %}
+        </div>
+
+
+    </div>
+
+    <div class="article-comments">
+        <h2 class="comments-headline" >Comments</h2>
+        {% for comment in comments %}
+            <div class="comment card">
+                <div class="comment-top">
+                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
+                    <div class="separator">•</div>
+                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
+                </div>
+                <div class="comment-bottom">
+                    {{ comment.content }}
+                </div>
+            </div>
+
+{#            <div>{{ comment }}</div>#}
+{#            <div>comment</div>#}
+        {% endfor %}
+    </div>
+</div>
+

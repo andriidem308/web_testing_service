@@ -3,21 +3,17 @@
 {% block content %}
     <div class="filter"></div>
 
-    <h1>Groups</h1>
-    <a href="{% url 'group' pk=1 %}">Group</a>
-    <a href="{% url 'group_add' %}">Group Add</a>
-    <a href="{% url 'group_edit' pk=1 %}">Group Edit</a>
-
+    <div class="list-top-row">
+        <h1>Groups</h1>
+        <a class='add-group pretty-button primary' href="{% url 'group_add' %}">
+            <i class="fa-solid fa-plus"></i>New group</a>
+    </div>
     {% for group in groups %}
-        <div class="card">
-            <a href="{% url 'group' pk=group.pk %}">
-                <h2 class="group-name">{{ group.name }}</h2>
-                <div class="group-teacher">Teacher: {{ group.teacher }}</div>
-            </a>
-        </div>
+        <a class="card" href="{% url 'group' pk=group.pk %}">
+            <h2 class="group-name">{{ group.name }}</h2>
+            <div class="group-teacher">Teacher: {{ group.teacher }}</div>
+        </a>
     {% endfor %}
+
+    {% include '_pagination.html' with items=groups %}
 {% endblock %}
-
-
-
-

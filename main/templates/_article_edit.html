@@ -1,0 +1,194 @@
+{% load sass_tags  %}
+{% load static %}
+{% load custom_filters %}
+
+<script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
+
+
+<link href="{% sass_src 'styles/article.scss' %}" rel="stylesheet" type="text/css">
+
+
+
+<div class="article-container">
+    <h1 class="page-title">Edit problem {{ problem.headline }}</h1>
+    <form class="article-box" method="post" enctype="multipart/form-data" novalidate autocomplete="off">
+        {% csrf_token %}
+        <div class="article-fields card">
+            <div class="article-fields-top">
+                <div class="top-row">
+                    <div class="headline" id="headline"><b>Headline:</b>&nbsp;&nbsp;&nbsp;
+                        {% if form.headline.errors %}
+                            {{ form.headline|add_class:"danger-outline" }}
+                        {% else %}
+                            {{ form.headline }}
+                        {% endif %}
+                    </div>
+
+                    {% if teacher %}
+                        <div class="edit-actions">
+                            <a class="action-hover" onclick="showDeleteConfirmation()"><i class="fa-solid fa-trash-can"></i></a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if problem %}
+                    <div class="due-date"><b>Due date:</b>&nbsp;&nbsp;{{ form.deadline }}</div>
+
+                    <div class="article-values">
+                        <div class="max-points"><b>Points:</b>&nbsp;&nbsp;&nbsp;
+                            {% if form.max_points.errors %}
+                                {{ form.max_points|add_class:"danger-outline" }}
+                            {% else %}
+                                {{ form.max_points }}
+                            {% endif %}
+                        </div>
+                        <div class="max-execution-time"><b>Max execution time:</b>&nbsp;&nbsp;&nbsp;
+                            {% if form.max_execution_time.errors %}
+                                {{ form.max_execution_time|add_class:"danger-outline" }}
+                            {% else %}
+                                {{ form.max_execution_time }}
+                            {% endif %}&nbsp;ms
+                        </div>
+                    </div>
+                {% endif %}
+                <hr>
+
+                <div class="article-content">
+                    {% if form.content.errors %}
+                        {{ form.content|add_class:"danger-outline" }}
+                    {% else %}
+                        {{ form.content }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="article-fields-bottom">
+                {% if teacher and problem %}
+                    <div id="selectedFiles" class="test-file">
+                        <label class="files-input" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
+                        {{ form.test_file }}
+                    </div>
+                {% endif %}
+                <hr>
+                <div class="action-buttons">
+                    <button class="pretty-button success" type="submit">Save</button>
+                    {% if problem %}
+                        <a class="pretty-button danger" href="{% url 'problem' pk=article.id %}">Cancel</a>
+                    {% elif lecture %}
+                        <a class="pretty-button danger" href="{% url 'lecture' pk=article.id %}">Cancel</a>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+        <div class="article-right">
+            {% if student and problem %}
+                <div class="article-solutions card">
+                    <div class="solution-headline">
+                        <h3>Your solution</h3>
+                        {% if solution %}
+                            <h4 class="rounded-tile success">Taken</h4>
+                        {% else %}
+                            <h4 class="rounded-tile danger">None</h4>
+                        {% endif %}
+                    </div>
+                    {% if solution %}
+                        <div class="solution-score">
+                            <div class="rounded-tile action score">{{ solution.score }}/{{ article.max_points }}</div>
+                            <div class="taken">
+                                <div class="taken-time">{{ solution.date_solved|date:'H:i'}}</div>
+                                <div class="taken-date">{{ solution.date_solved|date:'d/m/Y'}}</div>
+                            </div>
+                            <div class="checked">
+                                {% if solution.checked %}
+                                    <i class="fa-solid fa-square-check success-text"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-square-xmark danger-text"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </form>
+
+    <div class="article-comments">
+        <h2 class="comments-headline" >Comments</h2>
+        {% for comment in comments %}
+            <div class="comment card">
+                <div class="comment-top">
+                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
+                    <div class="separator">•</div>
+                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
+                </div>
+                <div class="comment-bottom">
+                    {{ comment.content }}
+                </div>
+            </div>
+
+            {#            <div>{{ comment }}</div>#}
+            {#            <div>comment</div>#}
+        {% endfor %}
+    </div>
+
+    <div class="disabled-area" id="disabled-area"></div>
+
+    <div class="delete-confirmation card" id="delete-confirmation">
+        <h3>Do you want delete "{{ article.headline }}" ?</h3>
+        <div class="delete-confirmation-buttons">
+            <button class="pretty-button primary" onclick="closeDeleteConfirmation()">Cancel</button>
+            <a class="pretty-button danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
+        </div>
+    </div>
+
+    <script>
+        function showDeleteConfirmation() {
+            document.getElementById("disabled-area").classList.add('active');
+            document.getElementById("delete-confirmation").classList.add('active-flex');
+        }
+
+        function closeDeleteConfirmation() {
+            document.getElementById("disabled-area").classList.remove('active');
+            document.getElementById("delete-confirmation").classList.remove('active-flex');
+        }
+
+        const problemDeadline = `{{ problem.deadline|date:'Y-m-d H:i:s' }}`;
+        if (problemDeadline) {
+            const deadlineInput = document.getElementById("id_deadline");
+            deadlineInput.value = problemDeadline;
+        }
+
+        const errors = `{{ form.errors }}`;
+        if (errors.includes("deadline")) {
+            const deadlineInput = document.getElementById("id_deadline");
+            deadlineInput.classList.add('danger-outline');
+        }
+        if (errors.includes("test_file")) {
+            const testFileButton = document.getElementById("test-file-label");
+            testFileButton.classList.add('danger');
+        }
+
+        console.log(`{{ form.test_file.value }}`)
+
+        const fileInput = document.getElementById('id_test_file');
+
+
+        function displayFileName() {
+            const selectedFiles = document.getElementById('selectedFiles');
+
+            if (fileInput.files.length > 0) {
+                const attachment = document.createElement("a");
+                attachment.textContent = fileInput.files[0].name;
+                attachment.classList.add('pretty-button');
+                attachment.classList.add('dark');
+                selectedFiles.appendChild(attachment);
+            }
+        }
+    </script>
+
+
+</div>
+

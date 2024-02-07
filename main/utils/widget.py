@@ -9,7 +9,7 @@ class TimePicker(DateTimeInput):
         if attrs is None:
             attrs = dict()
         attrs['data-target'] = '#{id}'.format(id=datetimepicker_id)
-        attrs['class'] = 'form-control datetimepicker-input'
+        attrs['class'] = 'form-control datetimepicker-input pretty-input'
         context = super().get_context(name, value, attrs)
         context['widget']['datetimepicker_id'] = datetimepicker_id
         return context
