@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Problems{% endblock %}
+
 {% block content %}
     {% include '_base_list.html' with items=problems list_name='Problems' add_url='problem_add' object_name='problem' %}
 {% endblock %}

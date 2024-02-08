@@ -3,7 +3,7 @@
         <div class="article-fields card">
             <div class="article-fields-top">
                 <div class="top-row">
-                    <h2 class="headline" id="headline">{{ article.headline }}</h2>
+                    <h1 class="headline" id="headline">{{ article.headline }}</h1>
 
                     {% if teacher %}
                     <div class="edit-actions">
@@ -12,7 +12,6 @@
                         {% elif lecture %}
                             <a class="action-hover" href="{% url 'lecture_edit' pk=article.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
                         {% endif %}
-                        <a class="action-hover"><i class="fa-solid fa-trash-can"></i></a>
                     </div>
                     {% endif %}
                 </div>

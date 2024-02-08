@@ -15,12 +15,6 @@
                             {{ form.headline }}
                         {% endif %}
                     </div>
-
-                    {% if teacher %}
-                        <div class="edit-actions">
-                            <a class="action-hover" onclick="showDeleteConfirmation()"><i class="fa-solid fa-trash-can"></i></a>
-                        </div>
-                    {% endif %}
                 </div>
 
                 {% if type == 'problem' %}
@@ -78,21 +72,6 @@
     <div class="disabled-area" id="disabled-area"></div>
 
     <script>
-        function showDeleteConfirmation() {
-            document.getElementById("disabled-area").classList.add('active');
-            document.getElementById("delete-confirmation").classList.add('active-flex');
-        }
-
-        function closeDeleteConfirmation() {
-            document.getElementById("disabled-area").classList.remove('active');
-            document.getElementById("delete-confirmation").classList.remove('active-flex');
-        }
-
-        const problemDeadline = `{{ problem.deadline|date:'Y-m-d H:i:s' }}`;
-        if (problemDeadline) {
-            const deadlineInput = document.getElementById("id_deadline");
-            deadlineInput.value = problemDeadline;
-        }
 
         const errors = `{{ form.errors }}`;
         if (errors.includes("deadline")) {

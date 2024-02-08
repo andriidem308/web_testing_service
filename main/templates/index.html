@@ -1,14 +1,92 @@
 {% extends 'base.html' %}
 
+{% block title %}Web Testing Service{% endblock %}
+
 {% block content %}
     <div>
         <a class="pretty-button dark" href="{% url 'login' %}">Login</a>
         <a class="pretty-button primary" href="{% url 'signup' user_type='teacher' %}">Create Teacher</a>
         <a class="pretty-button action" href="{% url 'signup' user_type='student' %}">Create Student</a>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    Something
+    <br><br><br>
+
+    <div class="views-columns">
+        <div class="single-column">
+            <h2>Teacher</h2>
+            <h3>Problems</h3>
+            <ul>
+                <li><a href="{% url 'problems' %}">List</a></li>
+                <li><a href="{% url 'problem' pk=26 %}">View</a></li>
+                <li><a href="{% url 'problem_add' %}">Add (T)</a></li>
+                <li><a href="{% url 'problem_edit' pk=26 %}">Edit (T)</a></li>
+                <li><a href="{% url 'solutions' pk=26 %}">Solution list (T)</a></li>
+                <li><a href="{% url 'solution' pk=26 %}">Solution </a></li>
+            </ul>
+            <h3>Lectures</h3>
+            <ul>
+                <li><a href="{% url 'lectures' %}">List</a></li>
+                <li><a href="{% url 'lecture' pk=5 %}">View</a></li>
+                <li><a href="{% url 'lecture_add' %}">Add (T)</a></li>
+                <li><a href="{% url 'lecture_edit' pk=5 %}">Edit (T)</a></li>
+            </ul>
+            <h3>Groups</h3>
+            <ul>
+                <li><a href="{% url 'groups' %}">List</a></li>
+                <li><a href="{% url 'group' pk=15 %}">View</a></li>
+                <li><a href="{% url 'group_add' %}">Add (T)</a></li>
+                <li><a href="{% url 'group_edit' pk=15 %}">Edit (T)</a></li>
+            </ul>
+        </div>
+        <div class="single-column">
+            <h2>Student</h2>
+            <h3>Problems</h3>
+            <ul>
+                <li><a href="{% url 'problems' %}">List</a></li>
+                <li><a href="{% url 'problem' pk=26 %}">View</a></li>
+                <li><a href="{% url 'problem_take' pk=26 %}">Take (S)</a></li>
+                <li><a href="{% url 'solution' pk=26 %}">Solution</a></li>
+            </ul>
+            <h3>Lectures</h3>
+            <ul>
+                <li><a href="{% url 'lectures' %}">List</a></li>
+                <li><a href="{% url 'lecture' pk=5 %}">View</a></li>
+            </ul>
+            <h3>Groups</h3>
+            <ul>
+                <li><a href="{% url 'groups' %}">List</a></li>
+                <li><a href="{% url 'group' pk=15 %}">View</a></li>
+            </ul>
+        </div>
+        <div class="single-column">
+            <h2>Guest</h2>
+            <h3>Problems</h3>
+            <ul>
+                <li><a href="{% url 'problems' %}">List</a></li>
+                <li><a href="{% url 'problem' pk=26 %}">View</a></li>
+            </ul>
+
+            <h3>Lectures</h3>
+            <ul>
+                <li><a href="{% url 'lectures' %}">List</a></li>
+                <li><a href="{% url 'lecture' pk=5 %}">View</a></li>
+            </ul>
+            <h3>Groups</h3>
+            <ul>
+                <li><a href="{% url 'groups' %}">List</a></li>
+                <li><a href="{% url 'group' pk=15 %}">View</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <style>
+        .views-columns {
+            min-width: 50rem;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+        }
+
+    </style>
 {% endblock %}
