@@ -2,6 +2,7 @@ annotated-types==0.6.0
 asgiref==3.7.2
 backports.zoneinfo==0.2.1
 Django==4.2.9
+django-ninja==1.1.0
 django-sass-processor==1.4
 djangorestframework==3.14.0
 Faker==22.6.0
