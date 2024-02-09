@@ -88,6 +88,7 @@
 
   flex-wrap: wrap;
 
+  max-height: 40rem;
   min-height: 33rem;
 }
 
@@ -99,7 +100,8 @@
 
   width: 42rem;
 
-  min-height: 33rem;
+  max-height: 40rem;
+  min-height: 36rem;
 
   hr {
     margin: 20px 0;
@@ -244,11 +246,40 @@
       flex-direction: column;
 
       .solution-item {
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        margin: 0.25rem 0;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+
+        font-size: 12px;
 
         box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
 
+        div {
+          max-width: 7.5rem;
+          height: 1rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
+        }
+
+        &:hover {
+          background-color: $action-hover;
+        }
+
+        &:first-child {
+          margin-top: -0.5rem;
+        }
+
+      }
+
+      .solutions-list-footer {
+        margin-top: 1rem;
+        color: $primary;
+        font-weight: bold;
       }
     }
 
@@ -274,9 +305,8 @@
       }
 
       .checked {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
-
     }
   }
 
