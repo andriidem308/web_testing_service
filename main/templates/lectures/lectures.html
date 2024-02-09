@@ -1,21 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="list-top-row">
-        <h1>Lectures</h1>
-        <a class='add-lecture pretty-button primary' href="{% url 'lecture_add' %}">
-            <i class="fa-solid fa-plus"></i>New lecture</a>
-    </div>
-
-    {% for lecture in lectures %}
-        <a class="lecture-card card" href="{% url 'lecture' pk=lecture.pk %}">
-            <div class="lecture-name">Headline: {{ lecture.headline }}</div>
-            <div class="lecture-teacher">Teacher: {{ lecture.teacher }}</div>
-            <div class="lecture-content">{{ lecture.content }}</div>
-        </a>
-    {% endfor %}
-
-    {% include '_pagination.html' with items=lectures %}
+    {% include '_base_list.html' with items=lectures list_name='Lectures' add_url='lecture_add' object_name='lecture' %}
 {% endblock %}
 
 

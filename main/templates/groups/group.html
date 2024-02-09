@@ -1,19 +1,25 @@
 {% extends 'base.html' %}
 
+{% block title %}Group | {{ group.name }}{% endblock %}
+
 {% block content %}
-    <div class="card">
-        <h2 class="group-name">Group Name: {{ group.name}}</h2>
-        <div class="group-teacher">Teacher: {{ group.teacher }}</div>
+    <div class="group-container">
+        <div class="group-top-row">
+            <h1 class="group-name">{{ group.name}}</h1>
+            <div class="group-teacher"><b>Teacher:</b> <a href="{% url 'profile' %}">{{ group.teacher }}</a></div>
+        </div>
     </div>
 
-    <div class="students">
-        <ul>
-            {% for student in students %}
-                <li>{{ student.user.first_name }} {{ student.user.last_name }}</li>
-            {% endfor %}
-        </ul>
+    <table id="students-table" class="students-table display" cellspacing="0" data-url="{% url 'group_data' pk=group.pk %}">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Score</th>
+            <th>Solved</th>
+        </tr>
+        </thead>
+        <tbody id="students-table-tbody"></tbody>
+    </table>
 
-        {% include '_pagination.html' with items=students %}
-
-    </div>
 {% endblock %}

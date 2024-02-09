@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Forbidden{% endblock %}
+
+{% block content %}
+    <h1>Forbidden</h1>
+    <div>
+        Unfortunately, you are not allowed to make this action.
+        Only <b>{{ user_type|title }}s</b> can access this page.
+    </div>
+
+    <div>
+        If you are a <b>{{ user_type|title }}</b>, please <a href="{% url 'login' %}?next={{ next_page }}">Authorize</a>
+    </div>
+{% endblock %}

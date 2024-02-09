@@ -13,3 +13,8 @@ def get_student(user):
     if student:
         student = student[0]
     return student
+
+
+def get_students_by_group(group):
+    students = Student.objects.filter(group=group)
+    return students

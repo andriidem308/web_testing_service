@@ -1,79 +1,8 @@
 {% extends 'base.html' %}
 
+{% block title %}Problem | {{ problem.headline }}{% endblock %}
 
 {% block content %}
     {% include '_article.html' with article=problem solution=solution %}
 {% endblock %}
-{##}
-{#{% block content %}#}
-{#    <div class="problem-container">#}
-{#        <div class="problem-description card">#}
-{#            <h1 class="title" id="title">{{ problem.headline }}</h1>#}
-{#            <div class="created">#}
-{#                <div class="created-by">#}
-{#                    <div class="author" id="author">{{ problem.teacher.user.get_full_name }}</div>#}
-{#                    <div class="separator-dot">•</div>#}
-{#                    <div class="date-created" id="date-created">{{ date_created }}</div>#}
-{#                </div>#}
-{#                <div class="due-date">#}
-{#                    <div><b>Due date:</b> <span>{{ deadline }}</span></div>#}
-{#                </div>#}
-{##}
-{#            </div>#}
-{#            <div class="max-points"><b>Points: {{ problem.max_points }}</b></div>#}
-{##}
-{#            <hr>#}
-{#            <div class="description" id="description">#}
-{#                {{ problem.content }}#}
-{#            </div>#}
-{##}
-{#            {% if user.is_teacher %}#}
-{#                <div>{{ problem.test_file }}</div>#}
-{#            {% endif %}#}
-{#            <br>#}
-{#            <hr>#}
-{#        </div>#}
-{##}
-{#        {% if user.is_authenticated %}#}
-{#        <div class="problem-input">#}
-{##}
-{#            {% if user.is_student %}#}
-{#            <div class="problem-solution card">#}
-{#                <div class="solution-headline">#}
-{#                    <h3>Your solution</h3>#}
-{#                    {% if solution %}#}
-{#                        <h4 class="success-text">Taken</h4>#}
-{#                    {% else %}#}
-{#                        <h4 class="rounded-tile danger">None</h4>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{##}
-{#                {% if solution %}#}
-{#                    <div class="solution-score">#}
-{#                        <div>Score: {{ solution.score }} out of {{ problem.max_points }}</div>#}
-{#                        <div>Taken: {{ solution.date_solved }}</div>#}
-{#                        <div>Checked: {{ solution.checked }}</div>#}
-{#                    </div>#}
-{#                {% else %}#}
-{#                    <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>#}
-{#                {% endif %}#}
-{##}
-{##}
-{#                <button class="pretty-button primary">Mark as completed</button>#}
-{#            </div>#}
-{#            {% endif %}#}
-{#            <form method="POST" class="comments card">#}
-{#                {% csrf_token %}#}
-{#                <h3>Leave a comment</h3>#}
-{#                {{ comment_form.content  }}#}
-{#                <button class="pretty-button primary">Comment</button>#}
-{#            </form>#}
-{#        </div>#}
-{#        {% endif %}#}
-{#    </div>#}
-{##}
-{#    {% for comment in comments %}#}
-{#        <div>{{ comment }}</div>#}
-{#    {% endfor %}#}
-{##}
-{#{% endblock %}#}
+

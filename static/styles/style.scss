@@ -1,6 +1,6 @@
 /* -------------- GLOBAL -------------- */
 
-@import 'variables.scss';
+@import 'model_pages.scss';
 
 /* -------------- HEADER -------------- */
 
@@ -152,12 +152,7 @@ main {
   flex-direction: column;
 }
 
-/* -------------- ASIDE -------------- */
-
-/* -------------- FOOTER -------------- */
-
-/* -------------- ELSE -------------- */
-
+/* -------------- AUTH PAGES STYLES -------------- */
 
 .auth-container {
   flex-grow: 1;
@@ -228,336 +223,6 @@ main {
   justify-content: center !important;
   align-items: center;
 }
-
-.files-input {
-  padding: 10px 20px;
-  margin: 10px;
-  cursor: pointer;
-  transition: 0.3s ease-out;
-  border: none;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 12px;
-  color: $light;
-  background-color: $primary;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  border-radius: 12px;
-  background-color: transparent;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: $grey;
-  border-radius: 12px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: $grey-hover;
-  }
-}
-
-/* -------------- Group -------------- */
-
-.group-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  * {
-    display: flex;
-    flex-direction: row;
-    flex: 1 1 0;
-  }
-}
-
-/* -------------- PROBLEM -------------- */
-
-.problem-container {
-  display: flex;
-  flex-direction: row;
-  min-height: 75vh;
-
-  .pretty-textarea {
-    margin: 10px;
-    max-width: 300px;
-    padding: 15px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    resize: none;
-
-    &:hover {
-      outline: $dark auto 1px;
-    }
-  }
-
-  .attachments {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .attachments-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .attachment {
-    margin: 10px;
-    padding: 20px;
-    background-color: $light;
-    border-radius: 12px;
-    border: 1px solid $grey;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
-
-    a {
-      width: 100%;
-    }
-
-    .attachment-name {
-      width: 100%;
-      overflow: hidden;
-    }
-  }
-}
-
-.problem-description {
-  display: flex;
-  flex-direction: column;
-
-  .description {
-    padding: 20px 0;
-    height: 100%;
-  }
-}
-
-//.created {
-//  display: flex;
-//  flex-direction: row;
-//  justify-content: space-between;
-//  margin: 10px 0;
-//
-//  .created-by {
-//    display: flex;
-//    flex-direction: row;
-//
-//    *:not(:last-child) {
-//      margin-right: 10px;
-//    }
-//  }
-//}
-
-//.max-points {
-//  margin: 10px 0;
-//}
-
-.problem-input {
-  text-align: center;
-
-  .pretty-textarea {
-    margin: 10px;
-    max-width: 300px;
-    padding: 15px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    resize: none;
-
-    &:hover {
-      outline: $dark auto 1px;
-    }
-  }
-}
-
-.problem-solution {
-  .solution-headline {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .rounded-tile {
-    padding: 4px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    text-align: center;
-    font-weight: bold;
-    color: $light-hover;
-  }
-}
-
-
-.comments {
-  .pretty-textarea {
-    margin: 10px;
-    max-width: 300px;
-    padding: 15px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    resize: none;
-
-    &:hover {
-      outline: $dark auto 1px;
-    }
-  }
-}
-
-
-
-.problem-card {
-  max-height: 20rem;
-  aspect-ratio: 1/5;
-
-  * {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* -------------- LECTURE -------------- */
-
-.lecture-card {
-  max-width: 60vw;
-
-  * {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.lecture-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-
-  .attachments {
-    display: flex;
-    flex-direction: column;
-    min-width: 320px;
-    text-align: center;
-  }
-
-  .attachments-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .attachment {
-    overflow: hidden;
-    margin: 10px;
-    padding: 20px;
-    background-color: $light;
-    border-radius: 12px;
-    border: 1px solid $grey;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
-
-    a {
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .attachment-name {
-      width: 100%;
-      overflow: hidden;
-    }
-
-    &:hover {
-      transition: 0.3s ease-out;
-      background-color: $action-hover;
-    }
-  }
-
-  .comments {
-    text-align: center;
-
-    .pretty-textarea {
-      margin: 10px;
-      max-width: 300px;
-      padding: 15px;
-      box-sizing: border-box;
-      border-radius: 12px;
-      resize: none;
-
-      &:hover {
-        outline: $dark auto 1px;
-      }
-    }
-  }
-}
-
-.lecture-side {
-  display: flex;
-  flex-direction: column;
-
-  .lecture-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-
-    * {
-      flex: 1 1 0;
-      max-height: 40px;
-    }
-  }
-}
-
-.lecture-description {
-  display: flex;
-  flex-direction: column;
-  min-height: 75vh;
-
-  .description {
-    overflow-wrap: break-word;
-    max-width: 660px;
-
-    padding: 20px 0;
-    height: 100%;
-
-    .pretty-textarea {
-      margin: 10px;
-      min-width: 580px;
-      height: 100%;
-      padding: 15px;
-      box-sizing: border-box;
-      border-radius: 12px;
-      resize: none;
-
-      &:hover {
-        outline: $dark auto 1px;
-      }
-    }
-  }
-}
-
-.created {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 10px 0;
-
-  .created-by {
-    display: flex;
-    flex-direction: row;
-
-    *:not(:last-child) {
-      margin-right: 10px;
-    }
-  }
-}
-
-/* -------------- TEST -------------- */
 
 /* -------------- PROFILE -------------- */
 
@@ -689,7 +354,6 @@ main {
 }
 
 
-
 .article-container {
 
   display: flex;
@@ -736,16 +400,139 @@ main {
 
 }
 
-//.add-problem {
-//  i {
-//    font-size: 2rem;
-//    color: $action;
-//  }
-//
-//  &:hover {
-//    i {
-//      color: $action-hover;
-//    }
-//
-//  }
-//}
+.dataTables_wrapper {
+  width: 60rem;
+  margin: 2rem auto;
+
+}
+
+.dataTables_length {
+  margin: 1.5rem;
+
+  select {
+
+    margin: 0 0.25rem;
+    padding: 0.25rem;
+
+    border: 1px solid $dark;
+    border-radius: 0.5rem;
+  }
+}
+
+.dataTables_filter {
+  margin: 1.5rem;
+
+  input {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+
+    border: 1px solid $dark;
+    border-radius: 1rem;
+  }
+}
+
+.students-table {
+  border-radius: 12px;
+  margin: 1.5rem;
+  //padding: 1.5rem 2rem;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
+
+  text-align: left;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 18px 0px;
+  }
+
+
+  width: 100%;
+  background-color: $light-hover;
+
+  thead th {
+    padding: 1.5rem 2rem;
+    background-color: $primary;
+
+    color: $light;
+
+    &:first-child {
+      border-radius: 12px 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 12px 0 0;
+    }
+
+  }
+  tbody td {
+    padding: 0.5rem 2rem;
+  }
+
+  tbody tr:last-child {
+    padding-bottom: 1rem ;
+
+    td:first-child {
+      border-radius: 0 0 0 12px;
+    }
+
+    td:last-child {
+      border-radius: 0 0 12px 0;
+    }
+  }
+
+  mark {
+    background-color: $action-hover;
+    color: $dark;
+  }
+
+  th, td {
+    padding: 0.5rem 0;
+  }
+
+  tbody tr {
+
+    &.odd {
+      background-color: $light;
+    }
+
+    &:hover {
+      background-color: #c5c5c5;
+    }
+  }
+
+}
+
+.dataTables_info {
+  display: none;
+}
+
+.dataTables_paginate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  a {
+    margin: 0 0.75rem;
+    padding: 0.5rem 1rem;
+
+    background-color: $primary;
+    color: $light;
+
+    border-radius: 1rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+
+
+  }
+
+  a.current {
+    background-color: $action;
+  }
+
+
+}

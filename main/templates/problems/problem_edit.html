@@ -1,6 +1,8 @@
 
 {% extends 'base.html' %}
 
+{% block title %}Edit Problem | {{ problem.headline }}{% endblock %}
+
 {% block content %}
     {% include '_article_edit.html' with form=form article=problem %}
 {% endblock %}

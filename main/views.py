@@ -1,23 +1,15 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
-import boto3
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from main.forms import (
-    GroupCreateForm, GroupUpdateForm,
-    LectureCreateForm, LectureUpdateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm
-)
-from main.models import (
-    Student, Teacher, Group, Lecture, Problem, Solution
-)
-from main.services import article_service
-from main.services.code_solver import test_student_solution
-from main.services.s3_helper import upload_file_to_s3
-from main.services.users_service import get_teacher, get_student
-from main.services import paginate_service
+from accounts.decorators import student_required, teacher_required
+from main import forms
+from main.models import Group, Lecture, Problem, Solution, Student, Teacher
+from main.services import article_service, code_solver, paginate_service, users_service
 from web_testing_service import settings
-
 from web_testing_service.settings import MEDIA_URL
 
 
@@ -47,7 +39,9 @@ class GroupListView(ListView):
         self.object_list = self.get_queryset()
         context = super().get_context_data(*args, **kwargs)
         groups = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+        teacher = users_service.get_teacher(request.user)
         context['groups'] = groups
+        context['teacher'] = teacher
         return self.render_to_response(context)
 
 
@@ -65,9 +59,10 @@ class GroupView(DetailView):
         return self.render_to_response(context)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class GroupCreateView(CreateView):
     model = Group
-    form_class = GroupCreateForm
+    form_class = forms.GroupCreateForm
     template_name = 'groups/group_add.html'
 
     def get_form_kwargs(self):
@@ -79,14 +74,14 @@ class GroupCreateView(CreateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = GroupCreateForm(teacher=teacher)
+        form = forms.GroupCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = request.user
         teacher = Teacher.objects.get(user=user)
-        form = GroupCreateForm(teacher, request.POST)
+        form = forms.GroupCreateForm(teacher, request.POST)
         if form.is_valid():
             form.save()
             return redirect('groups')
@@ -95,13 +90,15 @@ class GroupCreateView(CreateView):
             return render(request, self.template_name, context)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class GroupUpdateView(UpdateView):
     model = Group
-    form_class = GroupUpdateForm
+    form_class = forms.GroupUpdateForm
     template_name = 'groups/group_edit.html'
     success_url = reverse_lazy('groups')
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class GroupDeleteView(DeleteView):
     model = Group
     success_url = reverse_lazy('groups')
@@ -125,7 +122,9 @@ class LectureListView(ListView):
         self.object_list = self.get_queryset()
         context = super().get_context_data(*args, **kwargs)
         lectures = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+        teacher = users_service.get_teacher(request.user)
         context['lectures'] = lectures
+        context['teacher'] = teacher
         return self.render_to_response(context)
 
 
@@ -138,8 +137,8 @@ class LectureView(DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
 
-        teacher = get_teacher(self.request.user)
-        student = get_student(self.request.user)
+        teacher = users_service.get_teacher(self.request.user)
+        student = users_service.get_student(self.request.user)
 
         comment_form, comments = article_service.comment_method(self.object, self.request)
 
@@ -168,22 +167,23 @@ class LectureView(DetailView):
         return redirect('lecture', pk=self.object.pk)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class LectureCreateView(CreateView):
     model = Lecture
-    form_class = LectureCreateForm
+    form_class = forms.LectureCreateForm
     template_name = 'lectures/lecture_add.html'
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = LectureCreateForm(teacher=teacher)
+        form = forms.LectureCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = LectureCreateForm(teacher, request.POST)
+        form = forms.LectureCreateForm(teacher, request.POST)
         if form.is_valid():
             form.save()
             return redirect('lectures')
@@ -192,13 +192,60 @@ class LectureCreateView(CreateView):
             return render(request, self.template_name, context)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class LectureUpdateView(UpdateView):
     model = Lecture
-    form_class = LectureUpdateForm
+    form_class = forms.LectureUpdateForm
     template_name = 'lectures/lecture_edit.html'
     success_url = reverse_lazy('lectures')
 
+    # TODO: uncomment and implement
+    # def get(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     comments = article_service.get_comments(self.object)
+    #
+    #     teacher = get_teacher(self.request.user)
+    #     student = get_student(self.request.user)
+    #
+    #     context = self.get_context_data(object=self.object)
+    #
+    #     context.update({
+    #         'date_created': self.object.date_created,
+    #         'deadline': self.object.deadline,
+    #         'comments': comments,
+    #         'teacher': teacher,
+    #         'student': student,
+    #         'MEDIA_URL': MEDIA_URL,
+    #     })
+    #
+    #     return self.render_to_response(context)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     comments = article_service.get_comments(self.object)
+    #
+    #     user = self.request.user
+    #     teacher = get_teacher(user)
+    #     form = self.get_form()
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('problem', pk=self.object.pk)
+    #     else:
+    #         context = self.get_context_data(object=self.object)
+    #         context.update({
+    #             'user': user,
+    #             'form': form,
+    #             'date_created': self.object.date_created,
+    #             'deadline': self.object.deadline,
+    #             'comments': comments,
+    #             'teacher': teacher,
+    #             'errors': form.errors,
+    #         })
+    #         return render(request, self.template_name, context)
 
+
+@method_decorator([login_required, teacher_required], name='dispatch')
 class LectureDeleteView(DeleteView):
     model = Lecture
     success_url = reverse_lazy('lectures')
@@ -221,8 +268,10 @@ class ProblemListView(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         context = super().get_context_data(*args, **kwargs)
+        teacher = users_service.get_teacher(request.user)
         problems = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
         context['problems'] = problems
+        context['teacher'] = teacher
         return self.render_to_response(context)
 
     def get_context_data(self, *args, **kwargs):
@@ -242,8 +291,8 @@ class ProblemView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        teacher = get_teacher(self.request.user)
-        student = get_student(self.request.user)
+        teacher = users_service.get_teacher(self.request.user)
+        student = users_service.get_student(self.request.user)
         solution = article_service.solution_find(self.object, student) if student else None
 
         context = self.get_context_data(object=self.object)
@@ -283,22 +332,25 @@ class ProblemView(DetailView):
         return redirect('problem', pk=self.object.pk)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemCreateView(CreateView):
     model = Problem
-    form_class = ProblemCreateForm
+    form_class = forms.ProblemCreateForm
     template_name = 'problems/problem_add.html'
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = ProblemCreateForm(teacher=teacher)
+        form = forms.ProblemCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = ProblemCreateForm(teacher, request.POST, request.FILES)
+        form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
+
+        print(form.errors)
 
         if form.is_valid():
             print(form.cleaned_data)
@@ -318,22 +370,34 @@ class ProblemCreateView(CreateView):
             return redirect('problems')
 
         else:
-            context = {'form': form, 'user': user}
+            comment_form, comments = article_service.comment_method(self.object, self.request)
+            context = self.get_context_data(problem=self.object)
+
+            context.update({
+                'user': user,
+                'form': form,
+                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
+                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
+                'comment_form': comment_form,
+                'comments': comments,
+                'MEDIA_URL': MEDIA_URL,
+            })
             return render(request, self.template_name, context)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemUpdateView(UpdateView):
     model = Problem
-    form_class = ProblemUpdateForm
+    form_class = forms.ProblemUpdateForm
     template_name = 'problems/problem_edit.html'
     success_url = reverse_lazy('problems')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        _, comments = article_service.comment_method(self.object, self.request)
+        comments = article_service.get_comments(self.object)
 
-        teacher = get_teacher(self.request.user)
-        student = get_student(self.request.user)
+        teacher = users_service.get_teacher(self.request.user)
+        student = users_service.get_student(self.request.user)
 
         context = self.get_context_data(object=self.object)
 
@@ -350,10 +414,10 @@ class ProblemUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        _, comments = article_service.comment_method(self.object, self.request)
+        comments = article_service.get_comments(self.object)
 
         user = self.request.user
-        teacher = get_teacher(user)
+        teacher = users_service.get_teacher(user)
         form = self.get_form()
 
         if form.is_valid():
@@ -368,14 +432,12 @@ class ProblemUpdateView(UpdateView):
                 'deadline': self.object.deadline,
                 'comments': comments,
                 'teacher': teacher,
-                # 'solution': solution,
-                # 'test_filename': test_filename,
-                'MEDIA_URL': MEDIA_URL,
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemDeleteView(DeleteView):
     model = Problem
     success_url = reverse_lazy('problems')
@@ -384,9 +446,10 @@ class ProblemDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
 
 
+@method_decorator([login_required, student_required], name='dispatch')
 class ProblemTakeView(CreateView):
     model = Solution
-    form_class = ProblemTakeForm
+    form_class = forms.ProblemTakeForm
     template_name = 'problems/problem_take.html'
 
     def get(self, request, *args, **kwargs):
@@ -394,7 +457,7 @@ class ProblemTakeView(CreateView):
         student = Student.objects.get(user=user)
         problem = Problem.objects.get(id=kwargs.get('pk'))
 
-        form = ProblemTakeForm(problem=problem, student=student)
+        form = forms.ProblemTakeForm(problem=problem, student=student)
         context = {'form': form, 'student': student, 'problem': problem}
         return render(request, self.template_name, context)
 
@@ -405,7 +468,7 @@ class ProblemTakeView(CreateView):
         user = self.request.user
         student = Student.objects.get(user=user)
 
-        form = ProblemTakeForm(problem, student, request.POST)
+        form = forms.ProblemTakeForm(problem, student, request.POST)
         if form.is_valid():
             solution = form.save(commit=False)
             solution.problem = problem
@@ -420,9 +483,11 @@ class ProblemTakeView(CreateView):
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
 
-            test_score_percentage = test_student_solution(code=solution_code,
-                                                          exec_time=max_execution_time,
-                                                          test_filename=test_file)
+            test_score_percentage = code_solver.test_student_solution(
+                code=solution_code,
+                exec_time=max_execution_time,
+                test_filename=test_file
+            )
 
             score = round(test_score_percentage * problem.max_points, 1)
             # if settings.workflow == 's3':
@@ -446,3 +511,13 @@ class ProblemTakeView(CreateView):
         else:
             context = {'form': form, 'user': user, 'student': student, 'problem': problem}
             return render(request, self.template_name, context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class ProblemSolutionListView(ListView):
+    pass
+
+
+@method_decorator([login_required], name='dispatch')
+class ProblemSolutionView(DetailView):
+    pass

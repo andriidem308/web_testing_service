@@ -1,15 +1,31 @@
 {% extends 'base.html' %}
 
+{% block title %}Problem take | {{ problem.headline }}{% endblock %}
+
 {% block content %}
 
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
+    <div class="solution-container">
         <h1>Add solution for {{ problem.headline }}</h1>
-        <div><b>Problem description:</b></div>
-        <div>Problem description: {{ problem.content }}</div>
-        {{ form.solution_code }}
-        <br>
-        <button class="pretty-button success">Save</button>
-    </form>
+
+        <form class="solution-card card" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <div><h2 class="problem-content-headline"><b>Problem description:</b></h2></div>
+            <hr>
+            <div class="problem-content">{{ problem.content }}</div>
+            <hr>
+            {{ form.solution_code }}
+            <br>
+
+            <div class="buttons-row">
+                <button class="pretty-button success">Save</button>
+                <button class="pretty-button danger">Cancel</button>
+            </div>
+
+
+        </form>
+    </div>
+
+
 
 {% endblock %}

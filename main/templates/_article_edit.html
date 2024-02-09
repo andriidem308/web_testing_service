@@ -1,16 +1,12 @@
-{% load sass_tags  %}
-{% load static %}
 {% load custom_filters %}
 
-<script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
-
-
-<link href="{% sass_src 'styles/article.scss' %}" rel="stylesheet" type="text/css">
-
-
-
 <div class="article-container">
-    <h1 class="page-title">Edit problem {{ problem.headline }}</h1>
+    {% if problem %}
+        <h1 class="page-title">{{ problem.headline }}</h1>
+    {% elif lecture %}
+        <h1 class="page-title">{{ lecture.headline }}</h1>
+    {% endif %}
+
     <form class="article-box" method="post" enctype="multipart/form-data" novalidate autocomplete="off">
         {% csrf_token %}
         <div class="article-fields card">
@@ -52,8 +48,9 @@
                     </div>
                 {% endif %}
                 <hr>
-
+                <b>Content:</b>
                 <div class="article-content">
+
                     {% if form.content.errors %}
                         {{ form.content|add_class:"danger-outline" }}
                     {% else %}
@@ -114,7 +111,7 @@
             {% endif %}
         </div>
     </form>
-
+    {% if comments %}
     <div class="article-comments">
         <h2 class="comments-headline" >Comments</h2>
         {% for comment in comments %}
@@ -128,11 +125,9 @@
                     {{ comment.content }}
                 </div>
             </div>
-
-            {#            <div>{{ comment }}</div>#}
-            {#            <div>comment</div>#}
         {% endfor %}
     </div>
+    {% endif %}
 
     <div class="disabled-area" id="disabled-area"></div>
 
@@ -176,15 +171,38 @@
         const fileInput = document.getElementById('id_test_file');
 
 
+        const selectedFiles = document.getElementById('selectedFiles');
+
+        function createTestFileTile(filename) {
+            const rawFilename = '/media/problems/test_files/' + filename;
+
+            const attachment = document.createElement("a");
+            attachment.textContent = filename;
+            attachment.classList.add('pretty-button');
+            attachment.classList.add('dark');
+            attachment.setAttribute('href', rawFilename)
+            attachment.setAttribute('download', filename)
+            attachment.setAttribute('id', 'test_file_content')
+            selectedFiles.appendChild(attachment);
+        }
+
+        if ('{{ article.test_file }}') {
+            const rawFilename = '{{ article.test_file.name }}';
+            const filename = rawFilename.split('/').pop();
+            createTestFileTile(filename);
+        }
+
+
+
         function displayFileName() {
             const selectedFiles = document.getElementById('selectedFiles');
 
             if (fileInput.files.length > 0) {
-                const attachment = document.createElement("a");
-                attachment.textContent = fileInput.files[0].name;
-                attachment.classList.add('pretty-button');
-                attachment.classList.add('dark');
-                selectedFiles.appendChild(attachment);
+                const oldTestFile = document.getElementById('test_file_content');
+                oldTestFile.remove();
+
+                const filename = fileInput.files[0].name;
+                createTestFileTile(filename);
             }
         }
     </script>

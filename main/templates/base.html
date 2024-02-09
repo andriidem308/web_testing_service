@@ -1,5 +1,6 @@
 {% load sass_tags  %}
 {% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,15 +9,20 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
-    <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
-
     <link href="{% sass_src 'styles/style.scss' %}" rel="stylesheet" type="text/css">
 
-    <title>Document</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <title>{% block title %}Web Testing Service{% endblock %}</title>
 </head>
 <body>
 
@@ -29,15 +35,19 @@
     {% endblock %}
 </main>
 
-<aside>
+{#<aside>#}
+{##}
+{#</aside>#}
 
-</aside>
-
+{# ----------> ONLY FOR DEBUG <---------- #}
 {#<script>#}
 {#    // Reload the page every 3 seconds (3000 milliseconds)#}
 {#    setInterval(function() {#}
 {#        location.reload();#}
 {#    }, 1000);#}
 {#</script>#}
+
+<script src="{% static 'js/main.js' %}"></script>
+
 </body>
 </html>

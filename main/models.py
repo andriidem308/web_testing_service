@@ -1,6 +1,5 @@
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.db import models
 
 from accounts.models import User
 from main.services.s3_helper import S3MediaStorage
@@ -12,7 +11,7 @@ class Teacher(models.Model):
     user._is_teacher = True
 
     class Meta:
-        ordering = ['user__last_name', 'user__first_name']
+        ordering = ('user__first_name', 'user__last_name',)
 
     def __str__(self):
         return self.user.get_full_name()
@@ -21,6 +20,9 @@ class Teacher(models.Model):
 class Group(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, unique=True)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('name',)
@@ -35,11 +37,10 @@ class Student(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['user__last_name', 'user__first_name']
+        ordering = ('user__first_name', 'user__last_name',)
 
     def __str__(self):
-        # return self.user.get_full_name()
-        return f'{self.user.get_full_name()} | {self.group.name}'
+        return self.user.get_full_name()
 
     def get_group(self):
         return self.group
@@ -82,16 +83,6 @@ class Attachment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     content = models.FileField(upload_to='media/lectures/attachments/')
-
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now_add=True)
-
-
-class TestFile(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-
-    content = models.FileField(upload_to='media/problems/test_files/')
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)

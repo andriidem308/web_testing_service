@@ -43,7 +43,9 @@ INSTALLED_APPS = [
 
     'main',
     'accounts',
+    'api',
 
+    'rest_framework',
     'sass_processor',
     'storages',
 ]

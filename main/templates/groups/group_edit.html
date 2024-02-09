@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}Group Edit | {{ group.name }}{% endblock %}
+
 {% block content %}
+    <h1>EGroup</h1>
     <h2 class="page-title">New group</h2>
     <form class="group-container" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}

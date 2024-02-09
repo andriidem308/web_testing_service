@@ -1,0 +1,106 @@
+{% load custom_filters %}
+
+<div class="article-container">
+    <h1 class="page-title">{{ headline }}</h1>
+
+    <form class="article-box" method="post" enctype="multipart/form-data" novalidate autocomplete="off">
+        {% csrf_token %}
+        <div class="article-fields card">
+            <div class="article-fields-top">
+                <div class="top-row">
+                    <div class="headline" id="headline"><b>Headline:</b>&nbsp;&nbsp;&nbsp;
+                        {% if form.headline.errors %}
+                            {{ form.headline|add_class:"danger-outline" }}
+                        {% else %}
+                            {{ form.headline }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if type == 'problem' %}
+                    <div class="due-date"><b>Due date:</b>&nbsp;&nbsp;{{ form.deadline }}</div>
+
+                    <div class="article-values">
+                        <div class="max-points"><b>Points:</b>&nbsp;&nbsp;&nbsp;
+                            {% if form.max_points.errors %}
+                                {{ form.max_points|add_class:"danger-outline" }}
+                            {% else %}
+                                {{ form.max_points }}
+                            {% endif %}
+                        </div>
+                        <div class="max-execution-time"><b>Max execution time:</b>&nbsp;&nbsp;&nbsp;
+                            {% if form.max_execution_time.errors %}
+                                {{ form.max_execution_time|add_class:"danger-outline" }}
+                            {% else %}
+                                {{ form.max_execution_time }}
+                            {% endif %}&nbsp;ms
+                        </div>
+                    </div>
+                {% endif %}
+                <hr>
+                <b>Content:</b>
+                <div class="article-content">
+
+                    {% if form.content.errors %}
+                        {{ form.content|add_class:"danger-outline" }}
+                    {% else %}
+                        {{ form.content }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="article-fields-bottom">
+                {% if teacher and type == 'problem' %}
+                    <div id="selectedFiles" class="test-file">
+                        <label class="files-input" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
+                        {{ form.test_file }}
+                    </div>
+                {% endif %}
+                <hr>
+                <div class="action-buttons">
+                    <button class="pretty-button success" type="submit">Save</button>
+                    {% if type == 'problem' %}
+                        <a class="pretty-button danger" href="{% url 'problems' %}">Cancel</a>
+                    {% elif type == 'lecture' %}
+                        <a class="pretty-button danger" href="{% url 'lectures' %}">Cancel</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="disabled-area" id="disabled-area"></div>
+
+    <script>
+
+        const errors = `{{ form.errors }}`;
+        if (errors.includes("deadline")) {
+            const deadlineInput = document.getElementById("id_deadline");
+            deadlineInput.classList.add('danger-outline');
+        }
+        if (errors.includes("test_file")) {
+            const testFileButton = document.getElementById("test-file-label");
+            testFileButton.classList.add('danger');
+        }
+
+        console.log(`{{ form.test_file.value }}`)
+
+        const fileInput = document.getElementById('id_test_file');
+
+
+        function displayFileName() {
+            const selectedFiles = document.getElementById('selectedFiles');
+
+            if (fileInput.files.length > 0) {
+                const attachment = document.createElement("a");
+                attachment.textContent = fileInput.files[0].name;
+                attachment.classList.add('pretty-button');
+                attachment.classList.add('dark');
+                selectedFiles.appendChild(attachment);
+            }
+        }
+    </script>
+
+
+</div>
+

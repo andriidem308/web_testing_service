@@ -1,0 +1,67 @@
+<div class="filter"></div>
+
+<div class="items-header">
+    <h1>{{ list_name }}</h1>
+
+    {% if teacher %}
+        <a class='add-item pretty-button primary' href="{% url add_url %}">
+            <i class="fa-solid fa-plus"></i>New {{ object_name }}</a>
+    {% endif %}
+
+</div>
+
+<div class="items-list">
+    {% for item in items %}
+        <a class="card item-card" href="{% url object_name pk=item.pk %}">
+            <div class="item-top-row">
+                {% if problems or lectures%}
+                    <h2>{{ item.headline }}</h2>
+                {% elif groups %}
+                    <h2>{{ item.name }}</h2>
+                {% endif %}
+            </div>
+
+            <div class="created-row">
+                <div class="teacher">{{ item.teacher.user.get_full_name}}</div>
+                <div class="separator">•</div>
+                <div class="created">{{ item.date_created|date:'d/m/Y, H:i' }}</div>
+                {% if item.date_updated|date:'d/m/Y, H:i' != item.date_created|date:'d/m/Y, H:i' %}
+                    <div class="updated">(edited {{ item.date_updated|date:'d/m/Y, H:i' }})</div>
+                {% endif %}
+
+            </div>
+
+            {% if problems %}
+                <div class="due-date"><b>Due date:</b>
+                    {{ item.deadline|date:'d/m/Y H:i' }}
+                </div>
+
+                <div class="article-values">
+                    <div class="max-points"><b>Points:</b>
+                        {{ item.max_points }}
+                    </div>
+                    <div class="max-execution-time"><b>Max execution time:</b>
+                        {{ item.max_execution_time }}
+                    </div>
+                </div>
+            {% endif %}
+
+
+            {% if problems or lectures%}
+                <hr>
+                <div class="article-content">
+                    {{ item.content }}
+                </div>
+            {% elif groups %}
+                <div class="group-content">
+                    <div><b>Teacher:</b>&nbsp;{{ item.teacher }}</div>
+                </div>
+            {% endif %}
+        </a>
+    {% endfor %}
+</div>
+
+
+
+{% include '_pagination.html' with items=items %}
+
