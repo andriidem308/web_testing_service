@@ -138,75 +138,9 @@
             <a class="pretty-button danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
         </div>
     </div>
-
-    <script>
-        function showDeleteConfirmation() {
-            document.getElementById("disabled-area").classList.add('active');
-            document.getElementById("delete-confirmation").classList.add('active-flex');
-        }
-
-        function closeDeleteConfirmation() {
-            document.getElementById("disabled-area").classList.remove('active');
-            document.getElementById("delete-confirmation").classList.remove('active-flex');
-        }
-
-        const problemDeadline = `{{ problem.deadline|date:'Y-m-d H:i:s' }}`;
-        if (problemDeadline) {
-            const deadlineInput = document.getElementById("id_deadline");
-            deadlineInput.value = problemDeadline;
-        }
-
-        const errors = `{{ form.errors }}`;
-        if (errors.includes("deadline")) {
-            const deadlineInput = document.getElementById("id_deadline");
-            deadlineInput.classList.add('danger-outline');
-        }
-        if (errors.includes("test_file")) {
-            const testFileButton = document.getElementById("test-file-label");
-            testFileButton.classList.add('danger');
-        }
-
-        console.log(`{{ form.test_file.value }}`)
-
-        const fileInput = document.getElementById('id_test_file');
-
-
-        const selectedFiles = document.getElementById('selectedFiles');
-
-        function createTestFileTile(filename) {
-            const rawFilename = '/media/problems/test_files/' + filename;
-
-            const attachment = document.createElement("a");
-            attachment.textContent = filename;
-            attachment.classList.add('pretty-button');
-            attachment.classList.add('dark');
-            attachment.setAttribute('href', rawFilename)
-            attachment.setAttribute('download', filename)
-            attachment.setAttribute('id', 'test_file_content')
-            selectedFiles.appendChild(attachment);
-        }
-
-        if ('{{ article.test_file }}') {
-            const rawFilename = '{{ article.test_file.name }}';
-            const filename = rawFilename.split('/').pop();
-            createTestFileTile(filename);
-        }
-
-
-
-        function displayFileName() {
-            const selectedFiles = document.getElementById('selectedFiles');
-
-            if (fileInput.files.length > 0) {
-                const oldTestFile = document.getElementById('test_file_content');
-                oldTestFile.remove();
-
-                const filename = fileInput.files[0].name;
-                createTestFileTile(filename);
-            }
-        }
-    </script>
-
-
 </div>
+
+<script>
+
+</script>
 

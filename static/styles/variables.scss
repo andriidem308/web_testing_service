@@ -192,7 +192,9 @@ h1, h2, h3, h4, h5 {
 }
 
 .pretty-textarea {
-  width: 100%;
+  width: calc(100% - 4px);
+  margin-left: 2px;
+  margin-right: 2px;
   padding: 15px;
   box-sizing: border-box;
   border-radius: 12px;
@@ -217,8 +219,9 @@ h1, h2, h3, h4, h5 {
 }
 
 .danger-outline {
-  outline-color: $danger;
-  border-color: $danger;
+  //outline-color: $danger;
+  outline: 2px solid $danger;
+  border-color: transparent !important;
 }
 
 .active {

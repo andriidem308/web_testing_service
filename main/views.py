@@ -347,8 +347,6 @@ class ProblemCreateView(CreateView):
         teacher = Teacher.objects.get(user=user)
         form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
 
-        print(form.errors)
-
         if form.is_valid():
             form.save()
             return redirect('problems')
@@ -371,9 +369,13 @@ class ProblemUpdateView(UpdateView):
         teacher = users_service.get_teacher(self.request.user)
         student = users_service.get_student(self.request.user)
 
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
         context = self.get_context_data(object=self.object)
 
         context.update({
+            'form': form,
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
             'comments': comments,
