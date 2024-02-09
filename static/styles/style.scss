@@ -420,20 +420,28 @@ main {
 }
 
 .dataTables_filter {
-  margin: 1.5rem;
+  margin-bottom: 1rem;
 
   input {
     margin-left: 1rem;
     padding: 0.5rem 1rem;
 
     border: 1px solid $dark;
+    outline: 0;
     border-radius: 1rem;
+
+    &:hover {
+      outline: 1px solid $dark;
+    }
+
+    &:focus {
+      outline: 1px solid $dark;
+    }
   }
 }
 
 .students-table {
   border-radius: 12px;
-  margin: 1.5rem;
   //padding: 1.5rem 2rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
 
@@ -494,7 +502,7 @@ main {
     }
 
     &:hover {
-      background-color: #c5c5c5;
+      background-color: $grey;
     }
   }
 
@@ -509,6 +517,8 @@ main {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  margin-top: 2rem;
 
   a {
     margin: 0 0.75rem;

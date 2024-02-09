@@ -88,7 +88,7 @@
 
   flex-wrap: wrap;
 
-  min-height: 30rem;
+  min-height: 33rem;
 }
 
 .article-fields {
@@ -99,7 +99,7 @@
 
   width: 42rem;
 
-  min-height: 30rem;
+  min-height: 33rem;
 
   hr {
     margin: 20px 0;
@@ -236,6 +236,19 @@
 
       .rounded-tile.danger:hover {
         background-color: $danger !important;
+      }
+    }
+
+    .solutions-list {
+      display: flex;
+      flex-direction: column;
+
+      .solution-item {
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
+
       }
     }
 

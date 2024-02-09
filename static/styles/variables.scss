@@ -1,7 +1,7 @@
 $light: #fffdfa;
 $light: #f2f2f2;
 $light-hover: #ebebeb;
-$grey: #c9c9c9;
+$grey: #c5c5c5;
 $grey-hover: #989898;
 $dark: #363636;
 $dark-hover: #4d4d4d;
@@ -89,6 +89,10 @@ $nav-height: 60px;
     color: $light !important;
     background-color: $action !important;
   }
+}
+
+.action-text {
+  color: $action !important;
 }
 
 .primary {
