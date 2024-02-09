@@ -76,10 +76,16 @@ class ProblemCreateForm(forms.ModelForm):
 
     deadline = forms.DateTimeField(
         input_formats=['%Y-%m-%d %H:00:00'],
-        widget=TimePicker(attrs={'autocomplete': 'off'})
+        widget=forms.DateTimeInput(
+            attrs={
+                'autocomplete': 'off',
+                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'data-target': '#id_deadline'
+            },
+        )
     )
 
-    test_file = forms.TextInput()
+    test_file = forms.FileField()
 
     def __init__(self, teacher, *args, **kwargs):
         super(ProblemCreateForm, self).__init__(*args, **kwargs)
@@ -88,14 +94,6 @@ class ProblemCreateForm(forms.ModelForm):
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
-        widgets = {
-            'test_file': forms.TextInput(attrs={
-                "type": "File",
-                "class": "form-control",
-                "style": "display: none;",
-                'onchange': 'displayFileName()',
-            })
-        }
 
     def save(self, **kwargs):
         instance = super(ProblemCreateForm, self).save(commit=False)
@@ -116,22 +114,20 @@ class ProblemUpdateForm(forms.ModelForm):
 
     deadline = forms.DateTimeField(
         input_formats=['%Y-%m-%d %H:00:00'],
-        widget=TimePicker(attrs={'autocomplete': 'off'})
+        widget=forms.DateTimeInput(
+            attrs={
+                'autocomplete': 'off',
+                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'data-target': '#id_deadline'
+            },
+        )
     )
 
-    test_file = forms.TextInput()
+    test_file = forms.FileField()
 
     class Meta:
         model = Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
-        widgets = {
-            'test_file': forms.TextInput(attrs={
-                "type": "File",
-                "class": "form-control",
-                "style": "display: none;",
-                'onchange': 'displayFileName()',
-            })
-        }
 
     def __init__(self, *args, **kwargs):
         super(ProblemUpdateForm, self).__init__(*args, **kwargs)

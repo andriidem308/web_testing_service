@@ -321,11 +321,6 @@ main {
     margin-right: 4px;
   }
 
-  .comments {
-    //.pretty-textarea {
-    //  min-width: 580px;
-    //}
-  }
 }
 
 @media (max-width: 768px) {
@@ -343,16 +338,10 @@ main {
     margin-right: 2px;
   }
 
-  .comments {
-    .pretty-textarea {
-      //min-width: 400px;
-    }
-  }
 }
 
 @media (max-width: 576px) {
 }
-
 
 .article-container {
 
@@ -533,6 +522,8 @@ main {
   a.current {
     background-color: $action;
   }
-
-
 }
+
+//#id_test_file {
+//  display: none;
+//}

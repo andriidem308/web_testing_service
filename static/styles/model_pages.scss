@@ -97,7 +97,8 @@
   flex-direction: column;
   justify-content: space-between;
 
-  width: 42rem;
+  //width: 42rem;
+  width: 72rem;
 
   min-height: 30rem;
 
@@ -365,7 +366,7 @@
   font-weight: bold;
 
   border-radius: 1rem;
-  border: 2px solid $primary;
+  //border: 2px solid $primary;
 
   color: $light;
   background-color: $primary;
