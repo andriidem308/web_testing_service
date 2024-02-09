@@ -18,7 +18,13 @@
                 </div>
 
                 {% if type == 'problem' %}
-                    <div class="due-date"><b>Due date:</b>&nbsp;&nbsp;{{ form.deadline }}</div>
+                    <div class="due-date"><b>Due date:</b>&nbsp;&nbsp;
+                        {% if form.deadline.errors %}
+                            {{ form.deadline|add_class:"danger-outline" }}
+                        {% else %}
+                            {{ form.deadline }}
+                        {% endif %}
+                    </div>
 
                     <div class="article-values">
                         <div class="max-points"><b>Points:</b>&nbsp;&nbsp;&nbsp;
@@ -51,7 +57,7 @@
             <div class="article-fields-bottom">
                 {% if teacher and type == 'problem' %}
                     <div id="selectedFiles" class="test-file">
-                        <label class="files-input" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
+                        <label class="{% if form.test_file.errors %}files-input danger-outline{% else %}files-input{% endif %}" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
                         {{ form.test_file }}
                     </div>
                 {% endif %}
@@ -70,37 +76,5 @@
     </form>
 
     <div class="disabled-area" id="disabled-area"></div>
-
-    <script>
-
-        const errors = `{{ form.errors }}`;
-        if (errors.includes("deadline")) {
-            const deadlineInput = document.getElementById("id_deadline");
-            deadlineInput.classList.add('danger-outline');
-        }
-        if (errors.includes("test_file")) {
-            const testFileButton = document.getElementById("test-file-label");
-            testFileButton.classList.add('danger');
-        }
-
-        console.log(`{{ form.test_file.value }}`)
-
-        const fileInput = document.getElementById('id_test_file');
-
-
-        function displayFileName() {
-            const selectedFiles = document.getElementById('selectedFiles');
-
-            if (fileInput.files.length > 0) {
-                const attachment = document.createElement("a");
-                attachment.textContent = fileInput.files[0].name;
-                attachment.classList.add('pretty-button');
-                attachment.classList.add('dark');
-                selectedFiles.appendChild(attachment);
-            }
-        }
-    </script>
-
-
 </div>
 

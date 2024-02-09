@@ -8,8 +8,12 @@ def problem_all() -> List[Problem]:
     return Problem.objects.all()
 
 
-def problems_by_teacher(teacher) -> Lecture:
+def problems_by_teacher(teacher) -> List[Problem]:
     return Problem.objects.filter(teacher=teacher)
+
+
+def problems_by_group(group) -> List[Problem]:
+    return Problem.objects.filter(group=group)
 
 
 def problem_find(problem_id: int) -> Problem:
@@ -24,6 +28,21 @@ def solution_find(problem, student):
     if solution:
         solution = solution[0]
     return solution
+
+
+def solutions_by_student(student):
+    solutions = Solution.objects.filter(student=student)
+    return solutions
+
+
+def solutions_by_problem(problem):
+    solutions = Solution.objects.filter(problem=problem).order_by('date_solved')
+    return solutions
+
+
+def solutions_unchecked_by_problem(problem):
+    solutions = Solution.objects.filter(problem=problem, checked=False).order_by('date_solved')
+    return solutions
 
 
 def lecture_all() -> List[Lecture]:

@@ -1,29 +1,39 @@
 from django.db.models import Q
 
 
-def filter_students(request, student_list):
-    search_value = request.GET.get('search[value]', '').strip()
-
-    form_order_column = request.GET.get('order[0][column]')
-    form_order_dir = request.GET.get('order[0][dir]')
-    order = False if form_order_dir == 'desc' else True
-
-    columns = {
-        '0': 'user__first_name',
-        '1': 'user__last_name',
-        '2': 'group',
+def get_table_parameters(request):
+    table_parameters = {
+        'column': int(request.GET.get('order[0][column]'), 0),
+        'reversed': request.GET.get('order[0][dir]') == 'desc',
+        'search': request.GET.get('search[value]', '').strip(),
+        'size': int(request.GET.get('length', 0)),
+        'offset': int(request.GET.get('start', 0)),
     }
+    return table_parameters
 
-    order_column = columns[form_order_column] if order else f'-{columns[form_order_column]}'
-    filtered_students = student_list.order_by(order_column)
 
-    selected_students = filtered_students.filter(
-        Q(user__first_name__contains=search_value) | Q(user__last_name__contains=search_value))
+def filter_students(request, students_list):
+    params = get_table_parameters(request)
 
+    searched_students = students_list.filter(
+        Q(user__first_name__contains=params['search']) | Q(user__last_name__contains=params['search']))
+
+    order_column = params['column']
+    columns = ('first_name', 'last_name', 'total_score', 'problems_solved', )
+    order_column = columns[order_column]
+    ordered_students = sorted(searched_students, key=lambda s: getattr(s, order_column), reverse=params['reversed'])
+
+    return ordered_students
+
+
+def select_students(request, students_list):
+    params = get_table_parameters(request)
+    selected_students = students_list[params['offset']:params['offset']+params['size']]
     return selected_students
 
 
-def highlight_search(text, search_value):
+def highlight_search(text, request):
+    search_value = request.GET.get('search[value]', '').strip()
     start_pos = text.lower().find(search_value.lower())
 
     if start_pos != -1:

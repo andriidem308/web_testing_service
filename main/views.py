@@ -292,6 +292,8 @@ class ProblemView(DetailView):
         self.object = self.get_object()
 
         teacher = users_service.get_teacher(self.request.user)
+        solutions = article_service.solutions_by_problem(self.object)
+
         student = users_service.get_student(self.request.user)
         solution = article_service.solution_find(self.object, student) if student else None
 
@@ -309,6 +311,7 @@ class ProblemView(DetailView):
             'teacher': teacher,
             'student': student,
             'solution': solution,
+            'solutions': solutions,
             'test_filename': test_filename,
             'MEDIA_URL': MEDIA_URL,
         })
@@ -368,7 +371,6 @@ class ProblemCreateView(CreateView):
                 form.save()
 
             return redirect('problems')
-
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
             context = self.get_context_data(problem=self.object)
@@ -399,9 +401,13 @@ class ProblemUpdateView(UpdateView):
         teacher = users_service.get_teacher(self.request.user)
         student = users_service.get_student(self.request.user)
 
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
         context = self.get_context_data(object=self.object)
 
         context.update({
+            'form': form,
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
             'comments': comments,
@@ -483,19 +489,16 @@ class ProblemTakeView(CreateView):
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
 
-            test_score_percentage = code_solver.test_student_solution(
+            score = code_solver.test_student_solution(
                 code=solution_code,
                 exec_time=max_execution_time,
                 test_filename=test_file
             )
 
-            score = round(test_score_percentage * problem.max_points, 1)
-            # if settings.workflow == 's3':
-
-            print(score)
-
             if timezone.now() > problem.deadline:
-                score = round(score / 2, 1)
+                score = score / 2
+
+            score = round(score, 2)
 
             previous_solutions = Solution.objects.filter(student=student).filter(problem=problem)
             if previous_solutions:
