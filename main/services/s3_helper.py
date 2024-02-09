@@ -9,13 +9,8 @@ from storages.backends.s3boto3 import S3Boto3Storage
 class S3MediaStorage(S3Boto3Storage):
     location = 'problems/test_files/'
 
-    def _save(self, name, content):
-        # ваш код здесь
-        obj = self.bucket.Object(name)
 
-
-def upload_file_to_s3(instance, test_file):
-    print(test_file.name)
+def upload_file_to_s3(test_file):
     s3 = boto3.client('s3',
                       aws_access_key_id=settings.aws_access_key_id,
                       aws_secret_access_key=settings.aws_secret_access_key)
@@ -25,8 +20,8 @@ def upload_file_to_s3(instance, test_file):
 
     s3.upload_fileobj(test_file, bucket_name, s3_path)
 
-    instance.test_file.url = f'https://{bucket_name}.s3.amazonaws.com/{s3_path}'
-    instance.save()
+
+
 
 # def read_file_from_s3(s3_path):
 #     s3_client = boto3.client('s3',

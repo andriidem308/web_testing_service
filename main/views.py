@@ -1,3 +1,4 @@
+from django.contrib.messages.storage import default_storage
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -7,13 +8,15 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.decorators import student_required, teacher_required
 from main import forms
+from main.forms import ProblemCreateForm
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher
 from main.services import article_service, code_solver, paginate_service, users_service
+from main.services.s3_helper import upload_file_to_s3
 from web_testing_service import settings
 from web_testing_service.settings import MEDIA_URL
 
-
 PATH_TO_TEST_FILE = "tests.json"
+
 
 def test(request):
     context = {'comments': ['Comment 1', 'Comment 2', 'Comment 3']}
@@ -357,15 +360,11 @@ class ProblemCreateView(CreateView):
 
         if form.is_valid():
             print(form.cleaned_data)
-            instance = form.save(commit=False)
-            instance.teacher = teacher
+
 
             if settings.workflow == 's3':
-                instance.save()
-
-                test_file = request.FILES.get('test_file')
-                if test_file:
-                    upload_file_to_s3(instance, test_file)
+                upload_file_to_s3(form.cleaned_data['test_file'])
+                form.save()
 
             elif settings.workflow == 'local':
                 form.save()
@@ -385,6 +384,7 @@ class ProblemCreateView(CreateView):
                 'MEDIA_URL': MEDIA_URL,
             })
             return render(request, self.template_name, context)
+
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
