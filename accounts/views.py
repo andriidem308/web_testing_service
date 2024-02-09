@@ -29,6 +29,12 @@ class LoginView(BaseLoginView):
     form_class = AuthenticationForm
     template_name = 'login.html'
 
+    def get(self, request, *args, **kwargs):
+        next_page = request.GET.get('next') or ''
+        form = AuthenticationForm()
+        context = {'form': form, 'next_page': next_page}
+        return render(request, self.template_name, context)
+
 
 class SignUpView(CreateView):
     model = User
@@ -51,3 +57,9 @@ class SignUpView(CreateView):
         else:
             context = {'form': form, 'user_type': user_type}
             return render(request, self.template_name, context)
+
+
+def forbidden_view(request, user_type):
+    next_page = request.GET.get('next')
+    context = {'user_type': user_type, 'next_page': next_page}
+    return render(request, 'forbidden.html', context=context)

@@ -399,3 +399,140 @@ main {
   }
 
 }
+
+.dataTables_wrapper {
+  width: 60rem;
+  margin: 2rem auto;
+
+}
+
+.dataTables_length {
+  margin: 1.5rem;
+
+  select {
+
+    margin: 0 0.25rem;
+    padding: 0.25rem;
+
+    border: 1px solid $dark;
+    border-radius: 0.5rem;
+  }
+}
+
+.dataTables_filter {
+  margin: 1.5rem;
+
+  input {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+
+    border: 1px solid $dark;
+    border-radius: 1rem;
+  }
+}
+
+.students-table {
+  border-radius: 12px;
+  margin: 1.5rem;
+  //padding: 1.5rem 2rem;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
+
+  text-align: left;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 18px 0px;
+  }
+
+
+  width: 100%;
+  background-color: $light-hover;
+
+  thead th {
+    padding: 1.5rem 2rem;
+    background-color: $primary;
+
+    color: $light;
+
+    &:first-child {
+      border-radius: 12px 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 12px 0 0;
+    }
+
+  }
+  tbody td {
+    padding: 0.5rem 2rem;
+  }
+
+  tbody tr:last-child {
+    padding-bottom: 1rem ;
+
+    td:first-child {
+      border-radius: 0 0 0 12px;
+    }
+
+    td:last-child {
+      border-radius: 0 0 12px 0;
+    }
+  }
+
+  mark {
+    background-color: $action-hover;
+    color: $dark;
+  }
+
+  th, td {
+    padding: 0.5rem 0;
+  }
+
+  tbody tr {
+
+    &.odd {
+      background-color: $light;
+    }
+
+    &:hover {
+      background-color: #c5c5c5;
+    }
+  }
+
+}
+
+.dataTables_info {
+  display: none;
+}
+
+.dataTables_paginate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  a {
+    margin: 0 0.75rem;
+    padding: 0.5rem 1rem;
+
+    background-color: $primary;
+    color: $light;
+
+    border-radius: 1rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+
+
+  }
+
+  a.current {
+    background-color: $action;
+  }
+
+
+}

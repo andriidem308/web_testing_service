@@ -20,3 +20,6 @@ requirements:
 
 admin:
 	$(MANAGE) createsuperuser
+
+app:
+	$(MANAGE) startapp $(app)
