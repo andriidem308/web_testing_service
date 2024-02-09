@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
+import boto3
 
 from main.forms import (
     GroupCreateForm, GroupUpdateForm,
@@ -12,11 +13,15 @@ from main.models import (
 )
 from main.services import article_service
 from main.services.code_solver import test_student_solution
+from main.services.s3_helper import upload_file_to_s3
 from main.services.users_service import get_teacher, get_student
 from main.services import paginate_service
+from web_testing_service import settings
 
 from web_testing_service.settings import MEDIA_URL
 
+
+PATH_TO_TEST_FILE = "tests.json"
 
 def test(request):
     context = {'comments': ['Comment 1', 'Comment 2', 'Comment 3']}
@@ -291,28 +296,29 @@ class ProblemCreateView(CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
         form = ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
-            return redirect('problem', pk=self.object.pk)
-        else:
-            comment_form, comments = article_service.comment_method(self.object, self.request)
-            context = self.get_context_data(problem=self.object)
+            print(form.cleaned_data)
+            instance = form.save(commit=False)
+            instance.teacher = teacher
 
-            context.update({
-                'user': user,
-                'form': form,
-                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
-                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
-                'comment_form': comment_form,
-                'comments': comments,
-                'MEDIA_URL': MEDIA_URL,
-            })
+            if settings.workflow == 's3':
+                instance.save()
+
+                test_file = request.FILES.get('test_file')
+                if test_file:
+                    upload_file_to_s3(instance, test_file)
+
+            elif settings.workflow == 'local':
+                form.save()
+
+            return redirect('problems')
+
+        else:
+            context = {'form': form, 'user': user}
             return render(request, self.template_name, context)
 
 
@@ -402,10 +408,15 @@ class ProblemTakeView(CreateView):
         form = ProblemTakeForm(problem, student, request.POST)
         if form.is_valid():
             solution = form.save(commit=False)
-            solution.problem_view = problem
+            solution.problem = problem
             solution.student = student
+            if settings.workflow == 's3':
+                s3_path = problem.test_file.name
+                if read_file_from_s3(s3_path, PATH_TO_TEST_FILE):
+                    test_file = PATH_TO_TEST_FILE
 
-            test_file = problem.test_file
+            elif settings.workflow == 'local':
+                test_file = problem.test_file
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
 
@@ -414,6 +425,8 @@ class ProblemTakeView(CreateView):
                                                           test_filename=test_file)
 
             score = round(test_score_percentage * problem.max_points, 1)
+            # if settings.workflow == 's3':
+
             print(score)
 
             if timezone.now() > problem.deadline:

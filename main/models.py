@@ -3,6 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from accounts.models import User
+from main.services.s3_helper import S3MediaStorage
+from web_testing_service import settings
 
 
 class Teacher(models.Model):
@@ -65,7 +67,10 @@ class Problem(Article):
     max_execution_time = models.IntegerField()
     deadline = models.DateTimeField()
 
-    test_file = models.FileField(upload_to='problems/test_files/', null=True)
+    if settings.workflow == 's3':
+        test_file = models.FileField(upload_to='', storage=S3MediaStorage(), null=True)
+    elif settings.workflow == 'local':
+        test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
 
 class Lecture(Article):

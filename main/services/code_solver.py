@@ -3,6 +3,8 @@ import os
 import time
 from subprocess import PIPE, Popen
 
+from web_testing_service import settings
+
 
 def test_student_solution(code, exec_time, test_filename):
     temporary_filename = 'test_solution.py'

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv.main import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
 
     'sass_processor',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +157,9 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_REDIRECT_URL = "profile"
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
+
+load_dotenv()
+aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
+aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+aws_storage_bucket_name = os.getenv("AWS_STORAGE_BUCKET_NAME")
+workflow = os.getenv("WORKFLOW")
