@@ -14,6 +14,14 @@ class Teacher(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
 
 class Group(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -40,11 +48,37 @@ class Student(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
-    def get_group(self):
-        return self.group
+    def get_full_name(self):
+        return self.user.get_full_name()
 
-    def get_group_name(self):
+    @property
+    def group_name(self):
         return self.group.name
+
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
+    @property
+    def total_score(self):
+        solutions = Solution.objects.filter(student=self)
+        problems = Problem.objects.filter(groups__in=[self.group])
+
+        if problems:
+            sum_score = sum(solution.score for solution in solutions) / len(problems)
+        else:
+            sum_score = 0
+
+        return sum_score
+
+    @property
+    def problems_solved(self):
+        solutions_amount = Solution.objects.filter(student=self).count()
+        return solutions_amount
 
 
 class Article(models.Model):
@@ -112,3 +146,8 @@ class Solution(models.Model):
 
     def get_owner_name(self):
         return self.student.user.get_full_name()
+
+    @property
+    def points(self):
+        return round(self.score * self.problem.max_points, 1)
+

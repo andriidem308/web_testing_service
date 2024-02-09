@@ -57,35 +57,55 @@
         </div>
         <div class="article-right">
             {% if student and problem %}
-                <div class="article-solutions card">
-                    <div class="solution-headline">
-                        <h3>Your solution</h3>
-                        {% if solution %}
+                {% if solution %}
+                    <div class="article-solutions card">
+                        <div class="solution-headline">
+                            <h3>Your solution</h3>
                             <h4 class="rounded-tile success">Taken</h4>
-                        {% else %}
-                            <h4 class="rounded-tile danger">None</h4>
-                        {% endif %}
-                    </div>
-                    {% if solution %}
+                        </div>
                         <div class="solution-score">
-                            <div class="rounded-tile action score">{{ solution.score }}/{{ article.max_points }}</div>
+                            <div class="rounded-tile action score">{{ solution.points }}/{{ article.max_points }}</div>
                             <div class="taken">
                                 <div class="taken-time">{{ solution.date_solved|date:'H:i'}}</div>
                                 <div class="taken-date">{{ solution.date_solved|date:'d/m/Y'}}</div>
                             </div>
                             <div class="checked">
                                 {% if solution.checked %}
-                                    <i class="fa-solid fa-square-check success-text"></i>
+                                    <i class="fa-solid fa-circle-check success-text"></i>
                                 {% else %}
-                                    <i class="fa-solid fa-square-xmark danger-text"></i>
+                                    <i class="fa-solid fa-circle-question action-text"></i>
                                 {% endif %}
                             </div>
                         </div>
-                    {% else %}
+                        <a class="pretty-button primary"><i class="fa-solid fa-download"></i>&nbsp;&nbsp;Solution</a>
+                    </div>
+                {% else %}
+                    <div class="article-solutions card">
+                        <div class="solution-headline">
+                            <h3>Your solution</h3>
+                            <h4 class="rounded-tile danger">None</h4>
+                        </div>
                         <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
-                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if teacher and problem %}
+                <div class="article-solutions card">
+                    <div class="solution-headline center">
+                        <h3>Solutions</h3>
+                    </div>
+                    <div class="solutions-list">
+                        {% for solution in solutions %}
+                            <div class="solution-item">
+                                Hey
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="pretty-button primary"><i class="fa-solid fa-download"></i>&nbsp;&nbsp;Solution</a>
                 </div>
             {% endif %}
+
             {% if user.is_authenticated %}
                 <form class="leave-comment card" method="POST">
                     {% csrf_token %}

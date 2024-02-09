@@ -62,43 +62,23 @@ class SolutionViewSet(viewsets.ModelViewSet):
 
 
 def group_data(request, pk):
-    search_value = request.GET.get('search[value]', '').strip()
-    page_size = int(request.GET.get('length', 0))
-    offset = int(request.GET.get('start', 0))
-
     students = get_students_by_group(pk)
     filtered_students = table_service.filter_students(request, students)
-    selected_students = filtered_students[offset:offset + page_size]
+    selected_students = table_service.select_students(request, filtered_students)
 
     result = {
         'draw': request.GET.get('draw'),
         'recordsTotal': students.count(),
-        'recordsFiltered': filtered_students.count(),
-        'data': list(),
+        'recordsFiltered': len(filtered_students),
+        'data': [],
     }
 
-    problems = Problem.objects.filter(groups__in=[pk])
-    total_points = sum(problem.max_points for problem in problems)
-    print(total_points)
-
     for student in selected_students:
-        first_name = student.user.first_name
-        last_name = student.user.last_name
-
-        if search_value:
-            first_name = table_service.highlight_search(first_name, search_value)
-            last_name = table_service.highlight_search(last_name, search_value)
-
-        solutions = Solution.objects.filter(student=student)
-        points = sum(solution.score for solution in solutions)
-
-        score_percentage = round(points / total_points * 100)
-
         result['data'].append({
-            'first_name': first_name,
-            'last_name': last_name,
-            'score_percentage': f'{score_percentage}%',
-            'problems_solved': f'{solutions.count()}/{problems.count()}',
+            'first_name': table_service.highlight_search(student.first_name, request),
+            'last_name': table_service.highlight_search(student.last_name, request),
+            'score_percentage': f'{round(student.total_score, 3) * 100}%',
+            'problems_solved': student.problems_solved,
         })
 
     return JsonResponse(result, safe=False)
