@@ -10,19 +10,19 @@ from storages.backends.s3boto3 import S3Boto3Storage
 #     location = 'problems/test_files/'
 
 
-class S3ProblemTestFilesStorage(S3Boto3Storage):
-    location = 'problems/test_files/'
+# class S3ProblemTestFilesStorage(S3Boto3Storage):
+#     location = 'problems/test_files/'
 
 
-def upload_file_to_s3(test_file):
-    s3 = boto3.client('s3',
-                      aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-    s3_path = f'problems/test_files/{test_file.name}'
-
-    s3.upload_fileobj(test_file, bucket_name, s3_path)
+# def upload_file_to_s3(test_file):
+#     s3 = boto3.client('s3',
+#                       aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+#                       aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+#
+#     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+#     s3_path = f'problems/test_files/{test_file.name}'
+#
+#     s3.upload_fileobj(test_file, bucket_name, s3_path)
 
 
 

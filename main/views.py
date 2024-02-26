@@ -11,7 +11,7 @@ from main import forms
 from main.forms import ProblemCreateForm
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher
 from main.services import article_service, code_solver, paginate_service, users_service
-from main.services.s3_helper import upload_file_to_s3
+# from main.services.s3_helper import upload_file_to_s3
 from web_testing_service import settings
 from web_testing_service.settings import MEDIA_URL
 
