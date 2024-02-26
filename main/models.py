@@ -2,7 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from accounts.models import User
-from main.services.s3_helper import S3ProblemTestFilesStorage
 from web_testing_service import settings
 
 

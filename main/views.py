@@ -356,11 +356,8 @@ class ProblemCreateView(CreateView):
         teacher = Teacher.objects.get(user=user)
         form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
 
-        print(form.errors)
-
         if form.is_valid():
             form.save()
-            print(form.cleaned_data)
             return redirect('problems')
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
@@ -373,10 +370,8 @@ class ProblemCreateView(CreateView):
                 'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
                 'comment_form': comment_form,
                 'comments': comments,
-                'MEDIA_URL': MEDIA_URL,
             })
             return render(request, self.template_name, context)
-
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -405,7 +400,6 @@ class ProblemUpdateView(UpdateView):
             'comments': comments,
             'teacher': teacher,
             'student': student,
-            'MEDIA_URL': MEDIA_URL,
         })
 
         return self.render_to_response(context)
