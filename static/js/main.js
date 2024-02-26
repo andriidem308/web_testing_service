@@ -83,7 +83,6 @@ function displayFileName() {
     }
 }
 
-
 function testFileService() {
     "use strict";
 
@@ -98,8 +97,7 @@ function testFileService() {
         selectedFiles.innerHTML = selectedFiles.innerHTML.replace(/Currently:.*Change:/s, '');
         if (oldTestFile) {
             const rawFilename = oldTestFile.getAttribute('href');
-            const clearFilename = rawFilename.split('/').pop();
-
+            const clearFilename = rawFilename.split('/').pop().split('?')[0];
             const oldTestFileTile = document.createElement('a');
             oldTestFileTile.textContent = clearFilename;
             oldTestFileTile.classList.add('pretty-button');

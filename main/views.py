@@ -359,16 +359,8 @@ class ProblemCreateView(CreateView):
         print(form.errors)
 
         if form.is_valid():
+            form.save()
             print(form.cleaned_data)
-
-
-            if settings.workflow == 's3':
-                upload_file_to_s3(form.cleaned_data['test_file'])
-                form.save()
-
-            elif settings.workflow == 'local':
-                form.save()
-
             return redirect('problems')
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
@@ -479,13 +471,13 @@ class ProblemTakeView(CreateView):
             solution = form.save(commit=False)
             solution.problem = problem
             solution.student = student
-            if settings.workflow == 's3':
-                s3_path = problem.test_file.name
-                if read_file_from_s3(s3_path, PATH_TO_TEST_FILE):
-                    test_file = PATH_TO_TEST_FILE
-
-            elif settings.workflow == 'local':
-                test_file = problem.test_file
+            # if settings.WORKFLOW == 's3':
+            #     s3_path = problem.test_file.name
+            #     if read_file_from_s3(s3_path, PATH_TO_TEST_FILE):
+            #         test_file = PATH_TO_TEST_FILE
+            #
+            # elif settings.WORKFLOW == 'local':
+            test_file = problem.test_file
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
 

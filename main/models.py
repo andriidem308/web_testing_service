@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from accounts.models import User
-from main.services.s3_helper import S3MediaStorage
+from main.services.s3_helper import S3ProblemTestFilesStorage
 from web_testing_service import settings
 
 
@@ -102,8 +102,23 @@ class Problem(Article):
     max_execution_time = models.IntegerField()
     deadline = models.DateTimeField()
 
-
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
+    # test_file = models.FileField(storage=S3ProblemTestFilesStorage(), null=True)
+
+    def save(self, *args, **kwargs):
+        self.test_file.name = f"{self.problem_slug}_{self.test_file.name}"
+        super(Problem, self).save(*args, **kwargs)
+
+    @property
+    def test_file_name(self):
+        return self.test_file.name.replace(f'{self.problem_slug}_', '')
+
+    @property
+    def problem_slug(self):
+        teacher_slug = f'{self.teacher.first_name}_{self.teacher.last_name}'.lower()
+        headline_slug = f'{self.headline}'.lower()
+
+        return f'{teacher_slug}_{headline_slug}'.replace(' ', '_')
 
 
 class Lecture(Article):
