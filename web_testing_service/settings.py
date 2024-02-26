@@ -5,7 +5,6 @@ from dotenv.main import load_dotenv
 
 load_dotenv()
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
@@ -16,9 +15,7 @@ DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
-
 # APPS
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +33,7 @@ INSTALLED_APPS = [
     'storages',
 ]
 
+# MIDDLEWARES
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,6 +46,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'web_testing_service.urls'
 
+# TEMPLATES
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -69,9 +68,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web_testing_service.wsgi.application'
 
-
 # DATABASES
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -79,9 +76,7 @@ DATABASES = {
     }
 }
 
-
 # PASSWORD VALIDATION
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -97,12 +92,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # INTERNATIONALIZATION
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'EET'
 
 DATE_FORMAT = "Y-m-d %H:%M:%S"
@@ -114,7 +105,6 @@ USE_I18N = True
 
 
 # STATIC FILES
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -126,9 +116,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 SASS_PROCESSOR_ROOT = STATIC_ROOT
 
-
 # MEDIA FILES
-
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
