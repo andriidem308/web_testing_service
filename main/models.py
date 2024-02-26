@@ -102,10 +102,8 @@ class Problem(Article):
     max_execution_time = models.IntegerField()
     deadline = models.DateTimeField()
 
-    if settings.workflow == 's3':
-        test_file = models.FileField(upload_to='', storage=S3MediaStorage(), null=True)
-    elif settings.workflow == 'local':
-        test_file = models.FileField(upload_to='problems/test_files/', null=True)
+
+    test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
 
 class Lecture(Article):
