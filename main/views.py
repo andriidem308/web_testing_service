@@ -9,6 +9,9 @@ from accounts.decorators import student_required, teacher_required
 from main import forms
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher
 from main.services import article_service, code_solver, paginate_service, users_service
+
+from main.services.code_solver_util import read_json_local, read_json_s3
+from web_testing_service import settings
 from web_testing_service.settings import MEDIA_URL
 
 
@@ -378,7 +381,17 @@ class ProblemCreateView(CreateView):
             form.save()
             return redirect('problems')
         else:
-            context = {'form': form, 'teacher': teacher}
+            comment_form, comments = article_service.comment_method(self.object, self.request)
+            context = self.get_context_data(problem=self.object)
+
+            context.update({
+                'user': user,
+                'form': form,
+                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
+                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
+                'comment_form': comment_form,
+                'comments': comments,
+            })
             return render(request, self.template_name, context)
 
 
@@ -408,7 +421,6 @@ class ProblemUpdateView(UpdateView):
             'comments': comments,
             'teacher': teacher,
             'student': student,
-            'MEDIA_URL': MEDIA_URL,
         })
 
         return self.render_to_response(context)
@@ -474,15 +486,21 @@ class ProblemTakeView(CreateView):
             solution = form.save(commit=False)
             solution.problem = problem
             solution.student = student
-
-            test_file = problem.test_file
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
+            tests = None
+            if problem.test_file:
+                if settings.WORKFLOW == 's3':
+                    if problem.test_file:
+                        tests = read_json_s3(problem.test_file)
+
+                if settings.WORKFLOW == 'local':
+                    tests = read_json_local(problem.test_file.path)
 
             score = code_solver.test_student_solution(
                 code=solution_code,
                 exec_time=max_execution_time,
-                test_filename=test_file
+                tests=tests
             )
 
             if timezone.now() > problem.deadline:
