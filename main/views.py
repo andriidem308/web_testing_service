@@ -33,7 +33,13 @@ class GroupListView(ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
+
         context = super().get_context_data(*args, **kwargs)
         groups = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
         teacher = users_service.get_teacher(request.user)
@@ -116,7 +122,13 @@ class LectureListView(ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
+
         context = super().get_context_data(*args, **kwargs)
         lectures = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
         teacher = users_service.get_teacher(request.user)
@@ -263,12 +275,24 @@ class ProblemListView(ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
         context = super().get_context_data(*args, **kwargs)
-        teacher = users_service.get_teacher(request.user)
+
+        user = request.user
+
+        teacher = users_service.get_teacher(user)
         problems = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
-        context['problems'] = problems
-        context['teacher'] = teacher
+
+        context.update({
+            'problems': problems,
+            'teacher': teacher,
+        })
+
         return self.render_to_response(context)
 
     def get_context_data(self, *args, **kwargs):
