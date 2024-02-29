@@ -95,14 +95,17 @@
                         <h3>Solutions</h3>
                     </div>
                     <div class="solutions-list">
-                        {% for solution in solutions %}
-                            <div class="solution-item">
-                                Hey
-                            </div>
-                        {% endfor %}
-                    </div>
 
-                    <a class="pretty-button primary"><i class="fa-solid fa-download"></i>&nbsp;&nbsp;Solution</a>
+                        {% for solution in solutions|slice:":3" %}
+                            <a class="solution-item" href="{% url 'solution' pk=solution.pk %}">
+                                <div>{{ solution.student.first_name }} {{ solution.student.last_name }}</div>
+                                <div>{{ solution.student.group }}</div>
+                            </a>
+                        {% endfor %}
+                        {% if solutions.count > 3 %}
+                            <a class="solution-item primary center" href="{% url 'solutions' pk=problem.pk%}"><b>+{{ solutions.count|add:-3 }} more</b></a>
+                        {% endif %}
+                    </div>
                 </div>
             {% endif %}
 

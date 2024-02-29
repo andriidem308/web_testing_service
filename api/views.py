@@ -82,3 +82,26 @@ def group_data(request, pk):
         })
 
     return JsonResponse(result, safe=False)
+
+
+def solutions_data(request, pk):
+    students = get_students_by_group(pk)
+    filtered_students = table_service.filter_students(request, students)
+    selected_students = table_service.select_students(request, filtered_students)
+
+    result = {
+        'draw': request.GET.get('draw'),
+        'recordsTotal': students.count(),
+        'recordsFiltered': len(filtered_students),
+        'data': [],
+    }
+
+    for student in selected_students:
+        result['data'].append({
+            'first_name': table_service.highlight_search(student.first_name, request),
+            'last_name': table_service.highlight_search(student.last_name, request),
+            'score_percentage': f'{round(student.total_score, 3) * 100}%',
+            'problems_solved': student.problems_solved,
+        })
+
+    return JsonResponse(result, safe=False)

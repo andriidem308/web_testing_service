@@ -88,6 +88,7 @@
 
   flex-wrap: wrap;
 
+  max-height: 40rem;
   min-height: 33rem;
 }
 
@@ -99,7 +100,9 @@
 
   width: 42rem;
 
-  min-height: 36rem;
+
+  max-height: 40rem;
+
 
   hr {
     margin: 20px 0;
@@ -302,9 +305,8 @@
       }
 
       .checked {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
-
     }
   }
 
