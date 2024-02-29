@@ -14,6 +14,8 @@ $success: #27aa23;
 $success-hover: #24bb1f;
 $primary: #23537e;
 $primary-hover: #326fa2;
+$primary-light: #cee2f3;
+$primary-light-hover: #96c3ee;
 
 $nav-height: 60px;
 
@@ -144,6 +146,35 @@ h1, h2, h3, h4, h5 {
   font-weight: bold;
   border-radius: 12px;
   color: $light;
+}
+
+.filter-row {
+  margin: 20px 0;
+}
+
+.button-bordered {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: 0.3s ease-out;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  color: $primary;
+
+  border: 2px solid $primary;
+
+  &.filter-active {
+    background-color: $primary-light;
+  }
+
+  &:hover {
+    background-color: $primary-light-hover;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+
 }
 
 .rounded-tile {

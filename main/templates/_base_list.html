@@ -8,6 +8,11 @@
             <i class="fa-solid fa-plus"></i>New {{ object_name }}</a>
     {% endif %}
 
+    <div class="filter-row">
+        <a id="filter-teacher" class="button-bordered filter-teacher" href="{% url base_url %}">My</a>
+        <a id="filter-all" class="button-bordered filter-all" href="{% url base_url %}?show_all=1">All</a>
+    </div>
+
 </div>
 
 <div class="items-list">
@@ -61,7 +66,18 @@
     {% endfor %}
 </div>
 
-
-
 {% include '_pagination.html' with items=items %}
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const showAll = urlParams.get('show_all');
+
+    if (showAll) {
+        document.getElementById('filter-all').classList.add('filter-active');
+        document.getElementById('filter-teacher').classList.remove('filter-active');
+    } else {
+        document.getElementById('filter-teacher').classList.add('filter-active');
+        document.getElementById('filter-all').classList.remove('filter-active');
+    }
+</script>
 
