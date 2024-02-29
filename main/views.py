@@ -1,4 +1,3 @@
-from django.contrib.messages.storage import default_storage
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -8,14 +7,12 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.decorators import student_required, teacher_required
 from main import forms
-from main.forms import ProblemCreateForm
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher
 from main.services import article_service, code_solver, paginate_service, users_service
-# from main.services.s3_helper import upload_file_to_s3
+
+from main.services.code_solver_util import read_json_local, read_json_s3
 from web_testing_service import settings
 from web_testing_service.settings import MEDIA_URL
-
-PATH_TO_TEST_FILE = "tests.json"
 
 
 def test(request):
@@ -465,20 +462,21 @@ class ProblemTakeView(CreateView):
             solution = form.save(commit=False)
             solution.problem = problem
             solution.student = student
-            # if settings.WORKFLOW == 's3':
-            #     s3_path = problem.test_file.name
-            #     if read_file_from_s3(s3_path, PATH_TO_TEST_FILE):
-            #         test_file = PATH_TO_TEST_FILE
-            #
-            # elif settings.WORKFLOW == 'local':
-            test_file = problem.test_file
             solution_code = solution.solution_code
             max_execution_time = problem.max_execution_time
+            tests = None
+            if problem.test_file:
+                if settings.WORKFLOW == 's3':
+                    if problem.test_file:
+                        tests = read_json_s3(problem.test_file)
+
+                if settings.WORKFLOW == 'local':
+                    tests = read_json_local(problem.test_file.path)
 
             score = code_solver.test_student_solution(
                 code=solution_code,
                 exec_time=max_execution_time,
-                test_filename=test_file
+                tests=tests
             )
 
             if timezone.now() > problem.deadline:

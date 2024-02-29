@@ -3,16 +3,13 @@ import os
 import time
 from subprocess import PIPE, Popen
 
-from web_testing_service import settings
 
 
-def test_student_solution(code, exec_time, test_filename):
+def test_student_solution(code, exec_time, tests):
     temporary_filename = 'test_solution.py'
     with open(temporary_filename, 'w') as temporary_file:
         temporary_file.write(code)
 
-    with open(test_filename.path) as tests_file:
-        tests = json.load(tests_file)
     successful_tests = 0
     total_tests = len(tests)
 

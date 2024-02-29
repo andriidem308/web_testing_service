@@ -2,7 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from accounts.models import User
-from web_testing_service import settings
 
 
 class Teacher(models.Model):
@@ -102,7 +101,6 @@ class Problem(Article):
     deadline = models.DateTimeField()
 
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
-    # test_file = models.FileField(storage=S3ProblemTestFilesStorage(), null=True)
 
     def save(self, *args, **kwargs):
         self.test_file.name = f"{self.problem_slug}_{self.test_file.name}"
