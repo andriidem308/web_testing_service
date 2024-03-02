@@ -1,9 +1,10 @@
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LoginView as BaseLoginView, PasswordChangeView as BasePasswordChangeView
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from accounts.forms import AuthenticationForm, SignUpForm
+from accounts.forms import AuthenticationForm, SignUpForm, PasswordChangeForm
 from accounts.models import User
 from main.models import Student, Teacher
 
@@ -57,6 +58,12 @@ class SignUpView(CreateView):
         else:
             context = {'form': form, 'user_type': user_type}
             return render(request, self.template_name, context)
+
+
+class PasswordChangeView(BasePasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('profile')
+    template_name = 'password_change.html'
 
 
 def forbidden_view(request, user_type):
