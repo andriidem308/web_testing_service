@@ -104,7 +104,7 @@ class ProblemCreateForm(forms.ModelForm):
         input_formats=['%Y-%m-%d %H:00:00'],
         widget=forms.DateTimeInput(
             attrs={
-                'autocomplete': 'off',
+                # 'autocomplete': 'off',
                 'class': 'form-control datetimeinput datetimepicker-input pretty-input',
                 'data-target': '#id_deadline'
             },

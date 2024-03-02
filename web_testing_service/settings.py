@@ -131,9 +131,15 @@ LOGOUT_REDIRECT_URL = 'login'
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+
 WORKFLOW = os.getenv("WORKFLOW")
 
-if WORKFLOW == 's3':
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-if WORKFLOW == 'local':
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+LOCAL_STORAGE = 'django.core.files.storage.FileSystemStorage'
+S3_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+DEFAULT_FILE_STORAGE = S3_STORAGE
+
+# if WORKFLOW == 's3':
+#     DEFAULT_FILE_STORAGE = S3_STORAGE
+# if WORKFLOW == 'local':
+#     DEFAULT_FILE_STORAGE = LOCAL_STORAGE

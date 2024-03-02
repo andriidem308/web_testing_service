@@ -23,3 +23,9 @@ admin:
 
 app:
 	$(MANAGE) startapp $(app)
+
+delete_branches:
+	(git branch | grep -v "main" | xargs git branch -D)
+
+pull_and_delete:
+	git checkout main && git pull && make delete_branches

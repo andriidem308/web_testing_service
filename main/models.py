@@ -3,6 +3,12 @@ from django.db import models
 
 from accounts.models import User
 
+from web_testing_service.settings import WORKFLOW, LOCAL_STORAGE, DEFAULT_FILE_STORAGE, S3_STORAGE
+from main.storages import app_storage
+
+TEST_FILES_PATH_LOCAL = 'problems/test_files/'
+TEST_FILES_PATH_S3 = ''
+
 
 class Teacher(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -100,10 +106,20 @@ class Problem(Article):
     max_execution_time = models.IntegerField()
     deadline = models.DateTimeField()
 
-    test_file = models.FileField(upload_to='problems/test_files/', null=True)
+    test_file = models.FileField(upload_to=TEST_FILES_PATH_S3, storage=app_storage, null=True)
+    filename = models.CharField(max_length=255)
+    is_on_s3 = models.BooleanField(default=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Problem, self).__init__(*args, **kwargs)
+
 
     def save(self, *args, **kwargs):
-        self.test_file.name = f"{self.problem_slug}_{self.test_file.name}"
+        self.test_file.name = f'{self.test_file.name}'  # TODO: change this way: "{teacher}_{problem}_{filename}"
+        if WORKFLOW == 'local':
+            self.test_file.upload_to = TEST_FILES_PATH_LOCAL
+            self.is_on_s3 = False
+
         super(Problem, self).save(*args, **kwargs)
 
     @property
@@ -112,10 +128,8 @@ class Problem(Article):
 
     @property
     def problem_slug(self):
-        teacher_slug = f'{self.teacher.first_name}_{self.teacher.last_name}'.lower()
-        headline_slug = f'{self.headline}'.lower()
-
-        return f'{teacher_slug}_{headline_slug}'.replace(' ', '_')
+        problem_slug = f'{self.teacher.first_name}_{self.teacher.last_name}_{self.headline}'
+        return problem_slug.replace(' ', '_').lower()
 
 
 class Lecture(Article):
