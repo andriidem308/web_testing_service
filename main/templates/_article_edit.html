@@ -79,6 +79,14 @@
 
         </div>
         <div class="article-right">
+            {% if teacher %}
+                <div class="article-groups-select card">
+                    <h2>Select groups</h2>
+                    {{ form.groups }}
+                </div>
+            {% endif %}
+
+
             {% if student and problem %}
                 <div class="article-solutions card">
                     <div class="solution-headline">
@@ -111,23 +119,6 @@
             {% endif %}
         </div>
     </form>
-    {% if comments %}
-    <div class="article-comments">
-        <h2 class="comments-headline" >Comments</h2>
-        {% for comment in comments %}
-            <div class="comment card">
-                <div class="comment-top">
-                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
-                    <div class="separator">•</div>
-                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
-                </div>
-                <div class="comment-bottom">
-                    {{ comment.content }}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     <div class="disabled-area" id="disabled-area"></div>
 

@@ -56,6 +56,16 @@
 
         </div>
         <div class="article-right">
+            {% if teacher %}
+                <div class="selected-groups card">
+                    <h2>Groups</h2>
+
+                    {% for group in article.groups.all %}
+                        <p>{{ group.name }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             {% if student and problem %}
                 {% if solution %}
                     <div class="article-solutions card">
@@ -101,10 +111,13 @@
                                 <div>{{ solution.student.first_name }} {{ solution.student.last_name }}</div>
                                 <div>{{ solution.student.group }}</div>
                             </a>
+                        {% empty %}
+                            <h4 class="rounded-tile action">Not yet solved</h4>
                         {% endfor %}
                         {% if solutions.count > 3 %}
                             <a class="solution-item primary center" href="{% url 'solutions' pk=problem.pk%}"><b>+{{ solutions.count|add:-3 }} more</b></a>
                         {% endif %}
+
                     </div>
                 </div>
             {% endif %}
