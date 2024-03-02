@@ -387,7 +387,14 @@ class ProblemUpdateView(UpdateView):
     success_url = reverse_lazy('problems')
 
     def get(self, request, *args, **kwargs):
+        from main.storages import LocalStorage, S3Boto3Storage
+
         self.object = self.get_object()
+        if self.object.is_on_s3:
+            self.object.test_file.storage = S3Boto3Storage()
+        else:
+            self.object.test_file.storage = LocalStorage()
+
         context = self.get_context_data(object=self.object)
         context.update({
             'form': forms.ProblemUpdateForm(instance=self.object),
@@ -396,6 +403,9 @@ class ProblemUpdateView(UpdateView):
             'teacher': users_service.get_teacher(self.request.user),
             'student': users_service.get_student(self.request.user),
         })
+
+        print('h')
+        print(self.object.test_file.name)
 
         return self.render_to_response(context)
 
