@@ -211,50 +211,34 @@ class LectureUpdateView(UpdateView):
     template_name = 'lectures/lecture_edit.html'
     success_url = reverse_lazy('lectures')
 
-    # TODO: uncomment and implement
-    # def get(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     comments = article_service.get_comments(self.object)
-    #
-    #     teacher = get_teacher(self.request.user)
-    #     student = get_student(self.request.user)
-    #
-    #     context = self.get_context_data(object=self.object)
-    #
-    #     context.update({
-    #         'date_created': self.object.date_created,
-    #         'deadline': self.object.deadline,
-    #         'comments': comments,
-    #         'teacher': teacher,
-    #         'student': student,
-    #         'MEDIA_URL': MEDIA_URL,
-    #     })
-    #
-    #     return self.render_to_response(context)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     comments = article_service.get_comments(self.object)
-    #
-    #     user = self.request.user
-    #     teacher = get_teacher(user)
-    #     form = self.get_form()
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('problem', pk=self.object.pk)
-    #     else:
-    #         context = self.get_context_data(object=self.object)
-    #         context.update({
-    #             'user': user,
-    #             'form': form,
-    #             'date_created': self.object.date_created,
-    #             'deadline': self.object.deadline,
-    #             'comments': comments,
-    #             'teacher': teacher,
-    #             'errors': form.errors,
-    #         })
-    #         return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({
+            'form': forms.LectureUpdateForm(instance=self.object),
+            'date_created': self.object.date_created,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
+        })
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+
+        if form.is_valid():
+            form.save()
+            return redirect('lecture', pk=self.object.pk)
+        else:
+            context = self.get_context_data(object=self.object)
+            context.update({
+                'user': self.request.user,
+                'form': form,
+                'teacher': users_service.get_teacher(self.request.user),
+                'errors': form.errors,
+            })
+            return render(request, self.template_name, context)
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -378,7 +362,7 @@ class ProblemCreateView(CreateView):
         form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+            problem = form.save()
             return redirect('problems')
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
@@ -404,34 +388,21 @@ class ProblemUpdateView(UpdateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        comments = article_service.get_comments(self.object)
-
-        teacher = users_service.get_teacher(self.request.user)
-        student = users_service.get_student(self.request.user)
-
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
         context = self.get_context_data(object=self.object)
-
         context.update({
-            'form': form,
+            'form': forms.ProblemUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
-            'comments': comments,
-            'teacher': teacher,
-            'student': student,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
         })
 
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        comments = article_service.get_comments(self.object)
 
-        user = self.request.user
-        teacher = users_service.get_teacher(user)
-        form = self.get_form()
+        form = forms.ProblemUpdateForm(request.POST, request.FILES, instance=self.object)
 
         if form.is_valid():
             form.save()
@@ -439,12 +410,9 @@ class ProblemUpdateView(UpdateView):
         else:
             context = self.get_context_data(object=self.object)
             context.update({
-                'user': user,
+                'user': self.request.user,
                 'form': form,
-                'date_created': self.object.date_created,
-                'deadline': self.object.deadline,
-                'comments': comments,
-                'teacher': teacher,
+                'teacher': users_service.get_teacher(self.request.user),
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
