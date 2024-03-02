@@ -2,8 +2,8 @@ import re
 
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import (AuthenticationForm as BaseAuthenticationForm, UserCreationForm,
+                                       PasswordChangeForm as BasePasswordChangeForm)
 from django.db import transaction
 
 from main.models import Student, Teacher, Group
@@ -80,3 +80,24 @@ class SignUpForm(UserCreationForm):
             teacher = Teacher.objects.create(user=user)
 
         return user
+
+
+class PasswordChangeForm(BasePasswordChangeForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'pretty-input',
+            'placeholder': 'Old Password',
+        })
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'pretty-input',
+            'placeholder': 'New Password',
+        })
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'pretty-input',
+            'placeholder': 'Password Confirmation',
+        })
+    )
