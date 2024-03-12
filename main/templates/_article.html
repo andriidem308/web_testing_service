@@ -39,7 +39,7 @@
                 <hr>
 
                 <div class="article-content">
-                    {{ article.content }}
+                    {{ article.content|linebreaksbr }}
                 </div>
             </div>
             <div class="article-fields-bottom">
@@ -62,6 +62,8 @@
 
                     {% for group in article.groups.all %}
                         <p>{{ group.name }}</p>
+                    {% empty %}
+                        <p>No group assigned</p>
                     {% endfor %}
                 </div>
             {% endif %}

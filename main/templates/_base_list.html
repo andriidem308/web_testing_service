@@ -75,6 +75,10 @@
     if (showAll) {
         document.getElementById('filter-all').classList.add('filter-active');
         document.getElementById('filter-teacher').classList.remove('filter-active');
+        let paginationLinks = document.querySelectorAll('.step-links a');
+        paginationLinks.forEach(function (element) {
+            element.setAttribute('href', element.getAttribute('href') + '&show_all=1');
+        })
     } else {
         document.getElementById('filter-teacher').classList.add('filter-active');
         document.getElementById('filter-all').classList.remove('filter-active');
