@@ -5,7 +5,7 @@
                 <div class="top-row">
                     <h1 class="headline" id="headline">{{ article.headline }}</h1>
 
-                    {% if teacher %}
+                    {% if teacher and article.teacher == teacher %}
                     <div class="edit-actions">
                         {% if problem %}
                             <a class="action-hover" href="{% url 'problem_edit' pk=article.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
@@ -89,7 +89,8 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <a class="pretty-button primary"><i class="fa-solid fa-download"></i>&nbsp;&nbsp;Solution</a>
+
+                        <a class="pretty-button hover action" href="{% url 'problem_take' pk=problem.id %}">Retake</a>
                     </div>
                 {% else %}
                     <div class="article-solutions card">
@@ -97,7 +98,7 @@
                             <h3>Your solution</h3>
                             <h4 class="rounded-tile danger">None</h4>
                         </div>
-                        <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
+                        <a class="pretty-button hover action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
                     </div>
                 {% endif %}
             {% endif %}
@@ -110,7 +111,7 @@
 
                         {% for solution in solutions|slice:":3" %}
                             <a class="solution-item" href="{% url 'solution' pk=solution.pk %}">
-                                <div>{{ solution.student.first_name }} {{ solution.student.last_name }}</div>
+                                <div>{{ solution.student.last_name }} {{ solution.student.first_name|slice:1 }}.</div>
                                 <div>{{ solution.student.group }}</div>
                             </a>
                         {% empty %}
@@ -129,7 +130,7 @@
                     {% csrf_token %}
                     <h3>Leave a comment</h3>
                     {{ comment_form.content  }}
-                    <button class="pretty-button primary">Comment</button>
+                    <button class="pretty-button hover primary">Comment</button>
                 </form>
             {% endif %}
         </div>

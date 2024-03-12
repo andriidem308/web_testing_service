@@ -1,19 +1,31 @@
-$light: #fffdfa;
 $light: #f2f2f2;
 $light-hover: #ebebeb;
+
 $grey: #c5c5c5;
 $grey-hover: #989898;
+
 $dark: #363636;
 $dark-hover: #4d4d4d;
+$dark-void-hover: #d3d3d3;
+
 $action: #efaf00;
 $action-hover: #ffc32f;
+$action-void-hover: #fff7e5;
+
 $danger: #b22637;
 $danger-light: #fdc8c8;
 $danger-hover: #d23446;
+$danger-void-hover: #ffe9e9;
+
 $success: #27aa23;
 $success-hover: #24bb1f;
+$success-void-hover: #e5ffe5;
+
+
 $primary: #23537e;
 $primary-hover: #326fa2;
+$primary-void-hover: #eaf3ff;
+
 $primary-light: #cee2f3;
 $primary-light-hover: #96c3ee;
 
@@ -27,85 +39,79 @@ $nav-height: 60px;
   list-style: none;
 }
 
-@mixin common-style($bg-color, $text-color: $light) {
+@mixin common-style($bg-color, $hover-color, $void-hover-color, $text-color: $light) {
   background-color: $bg-color !important;
   color: $text-color !important;
 
-  &:hover {
-    background-color: darken($bg-color, 10%) !important;
-    color: $text-color !important;
+  transition: 0.3s ease-in;
+
+  &.hover {
+    &:hover {
+      background-color: $hover-color !important;
+      border-color: $hover-color !important;
+    }
+  }
+
+  &.pretty-button.void {
+    background-color: $light !important;
+    color: $bg-color !important;
+
+    &.hover {
+      &:hover {
+        background-color: $void-hover-color !important;
+        border-color: $bg-color !important;
+      }
+    }
   }
 }
 
-.danger {
-  @include common-style($danger);
-}
 
-.danger-hover {
-  &:hover {
-    color: $light !important;
-    background-color: $danger !important;
-  }
-}
-
-.danger-text {
-  color: $danger !important;
-}
-
-.success {
-  @include common-style($success);
-}
-
-.success-hover {
-  &:hover {
-    color: $light !important;
-    background-color: $success !important;
-  }
-}
-
-.success-text {
-  color: $success !important;
-}
-
-.dark {
-  @include common-style($dark, $light);
-}
-
-.dark-hover {
-  &:hover {
-    color: $light !important;
-    background-color: $dark !important;
-  }
-}
-
-.light {
-  @include common-style($light, $dark);
+.primary {
+  @include common-style($primary, $primary-hover, $primary-void-hover);
 }
 
 .action {
-  @include common-style($action);
+  @include common-style($action, $action-hover, $action-void-hover);
 }
 
-.action-hover {
-  &:hover {
-    color: $light !important;
-    background-color: $action !important;
-  }
+.danger {
+  @include common-style($danger, $danger-hover, $danger-void-hover);
+}
+
+.success {
+  @include common-style($success, $success-hover, $success-void-hover);
+}
+
+.dark {
+  @include common-style($dark, $dark-hover, $dark-void-hover);
+}
+
+.light {
+  @include common-style($light, $light-hover, $light-hover, $dark);
+}
+
+.primary-text {
+  color: $primary !important;
 }
 
 .action-text {
   color: $action !important;
 }
 
-.primary {
-  @include common-style($primary);
+.danger-text {
+  color: $danger !important;
 }
 
-.primary-hover {
-  &:hover {
-    color: $light  !important;
-    background-color: $primary !important;
-  }
+.success-text {
+  color: $success !important;
+}
+
+.dark-text {
+  color: $dark !important;
+}
+
+.light-text {
+  color: $light !important;
 }
 
 /* -------------- BODY -------------- */
@@ -122,30 +128,87 @@ body {
 
 a {
   color: $dark;
+  text-decoration: none;
 
   &:hover {
     color: $dark-hover;
   }
 }
 
-h1 {
-  font-size: 36px;
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, {
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
 }
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1.10rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h6 {
+  font-size: 0.875rem;
+}
+
+ol, ul {
+  padding: 0;
+}
+
 
 .pretty-button {
-  padding: 10px 20px;
-  margin: 10px;
-  cursor: pointer;
-  transition: 0.3s ease-out;
-  border: none;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 8px 16px;
+
+  border: 3px solid;
   border-radius: 12px;
+
   text-align: center;
-  color: $light;
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &.dark {
+    border-color: $dark;
+  }
+
+  &.danger {
+    border-color: $danger;
+  }
+
+  &.success {
+    border-color: $success;
+  }
+
+  &.action {
+    border-color: $action;
+  }
+
+  &.primary {
+    border-color: $primary;
+  }
+
 }
 
-.filter-row {
+.items-header__headline {
+  margin-bottom: 1rem;
+}
+
+.items-header__filters {
   margin: 20px 0;
 }
 
@@ -186,7 +249,7 @@ h1 {
 .card {
   background-color: $light-hover;
   border-radius: 12px;
-  margin: 1.5rem;
+  margin: 1rem;
   padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;

@@ -459,8 +459,7 @@ class ProblemTakeView(CreateView):
             tests = None
             if problem.test_file:
                 if settings.WORKFLOW == 's3':
-                    if problem.test_file:
-                        tests = read_json_s3(problem.test_file)
+                    tests = read_json_s3(problem.test_file)
 
                 if settings.WORKFLOW == 'local':
                     tests = read_json_local(problem.test_file.path)
@@ -499,4 +498,6 @@ class ProblemSolutionListView(ListView):
 
 @method_decorator([login_required], name='dispatch')
 class ProblemSolutionView(DetailView):
-    pass
+    model = Solution
+    context_object_name = 'solution'
+    template_name = 'problems/solution.html'

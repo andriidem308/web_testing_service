@@ -1,1 +1,101 @@
-{% block title %}Solution | {{ problem.headline }}{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Solution | {{ solution.problem.headline }}{% endblock %}
+
+{% block content %}
+    <div class="article-container">
+        <div class="article-box">
+            <div class="article-fields card">
+                <div class="article-fields-top">
+                    <div class="top-row">
+                        <h1 class="headline" id="headline">Solution | <a href="{% url 'problem' pk=solution.problem.pk %}">{{ solution.problem.headline }}</a></h1>
+                        {% if solution.score > 0.8 %}
+                            <div class="solution-score rounded-tile success">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% elif solution.score > 0.5 %}
+                            <div class="solution-score rounded-tile action">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% else %}
+                            <div class="solution-score rounded-tile danger">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="created-row">
+                        <div class="teacher">{{ solution.student.user.get_full_name}}</div>
+                        <div class="separator">•</div>
+                        <div class="created">{{ solution.date_solved|date:'d/m/Y, H:i' }}</div>
+                    </div>
+                    <hr>
+                    <div class="solution-code">
+                        <div class="solution-code__line-numbers" id="line-numbers"></div>
+                        <code class="solution-code__textarea" id="code-area">
+                            {{ solution.solution_code|linebreaks }}
+                        </code>
+                    </div>
+
+                </div>
+                <div class="article-fields-bottom">
+                    <hr>
+                <div class="buttons-row">
+                    <button class="pretty-button hover void primary">Mark as checked</button>
+                    <button class="pretty-button hover void action">Mark as checked</button>
+                    <button class="pretty-button hover void success">Mark as checked</button>
+                    <button class="pretty-button hover void danger">Mark as checked</button>
+                    <button class="pretty-button hover void dark">Mark as checked</button>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="pretty-button hover primary">Mark as checked</button>
+                    <button class="pretty-button hover action">Mark as checked</button>
+                    <button class="pretty-button hover success">Mark as checked</button>
+                    <button class="pretty-button hover danger">Mark as checked</button>
+                    <button class="pretty-button hover dark">Mark as checked</button>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="pretty-button hover void primary">Mark as checked</button>
+                    {% if user.is_teacher %}
+                        <button class="pretty-button hover primary">Mark as checked</button>
+                    {% endif %}
+                </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('code-area');
+        const lineNumbersEle = document.getElementById('line-numbers');
+
+        const displayLineNumbers = () => {
+            const lines = textarea.textContent.split('\n');
+            lineNumbersEle.innerHTML = Array.from({
+                length: lines.length,
+            }, (_, i) => `<div>${i + 1}</div>`).join('');
+        }
+
+        const textareaStyles = window.getComputedStyle(textarea);
+        [
+            'fontFamily',
+            'fontSize',
+            'fontWeight',
+            'letterSpacing',
+            'lineHeight',
+            'padding',
+        ].forEach((property) => {
+            lineNumbersEle.style[property] = textareaStyles[property];
+        });
+
+        displayLineNumbers();
+    </script>
+{% endblock %}
+
+
+
+
+

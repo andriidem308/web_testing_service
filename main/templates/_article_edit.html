@@ -67,11 +67,11 @@
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button success" type="submit">Save</button>
+                    <button class="pretty-button hover success" type="submit">Save</button>
                     {% if problem %}
-                        <a class="pretty-button danger" href="{% url 'problem' pk=article.id %}">Cancel</a>
+                        <a class="pretty-button hover danger" href="{% url 'problem' pk=article.id %}">Cancel</a>
                     {% elif lecture %}
-                        <a class="pretty-button danger" href="{% url 'lecture' pk=article.id %}">Cancel</a>
+                        <a class="pretty-button hover danger" href="{% url 'lecture' pk=article.id %}">Cancel</a>
                     {% endif %}
                 </div>
 
@@ -79,12 +79,7 @@
 
         </div>
         <div class="article-right">
-            {% if teacher %}
-                <div class="article-groups-select card">
-                    <h2>Select groups</h2>
-                    {{ form.groups }}
-                </div>
-            {% endif %}
+            {% if teacher %}{% include '_groups_select.html' %}{% endif %}
 
 
             {% if student and problem %}
@@ -113,7 +108,7 @@
                             </div>
                         </div>
                     {% else %}
-                        <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
+                        <a class="pretty-button hover action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
                     {% endif %}
                 </div>
             {% endif %}
@@ -125,8 +120,8 @@
     <div class="delete-confirmation card" id="delete-confirmation">
         <h3>Do you want delete "{{ article.headline }}" ?</h3>
         <div class="delete-confirmation-buttons">
-            <button class="pretty-button primary" onclick="closeDeleteConfirmation()">Cancel</button>
-            <a class="pretty-button danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
+            <button class="pretty-button hover primary" onclick="closeDeleteConfirmation()">Cancel</button>
+            <a class="pretty-button hover danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
         </div>
     </div>
 </div>

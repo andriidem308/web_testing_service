@@ -11,7 +11,9 @@
     <ul class="navigation">
         <li><a href="{% url 'lectures' %}">Lectures</a></li>
         <li><a href="{% url 'problems' %}">Problems</a></li>
-        <li><a href="{% url 'groups' %}">Groups</a></li>
+        {% if user.is_teacher %}
+            <li><a href="{% url 'groups' %}">Groups</a></li>
+        {% endif %}
         <li><a href="">Tests</a></li>
     </ul>
 

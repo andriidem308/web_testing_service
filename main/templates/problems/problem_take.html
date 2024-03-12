@@ -10,7 +10,7 @@
         <form class="solution-card card" method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
-            <div><h2 class="problem-content-headline"><b>Problem description:</b></h2></div>
+            <div><h2 class="problem-content-headline">Problem description:</h2></div>
             <hr>
             <div class="problem-content">{{ problem.content }}</div>
             <hr>
@@ -18,8 +18,8 @@
             <br>
 
             <div class="buttons-row">
-                <button class="pretty-button success">Save</button>
-                <button class="pretty-button danger">Cancel</button>
+                <button class="pretty-button hover success">Save</button>
+                <button class="pretty-button hover danger">Cancel</button>
             </div>
 
 

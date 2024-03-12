@@ -63,21 +63,18 @@
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button success" type="submit">Save</button>
+                    <button class="pretty-button hover success" type="submit">Save</button>
                     {% if type == 'problem' %}
-                        <a class="pretty-button danger" href="{% url 'problems' %}">Cancel</a>
+                        <a class="pretty-button hover danger" href="{% url 'problems' %}">Cancel</a>
                     {% elif type == 'lecture' %}
-                        <a class="pretty-button danger" href="{% url 'lectures' %}">Cancel</a>
+                        <a class="pretty-button hover danger" href="{% url 'lectures' %}">Cancel</a>
                     {% endif %}
                 </div>
 
             </div>
         </div>
 
-        <div class="article-groups-select card">
-            <h2>Select groups</h2>
-            {{ form.groups }}
-        </div>
+        {% include '_groups_select.html' %}
     </form>
 
     <div class="disabled-area" id="disabled-area"></div>

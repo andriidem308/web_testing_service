@@ -105,7 +105,7 @@ class ProblemCreateForm(forms.ModelForm):
         widget=forms.DateTimeInput(
             attrs={
                 'autocomplete': 'off',
-                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'class': 'datetimeinput datetimepicker-input pretty-input',
                 'data-target': '#id_deadline'
             },
         )
@@ -151,7 +151,7 @@ class ProblemUpdateForm(forms.ModelForm):
         widget=forms.DateTimeInput(
             attrs={
                 'autocomplete': 'off',
-                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'class': 'datetimeinput datetimepicker-input pretty-input',
                 'data-target': '#id_deadline'
             },
         )
@@ -208,7 +208,6 @@ class AttachmentForm(forms.ModelForm):
             'content': forms.TextInput(attrs={
                 "name": "images",
                 "type": "File",
-                "class": "form-control",
                 "multiple": "True",
                 "style": "display: none;",
                 'onchange': 'displayFileName()',

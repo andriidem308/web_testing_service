@@ -131,9 +131,9 @@ def create_problems(request):
 
             headline_lower = headline.lower().replace(' ', '_')
             teacher_lower = str(teacher).lower().replace(' ', '_')
-            test_filename = f'media/problems/test_files/{headline_lower}_{teacher_lower}.json'
+            test_filename = f'problems/test_files/{headline_lower}_{teacher_lower}.json'
 
-            with open(test_filename, 'w') as tmp_test_file:
+            with open('media/' + test_filename, 'w') as tmp_test_file:
                 tmp_test_file.write(json.dumps(problem_data.get('tests')))
 
             if not Problem.objects.filter(test_file=test_filename).exists():
