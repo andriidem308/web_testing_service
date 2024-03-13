@@ -227,6 +227,10 @@
 
       margin-bottom: 1rem;
 
+      h3 {
+        margin: 0;
+      }
+
       .rounded-tile.success:hover {
         background-color: $success !important;
       }
