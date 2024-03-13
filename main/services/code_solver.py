@@ -3,6 +3,26 @@ import os
 import time
 from subprocess import PIPE, Popen
 
+from django.utils import timezone
+
+from main.models import Solution
+from web_testing_service import settings
+
+
+def read_json_s3(file_field):
+    try:
+        file_content = file_field.open(mode='r')
+        file_content_str = file_content.read()
+        return json.loads(file_content_str)
+
+    except Exception as e:
+        print("Error while reading test file on S3:", e)
+        return None
+
+
+def read_json_local(file_path):
+    with open(file_path) as tests_file:
+        return json.load(tests_file)
 
 
 def test_student_solution(code, exec_time, tests):
@@ -36,3 +56,36 @@ def test_student_solution(code, exec_time, tests):
     os.remove(temporary_filename)
 
     return score
+
+
+def problem_take(solution):
+    current_time = timezone.now()
+
+    problem = solution.problem
+
+    problem_tests = []
+    if settings.WORKFLOW == 's3':
+        problem_tests = read_json_s3(problem.test_file)
+    if settings.WORKFLOW == 'local':
+        problem_tests = read_json_local(problem.test_file.path)
+
+    score = test_student_solution(
+        code=solution.solution_code,
+        exec_time=solution.problem.max_execution_time,
+        tests=problem_tests
+    )
+
+    if current_time > problem.deadline:
+        score /= 2
+
+    score = round(score, 2)
+
+    previous_solution = Solution.objects.filter(student=solution.student).filter(problem=problem)
+    if previous_solution:
+        if score >= previous_solution[0].score:
+            previous_solution.delete()
+            solution.score = score
+            solution.save()
+    else:
+        solution.score = score
+        solution.save()

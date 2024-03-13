@@ -4,7 +4,6 @@
             <div class="article-fields-top">
                 <div class="top-row">
                     <h1 class="headline" id="headline">{{ article.headline }}</h1>
-
                     {% if teacher and article.teacher == teacher %}
                     <div class="edit-actions">
                         {% if problem %}
@@ -15,7 +14,6 @@
                     </div>
                     {% endif %}
                 </div>
-
                 <div class="created-row">
                     <div class="teacher">{{ article.teacher.user.get_full_name}}</div>
                     <div class="separator">•</div>
@@ -25,7 +23,6 @@
                     {% endif %}
 
                 </div>
-
                 {% if problem %}
                     <div class="due-date">
                         <b>Due date:</b> {{ article.deadline|date:'d/m/Y, H:i'}}
@@ -37,7 +34,6 @@
                     </div>
                 {% endif %}
                 <hr>
-
                 <div class="article-content">
                     {{ article.content|linebreaksbr }}
                 </div>
@@ -46,28 +42,24 @@
                 <hr>
                 {% if teacher and problem %}
                 <div class="test-file">
-                    <a class="test-file-tile" download="{{ article.test_file }}" href="{{ MEDIA_URL }}{{ article.test_file }}">
-                        <i class="fa-solid fa-download"></i>
-                        <b>{{ test_filename }}</b>
+                    <a class="pretty-button primary test-file-tile" download="{{ article.test_file }}" href="{{ MEDIA_URL }}{{ article.test_file }}">
+                        <i class="fa-solid fa-download"></i>&nbsp;{{ test_filename }}
                     </a>
                 </div>
                 {% endif %}
             </div>
-
         </div>
         <div class="article-right">
             {% if teacher %}
                 <div class="selected-groups card">
-                    <h2>Groups</h2>
-
+                    <h3>Groups</h3>
                     {% for group in article.groups.all %}
-                        <p>{{ group.name }}</p>
+                        <a class="link" href="{% url 'group' pk=group.pk %}">{{ group.name }}</a>
                     {% empty %}
-                        <p>No group assigned</p>
+                        <p class="danger-text">No group assigned</p>
                     {% endfor %}
                 </div>
             {% endif %}
-
             {% if student and problem %}
                 {% if solution %}
                     <div class="article-solutions card">
@@ -76,7 +68,19 @@
                             <h4 class="rounded-tile success">Taken</h4>
                         </div>
                         <div class="solution-score">
-                            <div class="rounded-tile action score">{{ solution.points }}/{{ article.max_points }}</div>
+                            {% if solution.score > 0.8 %}
+                                <div class="score rounded-tile success notHover">
+                                    {{ solution.points }} / {{ solution.problem.max_points }}
+                                </div>
+                            {% elif solution.score > 0.5 %}
+                                <div class="score rounded-tile action notHover">
+                                    {{ solution.points }} / {{ solution.problem.max_points }}
+                                </div>
+                            {% else %}
+                                <div class="score rounded-tile danger notHover">
+                                    {{ solution.points }} / {{ solution.problem.max_points }}
+                                </div>
+                            {% endif %}
                             <div class="taken">
                                 <div class="taken-time">{{ solution.date_solved|date:'H:i'}}</div>
                                 <div class="taken-date">{{ solution.date_solved|date:'d/m/Y'}}</div>
@@ -89,8 +93,7 @@
                                 {% endif %}
                             </div>
                         </div>
-
-                        <a class="pretty-button hover action" href="{% url 'problem_take' pk=problem.id %}">Retake</a>
+                        <a class="pretty-button primary" href="{% url 'problem_take' pk=problem.id %}">Retake</a>
                     </div>
                 {% else %}
                     <div class="article-solutions card">
@@ -98,62 +101,54 @@
                             <h3>Your solution</h3>
                             <h4 class="rounded-tile danger">None</h4>
                         </div>
-                        <a class="pretty-button hover action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
+                        <a class="pretty-button action" href="{% url 'problem_take' pk=problem.id %}">Add solution</a>
                     </div>
                 {% endif %}
             {% endif %}
             {% if teacher and problem %}
                 <div class="article-solutions card">
-                    <div class="solution-headline center">
-                        <h3>Solutions</h3>
-                    </div>
+                    <h3>Solutions</h3>
+                    <br>
                     <div class="solutions-list">
-
                         {% for solution in solutions|slice:":3" %}
-                            <a class="solution-item" href="{% url 'solution' pk=solution.pk %}">
+                            <a class="solution-item link" href="{% url 'solution' pk=solution.pk %}">
                                 <div>{{ solution.student.last_name }} {{ solution.student.first_name|slice:1 }}.</div>
                                 <div>{{ solution.student.group }}</div>
                             </a>
                         {% empty %}
-                            <h4 class="rounded-tile action">Not yet solved</h4>
+                            <p class="danger-text">Nobody solved yet</p>
                         {% endfor %}
+                        <br>
                         {% if solutions.count > 3 %}
-                            <a class="solution-item primary center" href="{% url 'solutions' pk=problem.pk%}"><b>+{{ solutions.count|add:-3 }} more</b></a>
+                            <a class="link" href="{% url 'solutions' pk=article.pk %}">+{{ solutions.count|add:-3 }} more</a>
                         {% endif %}
-
                     </div>
                 </div>
             {% endif %}
-
-            {% if user.is_authenticated %}
-                <form class="leave-comment card" method="POST">
-                    {% csrf_token %}
-                    <h3>Leave a comment</h3>
-                    {{ comment_form.content  }}
-                    <button class="pretty-button hover primary">Comment</button>
-                </form>
-            {% endif %}
         </div>
-
-
     </div>
-    {% if comments %}
-        <div class="article-comments">
-            <h2 class="comments-headline">Comments</h2>
-            {% for comment in comments %}
-                <div class="comment card">
-                    <div class="comment-top">
-                        <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
-                        <div class="separator">•</div>
-                        <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
-                    </div>
-                    <div class="comment-bottom">
-                        {{ comment.content }}
-                    </div>
+    <div class="article-comments">
+        <h2 class="comments-headline">Comments</h2>
+        {% if user.is_authenticated %}
+            <form class="leave-comment card" method="POST">
+                {% csrf_token %}
+                <h3>Leave a comment</h3>
+                {{ comment_form.content  }}
+                <button class="pretty-button primary">Comment</button>
+            </form>
+        {% endif %}
+        {% for comment in comments %}
+            <div class="comment card">
+                <div class="comment-top">
+                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
+                    <div class="separator">•</div>
+                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
+                <div class="comment-bottom">
+                    {{ comment.content }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 

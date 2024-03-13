@@ -107,6 +107,8 @@
       flex-direction: row;
 
       justify-content: space-between;
+
+      margin-top: 16px;
     }
 
     .test-file {
@@ -121,15 +123,14 @@
 
         font-size: 1rem;
 
-        background-color: $primary;
-        color: $light;
-
         * {
           margin: 0 0.25rem
         }
 
         &:hover {
           cursor: pointer;
+          background-color: $primary-hover;
+          transition: 0.3s ease;
         }
       }
     }
@@ -171,7 +172,7 @@
   flex-direction: row;
   align-items: center;
 
-  div:not(:last-child) {
+  a:not(:last-child), div:not(:last-child) {
     margin-right: 0.4rem;
   }
 
@@ -195,6 +196,10 @@
 
 }
 
+.article-content {
+  margin: 12px 0;
+}
+
 .article-content, .group-content {
   overflow-wrap: break-word;
   overflow: hidden;
@@ -208,9 +213,9 @@
 
   justify-content: center;
 
+
   .article-solutions {
     min-width: 300px;
-    min-height: 10rem;
 
     text-align: center;
 
@@ -244,18 +249,12 @@
         padding: 0 8px;
 
         font-size: 16px;
-        font-weight: 500;
 
         div {
           max-width: 7.5rem;
           overflow: hidden;
           text-overflow: ellipsis;
           text-align: left;
-        }
-
-        &:hover {
-          color: $primary;
-          text-decoration: underline;
         }
 
         &:first-child {
@@ -279,14 +278,7 @@
 
       margin-bottom: 1rem;
 
-      .score {
-        padding: 0.5rem;
 
-        &:hover {
-          background-color: $action !important;
-        }
-
-      }
 
       .taken {
         font-weight: bold;
@@ -300,28 +292,20 @@
     }
   }
 
-  .leave-comment {
-    display: flex;
-    flex-direction: column;
+  .card {
+    min-width: 300px;
+  }
 
-    justify-content: center;
-    text-align: center;
+}
 
-    .pretty-textarea {
-      max-width: 15rem;
-      max-height: 7.5rem;
-      resize: none;
-      padding: 1rem;
-      border-radius: 1rem;
+.score {
+  padding: 0.5rem;
 
-      margin-bottom: 16px;
-    }
-
-    h3 {
-      margin-bottom: 16px;
-    }
+  &:hover {
+    background-color: $action !important;
   }
 }
+
 
 .article-comments {
   margin: 1rem 0;
@@ -335,6 +319,29 @@
 
   .comments-headline {
     text-align: center;
+  }
+
+  .leave-comment {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    text-align: center;
+
+    max-width: 42rem;
+
+    .pretty-textarea {
+      max-height: 10rem;
+      resize: none;
+      padding: 1rem;
+      border-radius: 1rem;
+
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin-bottom: 16px;
+    }
   }
 
   .comment {
@@ -390,26 +397,8 @@
 
 }
 
-.files-input {
-  padding: 0.75rem 1.5rem;
-  margin: 0.5rem;
-
-  cursor: pointer;
-
-  transition: 0.3s ease-out;
-
-  font-size: 16px;
-  font-weight: bold;
-
-  border-radius: 1rem;
-
-  color: $light;
-  background-color: $primary;
-
-  &:hover {
-    background-color: $primary-hover;
-    border-color: $primary-hover;
-  }
+.test-file {
+  margin: 16px 0
 }
 
 .solution-container {
@@ -479,6 +468,36 @@
 
 }
 
+.selected-groups, .article-solutions {
+  text-align: center;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
+  //a {
+  //  &:hover {
+  //    color: $primary;
+  //    text-decoration: underline;
+  //  }
+  //}
+}
+
+.item-top-row, .created-row, .article-values {
+  margin-bottom: 8px;
+}
+
+.card hr {
+  margin: 8px 0;
+}
+
+.solution_item__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (max-width: 992px) {
   .article-box {
     align-items: center !important;
@@ -496,11 +515,6 @@
     .article-solutions {
       flex: 1 1 0;
     }
-
-    .leave-comment {
-      flex: 1 1 0;
-    }
-
 
     .pretty-textarea {
       max-width: 35.5rem !important;
@@ -526,9 +540,6 @@
       flex: 1 1 0;
     }
 
-    .leave-comment {
-      flex: 1 1 0;
-    }
 
     .pretty-textarea {
       max-width: 12rem;

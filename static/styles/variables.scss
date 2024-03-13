@@ -21,7 +21,6 @@ $success: #27aa23;
 $success-hover: #24bb1f;
 $success-void-hover: #e5ffe5;
 
-
 $primary: #23537e;
 $primary-hover: #326fa2;
 $primary-void-hover: #eaf3ff;
@@ -43,12 +42,17 @@ $nav-height: 60px;
   background-color: $bg-color !important;
   color: $text-color !important;
 
-  transition: 0.3s ease-in;
+  transition: all 0.3s ease-in;
 
-  &.hover {
+  &:hover {
+    background-color: $hover-color !important;
+    border-color: $hover-color !important;
+  }
+
+  &.unhover {
     &:hover {
-      background-color: $hover-color !important;
-      border-color: $hover-color !important;
+      background-color: $bg-color !important;
+      border-color: $bg-color !important;
     }
   }
 
@@ -56,63 +60,32 @@ $nav-height: 60px;
     background-color: $light !important;
     color: $bg-color !important;
 
-    &.hover {
-      &:hover {
-        background-color: $void-hover-color !important;
-        border-color: $bg-color !important;
-      }
+    &:hover {
+      background-color: $void-hover-color !important;
     }
   }
 }
 
+.primary { @include common-style($primary, $primary-hover, $primary-void-hover);}
+.action { @include common-style($action, $action-hover, $action-void-hover);}
+.danger { @include common-style($danger, $danger-hover, $danger-void-hover);}
+.success { @include common-style($success, $success-hover, $success-void-hover);}
+.dark { @include common-style($dark, $dark-hover, $dark-void-hover);}
+.light { @include common-style($light, $light-hover, $light-hover, $dark);}
 
-.primary {
-  @include common-style($primary, $primary-hover, $primary-void-hover);
-}
+.primary-text {color: $primary !important;}
+.action-text {color: $action !important;}
+.danger-text {color: $danger !important;}
+.success-text {color: $success !important;}
+.dark-text {color: $dark !important;}
+.light-text {color: $light !important;}
 
-.action {
-  @include common-style($action, $action-hover, $action-void-hover);
-}
-
-.danger {
-  @include common-style($danger, $danger-hover, $danger-void-hover);
-}
-
-.success {
-  @include common-style($success, $success-hover, $success-void-hover);
-}
-
-.dark {
-  @include common-style($dark, $dark-hover, $dark-void-hover);
-}
-
-.light {
-  @include common-style($light, $light-hover, $light-hover, $dark);
-}
-
-.primary-text {
-  color: $primary !important;
-}
-
-.action-text {
-  color: $action !important;
-}
-
-.danger-text {
-  color: $danger !important;
-}
-
-.success-text {
-  color: $success !important;
-}
-
-.dark-text {
-  color: $dark !important;
-}
-
-.light-text {
-  color: $light !important;
-}
+.primary-hover { &:hover { color: $light !important; background-color: $primary !important;} }
+.action-hover { &:hover { color: $light !important; background-color: $action !important;} }
+.danger-hover { &:hover { color: $light !important; background-color: $danger !important;} }
+.success-hover { &:hover { color: $light !important; background-color: $success !important;} }
+.dark-hover { &:hover { color: $dark !important; background-color: $dark !important;} }
+.light-hover { &:hover { color: $light !important; background-color: $light !important;} }
 
 /* -------------- BODY -------------- */
 
@@ -135,40 +108,26 @@ a {
   }
 }
 
+p {
+  margin: 0;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, {
   font-weight: 700;
   margin: 0;
   padding: 0;
 }
 
-h1 {
-  font-size: 2.25rem;
-}
+h1 {font-size: 2.25rem;}
+h2 {font-size: 1.75rem;}
+h3 {font-size: 1.25rem;}
+h4 {font-size: 1.10rem;}
+h5 {font-size: 1rem;}
+h6 {font-size: 0.875rem;}
 
-h2 {
-  font-size: 1.75rem;
-}
+ol, ul {padding: 0;}
 
-h3 {
-  font-size: 1.25rem;
-}
-
-h4 {
-  font-size: 1.10rem;
-}
-
-h5 {
-  font-size: 1rem;
-}
-
-h6 {
-  font-size: 0.875rem;
-}
-
-ol, ul {
-  padding: 0;
-}
-
+mark {padding: 0;}
 
 .pretty-button {
   padding: 8px 16px;
@@ -202,6 +161,18 @@ ol, ul {
     border-color: $primary;
   }
 
+}
+
+.notHover {
+  pointer-events: none !important;
+}
+
+.link {
+  &:hover {
+    color: $primary;
+    transition: all 0.3s ease-in;
+    text-decoration: underline;
+  }
 }
 
 .items-header__headline {
@@ -250,7 +221,7 @@ ol, ul {
   background-color: $light-hover;
   border-radius: 12px;
   margin: 1rem;
-  padding: 1.5rem 2rem;
+  padding: 16px 32px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
