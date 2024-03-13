@@ -102,14 +102,6 @@ class Problem(Article):
 
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
-    # @property
-    # def problem_slug(self):
-    #     teacher_slug = f'{self.teacher.first_name}_{self.teacher.last_name}'.lower()
-    #     headline_slug = f'{self.headline}'.lower()
-    #
-    #     return f'{teacher_slug}_{headline_slug}'.replace(' ', '_')
-
-
 class Lecture(Article):
     pass
 
@@ -157,4 +149,3 @@ class Solution(models.Model):
     @property
     def points(self):
         return round(self.score * self.problem.max_points, 1)
-

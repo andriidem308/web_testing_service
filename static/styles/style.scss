@@ -178,10 +178,7 @@ main {
     margin: 15px 0;
 
     .buttons-row {
-      display: flex;
-      flex-direction: row;
       flex-wrap: wrap;
-      gap: 10px;
 
       * {
         flex-grow: 1;
@@ -224,6 +221,10 @@ main {
   align-items: center;
 }
 
+.text-center {
+  text-align: center;
+}
+
 /* -------------- PROFILE -------------- */
 
 .account-card {
@@ -242,13 +243,24 @@ main {
   .account-credentials {
     margin: 10px 0;
   }
+}
 
-  .buttons-row {
-    margin: 20px 0;
+.buttons-row {
+  display: flex;
+  flex-direction: row;
+
+  margin: 16px 0;
+  min-height: 42px;
+
+  align-items: center;
+  justify-content: space-between;
+
+  form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+
+    width: 100%;
   }
 }
 
@@ -429,6 +441,21 @@ main {
   }
 }
 
+.group-description {
+  margin: 16px 0;
+}
+
+.add-item {
+  margin-bottom: 12px;
+}
+
+.group-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
 .students-table {
   border-radius: 12px;
   //padding: 1.5rem 2rem;
@@ -467,11 +494,11 @@ main {
     padding-bottom: 1rem ;
 
     td:first-child {
-      border-radius: 0 0 0 12px;
+      border-bottom-left-radius: 12px;
     }
 
     td:last-child {
-      border-radius: 0 0 12px 0;
+      border-bottom-right-radius: 12px;
     }
   }
 
@@ -510,27 +537,17 @@ main {
   margin-top: 2rem;
 
   a {
-    margin: 0 0.75rem;
-    padding: 0.5rem 1rem;
+    @extend .pretty-button, .primary;
 
-    background-color: $primary;
-    color: $light;
-
-    border-radius: 1rem;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    &:hover {
-      background-color: $primary-hover;
-    }
-
-
+    margin: 0 12px;
+    padding: 6px 12px;
   }
 
   a.current {
-    background-color: $action;
+    @extend .pretty-button, .action;
+
+    margin: 0 12px;
+    padding: 6px 12px;
   }
 }
 

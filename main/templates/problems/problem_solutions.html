@@ -1,2 +1,8 @@
+{% extends 'base.html' %}
 
 {% block title %}Solutions | {{ problem.headline }}{% endblock %}
+
+{% block content %}
+    {% include '_base_list.html' with items=solutions list_name='Solutions' object_name='solution' %}
+{% endblock %}
+

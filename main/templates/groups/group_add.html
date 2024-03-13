@@ -7,14 +7,14 @@
         <h1 class="page-title">New group</h1>
         <form class="group-card card" method="post" enctype="multipart/form-data" novalidate >
             {% csrf_token %}
+            <h3 class="text-center">Group name:</h3>
             <div class="group-description">
                 {{ form.name }}
             </div>
-
             <div class="group-bottom">
                 <div class="group-actions">
-                    <button type="submit" class="pretty-button hover success">Create</button>
-                    <button type="submit" class="pretty-button hover danger">Cancel</button>
+                    <button type="submit" class="pretty-button primary">Create</button>
+                    <a class="pretty-button danger" href="{% url 'groups' %}">Cancel</a>
                 </div>
             </div>
         </form>

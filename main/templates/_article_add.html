@@ -63,11 +63,11 @@
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button hover success" type="submit">Save</button>
+                    <button class="pretty-button primary" type="submit">Save</button>
                     {% if type == 'problem' %}
-                        <a class="pretty-button hover danger" href="{% url 'problems' %}">Cancel</a>
+                        <a class="pretty-button danger" href="{% url 'problems' %}">Cancel</a>
                     {% elif type == 'lecture' %}
-                        <a class="pretty-button hover danger" href="{% url 'lectures' %}">Cancel</a>
+                        <a class="pretty-button danger" href="{% url 'lectures' %}">Cancel</a>
                     {% endif %}
                 </div>
 

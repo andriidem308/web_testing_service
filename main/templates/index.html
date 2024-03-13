@@ -4,9 +4,9 @@
 
 {% block content %}
     <div>
-        <a class="pretty-button hover dark" href="{% url 'login' %}">Login</a>
-        <a class="pretty-button hover primary" href="{% url 'signup' user_type='teacher' %}">Create Teacher</a>
-        <a class="pretty-button hover action" href="{% url 'signup' user_type='student' %}">Create Student</a>
+        <a class="pretty-button dark" href="{% url 'login' %}">Login</a>
+        <a class="pretty-button primary" href="{% url 'signup' user_type='teacher' %}">Create Teacher</a>
+        <a class="pretty-button action" href="{% url 'signup' user_type='student' %}">Create Student</a>
     </div>
     <br><br><br>
 

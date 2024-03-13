@@ -1,8 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Lecture, Group, Problem, Comment, Attachment, Solution, Teacher
-from main.utils.widget import TimePicker
+from main.models import Lecture, Group, Problem, Comment, Attachment, Solution
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -195,8 +194,15 @@ class ProblemTakeForm(forms.ModelForm):
         fields = ['solution_code']
 
 
-class AttachmentForm(forms.ModelForm):
+class CheckSolutionForm(forms.ModelForm):
+    formatted_score = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'pretty-input', 'min': 0, 'step': 0.1}))
 
+    class Meta:
+        model = Solution
+        fields = ['formatted_score']
+
+
+class AttachmentForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(AttachmentForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
@@ -220,5 +226,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content', ]
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'pretty-textarea'}),
+            'content': forms.Textarea(attrs={'class': 'pretty-textarea', 'cols': '64', 'rows': '10'}),
         }

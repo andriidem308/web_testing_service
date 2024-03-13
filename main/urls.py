@@ -6,7 +6,7 @@ from main.views import *
 
 urlpatterns = [
     path('', index, name='home'),
-    path('test/', test, name='home'),
+    path('test/', test, name='test'),
 
     path('problems/', ProblemListView.as_view(), name='problems'),
     path('problems/add/', ProblemCreateView.as_view(), name='problem_add'),
@@ -15,7 +15,7 @@ urlpatterns = [
     path('problems/<int:pk>/delete/', ProblemDeleteView.as_view(), name='problem_delete'),
     path('problems/<int:pk>/take/', ProblemTakeView.as_view(), name='problem_take'),
     path('problems/<int:pk>/solutions/', ProblemSolutionListView.as_view(), name='solutions'),
-    path('problems/<int:pk>/solution/', ProblemSolutionView.as_view(), name='solution'),
+    path('solutions/<int:pk>', ProblemSolutionView.as_view(), name='solution'),
 
     path('lectures/', LectureListView.as_view(), name='lectures'),
     path('lectures/add/', LectureCreateView.as_view(), name='lecture_add'),
