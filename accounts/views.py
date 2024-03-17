@@ -45,6 +45,8 @@ class SignUpView(CreateView):
     def get(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
         form = SignUpForm(user_type=user_type)
+
+
         context = {'form': form, 'user_type': user_type}
         return render(request, self.template_name, context)
 
@@ -56,6 +58,7 @@ class SignUpView(CreateView):
             login(self.request, user)
             return redirect('profile')
         else:
+            print(form.errors)
             context = {'form': form, 'user_type': user_type}
             return render(request, self.template_name, context)
 

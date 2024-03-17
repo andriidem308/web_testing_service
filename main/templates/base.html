@@ -44,8 +44,10 @@
 
 </head>
 <body>
+{% if user.is_authenticated %}
+    {% include '_header.html' with user=user %}
+{% endif %}
 
-{% include '_header.html' with user=user %}
 <main>
     {% block content %}
 

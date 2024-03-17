@@ -15,11 +15,12 @@
                     {% endif %}
                 </div>
                 <div class="created-row">
-                    <div class="teacher">{{ article.teacher.user.get_full_name}}</div>
-                    <div class="separator">•</div>
-                    <div class="created">{{ article.date_created|date:'d/m/Y, H:i' }}</div>
+                    <div class="teacher"><i class="fa-solid fa-user"></i>&nbsp;{{ article.teacher.user.get_full_name}}</div>
+                    <div class="separator">&emsp;</div>
+                    <div class="created"><i class="fa-regular fa-calendar"></i>&nbsp;{{ article.date_created|date:'d/m/Y, H:i' }}</div>
                     {% if article.date_updated|date:'d/m/Y, H:i' != article.date_created|date:'d/m/Y, H:i' %}
-                        <div class="updated">(edited {{ article.date_updated|date:'d/m/Y, H:i' }})</div>
+                        <div class="separator">&emsp;</div>
+                        <div class="updated"><i class="fa-solid fa-pencil"></i>&nbsp;{{ article.date_updated|date:'d/m/Y, H:i' }}</div>
                     {% endif %}
 
                 </div>

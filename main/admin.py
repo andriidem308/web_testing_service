@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from main.models import Student, Teacher, Group, Problem, Lecture, Attachment, Comment, Solution
-
+from main.models import Student, Teacher, Group, Problem, Lecture, Attachment, Comment, Solution, Notification
 
 admin.site.register(Teacher)
 admin.site.register(Student)
@@ -11,3 +10,4 @@ admin.site.register(Solution)
 admin.site.register(Lecture)
 admin.site.register(Attachment)
 admin.site.register(Comment)
+admin.site.register(Notification)

@@ -102,6 +102,7 @@ class Problem(Article):
 
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
+
 class Lecture(Article):
     pass
 
@@ -149,3 +150,16 @@ class Solution(models.Model):
     @property
     def points(self):
         return round(self.score * self.problem.max_points, 1)
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+
+    object_type = models.CharField(max_length=50, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+
+    is_seen = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+

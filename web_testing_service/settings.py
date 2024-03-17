@@ -61,6 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.notifications_context',
             ],
         },
     },
@@ -124,6 +125,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = "profile"
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'

@@ -13,7 +13,20 @@
 
             <form class="auth-form card" method="post">
                 {% csrf_token %}
-                {{ form }}
+                {{ form.group }}
+                {{ form.first_name }}
+                {{ form.last_name }}
+                {{ form.username }}
+                {{ form.email }}
+                {{ form.password1 }}
+                {{ form.password2 }}
+                {{ form.secret_key }}
+
+                {% if form.errors %}
+                    {% for field, message in form.errors.items %}
+                        <div class="auth-form__errors">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <div class="buttons-row">
                     <button class="pretty-button primary" type="submit">Sign up</button>
                 </div>

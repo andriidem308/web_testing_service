@@ -11,6 +11,11 @@
                 {% csrf_token %}
                 {{ form.username }}
                 {{ form.password }}
+
+                {% if form.errors %}
+                    <div class="auth-form__errors">Username or password are incorrect</div>
+                {% endif %}
+
                 <input type="hidden" name="next" value="{{ next_page }}">
                 <div class="buttons-row">
                     <button class="pretty-button primary" type="submit">Login</button>
