@@ -6,6 +6,7 @@ from subprocess import PIPE, Popen
 from django.utils import timezone
 
 from main.models import Solution
+from main.services.mail_notification import student_take_problem_notify
 from web_testing_service import settings
 
 
@@ -85,7 +86,10 @@ def problem_take(solution):
         if score >= previous_solution[0].score:
             previous_solution.delete()
             solution.score = score
+            student_take_problem_notify(solution)
             solution.save()
+
     else:
         solution.score = score
+        student_take_problem_notify(solution)
         solution.save()
