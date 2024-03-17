@@ -9,6 +9,7 @@ from main import forms
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
 from main.services import article_service, code_solver, paginate_service, users_service
 from main.services.notification_service import create_new_problem_notifications
+from main.services.mail_notification import problem_added_notify, lecture_added_notify
 from web_testing_service.settings import MEDIA_URL
 
 
@@ -195,7 +196,8 @@ class LectureCreateView(CreateView):
         teacher = Teacher.objects.get(user=user)
         form = forms.LectureCreateForm(teacher, request.POST)
         if form.is_valid():
-            form.save()
+            lecture = form.save()
+            lecture_added_notify(lecture)
             return redirect('lectures')
         else:
             context = {'form': form, 'user': user}
@@ -364,6 +366,7 @@ class ProblemCreateView(CreateView):
         if form.is_valid():
             problem = form.save()
             create_new_problem_notifications(problem)
+            problem_added_notify(problem)
             return redirect('problems')
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
