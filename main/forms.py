@@ -2,7 +2,6 @@ from django import forms
 from django.utils import timezone
 
 from main.models import Lecture, Group, Problem, Comment, Attachment, Solution
-from main.utils.widget import TimePicker
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -40,18 +39,26 @@ class LectureCreateForm(forms.ModelForm):
                                widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
     def __init__(self, teacher, *args, **kwargs):
         super(LectureCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
+        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
 
     class Meta:
         model = Lecture
-        fields = ['headline', 'content', ]
+        fields = ['headline', 'content', 'groups']
 
     def save(self, **kwargs):
         instance = super(LectureCreateForm, self).save(commit=False)
         instance.teacher = self.teacher
         instance.save()
+        self.save_m2m()
         return instance
 
 
@@ -60,9 +67,27 @@ class LectureUpdateForm(forms.ModelForm):
                                widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
     class Meta:
         model = Lecture
-        fields = ['headline', 'content', ]
+        fields = ['headline', 'content', 'groups']
+
+    def __init__(self, *args, **kwargs):
+        super(LectureUpdateForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
+
+    def save(self, **kwargs):
+        instance = super(LectureUpdateForm, self).save(commit=False)
+        instance.date_updated = timezone.now()
+        instance.save()
+        self.save_m2m()
+        return instance
 
 
 class ProblemCreateForm(forms.ModelForm):
@@ -79,7 +104,7 @@ class ProblemCreateForm(forms.ModelForm):
         widget=forms.DateTimeInput(
             attrs={
                 'autocomplete': 'off',
-                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'class': 'datetimeinput datetimepicker-input pretty-input',
                 'data-target': '#id_deadline'
             },
         )
@@ -87,18 +112,26 @@ class ProblemCreateForm(forms.ModelForm):
 
     test_file = forms.FileField()
 
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
     def __init__(self, teacher, *args, **kwargs):
         super(ProblemCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
+        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
 
     class Meta:
         model = Problem
-        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
+        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file', 'groups']
 
     def save(self, **kwargs):
         instance = super(ProblemCreateForm, self).save(commit=False)
         instance.teacher = self.teacher
         instance.save()
+        self.save_m2m()
         return instance
 
 
@@ -117,7 +150,7 @@ class ProblemUpdateForm(forms.ModelForm):
         widget=forms.DateTimeInput(
             attrs={
                 'autocomplete': 'off',
-                'class': 'form-control datetimeinput datetimepicker-input pretty-input',
+                'class': 'datetimeinput datetimepicker-input pretty-input',
                 'data-target': '#id_deadline'
             },
         )
@@ -125,17 +158,26 @@ class ProblemUpdateForm(forms.ModelForm):
 
     test_file = forms.FileField()
 
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
     class Meta:
         model = Problem
-        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file']
+        fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file', 'groups']
 
     def __init__(self, *args, **kwargs):
         super(ProblemUpdateForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
 
     def save(self, **kwargs):
         instance = super(ProblemUpdateForm, self).save(commit=False)
         instance.date_updated = timezone.now()
         instance.save()
+        self.save_m2m()
         return instance
 
 
@@ -152,8 +194,15 @@ class ProblemTakeForm(forms.ModelForm):
         fields = ['solution_code']
 
 
-class AttachmentForm(forms.ModelForm):
+class CheckSolutionForm(forms.ModelForm):
+    formatted_score = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'pretty-input', 'min': 0, 'step': 0.1}))
 
+    class Meta:
+        model = Solution
+        fields = ['formatted_score']
+
+
+class AttachmentForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(AttachmentForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
@@ -165,7 +214,6 @@ class AttachmentForm(forms.ModelForm):
             'content': forms.TextInput(attrs={
                 "name": "images",
                 "type": "File",
-                "class": "form-control",
                 "multiple": "True",
                 "style": "display: none;",
                 'onchange': 'displayFileName()',
@@ -178,5 +226,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content', ]
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'pretty-textarea'}),
+            'content': forms.Textarea(attrs={'class': 'pretty-textarea', 'cols': '64', 'rows': '10'}),
         }

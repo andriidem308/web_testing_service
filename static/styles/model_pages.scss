@@ -14,8 +14,6 @@
   justify-content: center;
   align-items: flex-start;
 
-  padding: 0 3.5rem;
-
   a {
     margin-left: 0 !important;
 
@@ -35,17 +33,12 @@
 
 .item-card {
   max-height: 20rem;
-  width: 61.75rem;
-
+  width: 100%;
 
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-
-  hr {
-    margin: 1rem 0;
-  }
 }
 
 .group-container, .article-container {
@@ -88,8 +81,7 @@
 
   flex-wrap: wrap;
 
-  max-height: 40rem;
-  min-height: 33rem;
+  min-height: 25rem;
 }
 
 .article-fields {
@@ -101,7 +93,7 @@
   width: 42rem;
 
 
-  max-height: 40rem;
+  min-height: 25rem;
 
 
   hr {
@@ -115,6 +107,8 @@
       flex-direction: row;
 
       justify-content: space-between;
+
+      margin-top: 16px;
     }
 
     .test-file {
@@ -129,13 +123,14 @@
 
         font-size: 1rem;
 
-        background-color: $primary;
-        color: $light;
-
-        * {margin: 0 0.25rem}
+        * {
+          margin: 0 0.25rem
+        }
 
         &:hover {
           cursor: pointer;
+          background-color: $primary-hover;
+          transition: 0.3s ease;
         }
       }
     }
@@ -176,9 +171,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 10px;
 
-  * {
+  a:not(:last-child), div:not(:last-child) {
     margin-right: 0.4rem;
   }
 
@@ -202,13 +196,14 @@
 
 }
 
-.article-content, .group-content {
-  padding: 20px 0;
+.article-content {
+  margin: 12px 0;
+}
 
+.article-content, .group-content {
   overflow-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .article-right {
@@ -218,9 +213,9 @@
 
   justify-content: center;
 
+
   .article-solutions {
     min-width: 300px;
-    min-height: 10rem;
 
     text-align: center;
 
@@ -231,6 +226,10 @@
       align-items: center;
 
       margin-bottom: 1rem;
+
+      h3 {
+        margin: 0;
+      }
 
       .rounded-tile.success:hover {
         background-color: $success !important;
@@ -250,24 +249,16 @@
         flex-direction: row;
         justify-content: space-between;
 
-        margin: 0.25rem 0;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
+        margin: 4px 0;
+        padding: 0 8px;
 
-        font-size: 12px;
-
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
+        font-size: 16px;
 
         div {
           max-width: 7.5rem;
-          height: 1rem;
           overflow: hidden;
           text-overflow: ellipsis;
           text-align: left;
-        }
-
-        &:hover {
-          background-color: $action-hover;
         }
 
         &:first-child {
@@ -289,14 +280,9 @@
       justify-content: space-between;
       align-items: center;
 
-      .score {
-        padding: 0.5rem;
+      margin-bottom: 1rem;
 
-        &:hover {
-          background-color: $action !important;
-        }
 
-      }
 
       .taken {
         font-weight: bold;
@@ -310,23 +296,20 @@
     }
   }
 
-  .leave-comment {
-    display: flex;
-    flex-direction: column;
+  .card {
+    min-width: 300px;
+  }
 
-    justify-content: center;
-    //align-items: center;
-    text-align: center;
+}
 
-    .pretty-textarea {
-      max-width: 15rem;
-      max-height: 7.5rem;
-      resize: none;
-      padding: 1rem;
-      border-radius: 1rem;
-    }
+.score {
+  padding: 0.5rem;
+
+  &:hover {
+    background-color: $action !important;
   }
 }
+
 
 .article-comments {
   margin: 1rem 0;
@@ -342,6 +325,29 @@
     text-align: center;
   }
 
+  .leave-comment {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    text-align: center;
+
+    max-width: 42rem;
+
+    .pretty-textarea {
+      max-height: 10rem;
+      resize: none;
+      padding: 1rem;
+      border-radius: 1rem;
+
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin-bottom: 16px;
+    }
+  }
+
   .comment {
 
     width: 42rem;
@@ -352,6 +358,7 @@
       justify-content: flex-start;
 
       margin-bottom: 1rem;
+
       * {
         margin-right: 0.5rem;
       }
@@ -388,35 +395,14 @@
   height: 10rem;
 
 
-
   .delete-confirmation-buttons {
     margin-top: 0.5rem;
   }
 
-  //background-color: ;
 }
 
-.files-input {
-  padding: 0.75rem 1.5rem;
-  margin: 0.5rem;
-
-  cursor: pointer;
-
-  transition: 0.3s ease-out;
-
-  font-size: 16px;
-  font-weight: bold;
-
-  border-radius: 1rem;
-  //border: 2px solid $primary;
-
-  color: $light;
-  background-color: $primary;
-
-  &:hover {
-    background-color: $primary-hover;
-    border-color: $primary-hover;
-  }
+.test-file {
+  margin: 16px 0
 }
 
 .solution-container {
@@ -440,7 +426,7 @@
   }
 
   .problem-content {
-    margin: 1.5rem 1rem;
+    margin: 1.5rem 0;
   }
 
   .buttons-row {
@@ -448,10 +434,73 @@
     flex-direction: row;
     justify-content: space-between;
   }
+}
 
+
+.solution-code {
+  padding: 0 0.5rem;
+  display: flex;
+  border: 1px solid $grey;
+
+  border-radius: 0.75rem;
+  background-color: $dark;
+  * {
+    font-family: "Source Code Pro", monospace;
+    font-weight: 500;
+  }
+}
+
+.solution-code__line-numbers {
+  border-right: 1px solid $grey;
+  padding: 0.5rem 0;
+
+  color: $light;
+}
+
+.solution-code__textarea {
+  border: none;
+  padding: 0.5rem;
+
+  color: #48d8e5;
+
+  //background-color: $dark;
+  //color: $light;
+  //padding: 1rem;
+  //width: 100%;
+  //
+  //border-radius: 0.5rem;
 
 }
 
+.selected-groups, .article-solutions {
+  text-align: center;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
+  //a {
+  //  &:hover {
+  //    color: $primary;
+  //    text-decoration: underline;
+  //  }
+  //}
+}
+
+.item-top-row, .created-row, .article-values {
+  margin-bottom: 8px;
+}
+
+.card hr {
+  margin: 8px 0;
+}
+
+.solution_item__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 
 @media (max-width: 992px) {
   .article-box {
@@ -466,16 +515,10 @@
 
     max-width: 44rem;
     margin: 0 auto;
-    //padding: 0 2rem;
 
     .article-solutions {
       flex: 1 1 0;
     }
-
-    .leave-comment {
-      flex: 1 1 0;
-    }
-
 
     .pretty-textarea {
       max-width: 35.5rem !important;
@@ -496,15 +539,11 @@
     align-items: flex-start;
     max-width: 44rem;
     margin: 0 auto;
-    //padding: 0 2rem;
 
     .article-solutions {
       flex: 1 1 0;
     }
 
-    .leave-comment {
-      flex: 1 1 0;
-    }
 
     .pretty-textarea {
       max-width: 12rem;

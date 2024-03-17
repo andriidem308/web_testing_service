@@ -63,7 +63,7 @@
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button success" type="submit">Save</button>
+                    <button class="pretty-button primary" type="submit">Save</button>
                     {% if type == 'problem' %}
                         <a class="pretty-button danger" href="{% url 'problems' %}">Cancel</a>
                     {% elif type == 'lecture' %}
@@ -73,6 +73,8 @@
 
             </div>
         </div>
+
+        {% include '_groups_select.html' %}
     </form>
 
     <div class="disabled-area" id="disabled-area"></div>

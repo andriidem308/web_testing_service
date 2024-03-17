@@ -1,1 +1,126 @@
-{% block title %}Solution | {{ problem.headline }}{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Solution | {{ solution.problem.headline }}{% endblock %}
+
+{% block content %}
+    <div class="article-container">
+        <div class="article-box">
+            <div class="article-fields card">
+                <div class="article-fields-top">
+                    <div class="top-row">
+                        <h1 class="headline" id="headline">Solution | <a class="link" href="{% url 'problem' pk=solution.problem.pk %}">{{ solution.problem.headline }}</a></h1>
+                        {% if solution.score > 0.8 %}
+                            <div class="solution-score score rounded-tile success notHover">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% elif solution.score > 0.5 %}
+                            <div class="solution-score score rounded-tile action notHover">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% else %}
+                            <div class="solution-score score rounded-tile danger notHover">
+                                {{ solution.points }} / {{ solution.problem.max_points }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="created-row">
+                        <a class="group link" href="{% url 'group' pk=solution.student.group.pk %}">{{ solution.student.group }}</a>
+                        <div class="separator">•</div>
+                        <div class="student">{{ solution.student.user.get_full_name}}</div>
+                        <div class="separator">•</div>
+                        <div class="created">{{ solution.date_solved|date:'d/m/Y, H:i' }}</div>
+                    </div>
+                    <hr>
+                    <div class="solution-code">
+                        <div class="solution-code__line-numbers" id="line-numbers"></div>
+                        <code class="solution-code__textarea" id="code-area">
+{#                            {{ solution.solution_code|linebreaksbr }}#}
+                            {{ solution_code }}
+                        </code>
+                    </div>
+
+                </div>
+                <div class="article-fields-bottom">
+                    <hr>
+                <div class="buttons-row">
+
+
+                        <form method="post">
+                        {% csrf_token %}
+{#                            {% widthratio form.score 1 solution.problem.max_points %}#}
+                            {{ form.formatted_score }}
+                            {% if user.is_teacher and not solution.checked %}
+                                <button class="pretty-button primary" type="submit">Mark as checked</button>
+                            {% endif %}
+                            <a class="pretty-button void primary" href="{% url 'solutions' pk=solution.problem.pk %}">Go to solutions</a>
+                        </form>
+
+
+                </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const KEYWORDS = [
+            'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class',
+            'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global',
+            'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return',
+            'try', 'while', 'with', 'yield'
+        ]
+
+        const DEFAULT_WORDS = [
+            ''
+        ]
+
+        const textarea = document.getElementById('code-area');
+        const lineNumbersEle = document.getElementById('line-numbers');
+        const textareaLines = textarea.textContent.trim().split('\n');
+
+        let code = document.createElement('code');
+
+        textarea.innerHTML = '';
+
+
+
+        textareaLines.forEach(function (textLine) {
+            let currentLine = document.createElement('p');
+            currentLine.innerHTML = textLine.replace(' ', '&nbsp;');
+            code.appendChild(currentLine);
+        })
+
+        textarea.innerHTML = code.innerHTML;
+
+        const displayLineNumbers = () => {
+            lineNumbersEle.innerHTML = Array.from({
+                length: textareaLines.length,
+            }, (_, i) => `<div>${i + 1}</div>`).join('');
+        }
+
+        const textareaStyles = window.getComputedStyle(textarea);
+        [
+            'fontFamily',
+            'fontSize',
+            'fontWeight',
+            'letterSpacing',
+            'lineHeight',
+            'padding',
+        ].forEach((property) => {
+            lineNumbersEle.style[property] = textareaStyles[property];
+        });
+
+
+
+
+        displayLineNumbers();
+
+    </script>
+{% endblock %}
+
+
+
+
+

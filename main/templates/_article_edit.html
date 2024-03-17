@@ -61,13 +61,13 @@
             <div class="article-fields-bottom">
                 {% if teacher and problem %}
                     <div id="selectedFiles" class="test-file">
-                        <label class="files-input" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
+                        <label class="files-input pretty-button dark" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
                         {{ form.test_file }}
                     </div>
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button success" type="submit">Save</button>
+                    <button class="pretty-button primary" type="submit">Save</button>
                     {% if problem %}
                         <a class="pretty-button danger" href="{% url 'problem' pk=article.id %}">Cancel</a>
                     {% elif lecture %}
@@ -79,6 +79,9 @@
 
         </div>
         <div class="article-right">
+            {% if teacher %}{% include '_groups_select.html' %}{% endif %}
+
+
             {% if student and problem %}
                 <div class="article-solutions card">
                     <div class="solution-headline">
@@ -111,23 +114,6 @@
             {% endif %}
         </div>
     </form>
-    {% if comments %}
-    <div class="article-comments">
-        <h2 class="comments-headline" >Comments</h2>
-        {% for comment in comments %}
-            <div class="comment card">
-                <div class="comment-top">
-                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
-                    <div class="separator">•</div>
-                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
-                </div>
-                <div class="comment-bottom">
-                    {{ comment.content }}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     <div class="disabled-area" id="disabled-area"></div>
 

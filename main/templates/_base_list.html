@@ -1,17 +1,21 @@
 <div class="filter"></div>
 
 <div class="items-header">
-    <h1>{{ list_name }}</h1>
-
+    <h1 class="items-header__headline">{{ list_name }}</h1>
     {% if teacher %}
-        <a class='add-item pretty-button primary' href="{% url add_url %}">
-            <i class="fa-solid fa-plus"></i>New {{ object_name }}</a>
+        {% if add_url %}
+            <a class='add-item pretty-button primary' href="{% url add_url %}">
+                <i class="fa-solid fa-plus"></i>New {{ object_name }}
+            </a>
+        {% endif %}
+        {% if base_url %}
+            <div class="items-header__filters">
+                <a id="filter-teacher" class="button-bordered filter-teacher" href="{% url base_url %}">My</a>
+                <a id="filter-all" class="button-bordered filter-all" href="{% url base_url %}?show_all=1">All</a>
+            </div>
+        {% endif %}
     {% endif %}
 
-    <div class="filter-row">
-        <a id="filter-teacher" class="button-bordered filter-teacher" href="{% url base_url %}">My</a>
-        <a id="filter-all" class="button-bordered filter-all" href="{% url base_url %}?show_all=1">All</a>
-    </div>
 
 </div>
 
@@ -23,18 +27,40 @@
                     <h2>{{ item.headline }}</h2>
                 {% elif groups %}
                     <h2>{{ item.name }}</h2>
+                {% elif solutions %}
+                    <div class="solution_item__header">
+                        <h2>{{ item.problem.headline }} | {{ item.student.group }}</h2>
+                        {% if item.checked %}
+                            <div class="rounded-tile success notHover">
+                                Checked
+                            </div>
+                        {% else %}
+                            <div class="rounded-tile danger notHover">
+                                Unchecked
+                            </div>
+                        {% endif %}
+                    </div>
+
                 {% endif %}
             </div>
 
-            <div class="created-row">
-                <div class="teacher">{{ item.teacher.user.get_full_name}}</div>
-                <div class="separator">•</div>
-                <div class="created">{{ item.date_created|date:'d/m/Y, H:i' }}</div>
-                {% if item.date_updated|date:'d/m/Y, H:i' != item.date_created|date:'d/m/Y, H:i' %}
-                    <div class="updated">(edited {{ item.date_updated|date:'d/m/Y, H:i' }})</div>
-                {% endif %}
-
-            </div>
+            {% if solutions %}
+                <br>
+                <div class="created-row">
+                    <div class="student">{{ item.student.get_full_name}}</div>
+                    <div class="separator">•</div>
+                    <div class="created">{{ item.date_solved|date:'d/m/Y, H:i' }}</div>
+                </div>
+            {% else %}
+                <div class="created-row">
+                    <div class="teacher">{{ item.teacher.user.get_full_name}}</div>
+                    <div class="separator">•</div>
+                    <div class="created">{{ item.date_created|date:'d/m/Y, H:i' }}</div>
+                    {% if item.date_updated|date:'d/m/Y, H:i' != item.date_created|date:'d/m/Y, H:i' %}
+                        <div class="updated">(edited {{ item.date_updated|date:'d/m/Y, H:i' }})</div>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             {% if problems %}
                 <div class="due-date"><b>Due date:</b>
@@ -75,6 +101,10 @@
     if (showAll) {
         document.getElementById('filter-all').classList.add('filter-active');
         document.getElementById('filter-teacher').classList.remove('filter-active');
+        let paginationLinks = document.querySelectorAll('.step-links a');
+        paginationLinks.forEach(function (element) {
+            element.setAttribute('href', element.getAttribute('href') + '&show_all=1');
+        })
     } else {
         document.getElementById('filter-teacher').classList.add('filter-active');
         document.getElementById('filter-all').classList.remove('filter-active');

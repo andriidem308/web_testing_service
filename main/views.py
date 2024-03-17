@@ -1,8 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from accounts.decorators import student_required, teacher_required
@@ -10,9 +9,7 @@ from main import forms
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher
 from main.services import article_service, code_solver, paginate_service, users_service
 
-from main.services.code_solver_util import read_json_local, read_json_s3
 from main.services.mail_notification import problem_added_notify, lecture_added_notify
-from web_testing_service import settings
 from web_testing_service.settings import MEDIA_URL
 
 
@@ -213,50 +210,34 @@ class LectureUpdateView(UpdateView):
     template_name = 'lectures/lecture_edit.html'
     success_url = reverse_lazy('lectures')
 
-    # TODO: uncomment and implement
-    # def get(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     comments = article_service.get_comments(self.object)
-    #
-    #     teacher = get_teacher(self.request.user)
-    #     student = get_student(self.request.user)
-    #
-    #     context = self.get_context_data(object=self.object)
-    #
-    #     context.update({
-    #         'date_created': self.object.date_created,
-    #         'deadline': self.object.deadline,
-    #         'comments': comments,
-    #         'teacher': teacher,
-    #         'student': student,
-    #         'MEDIA_URL': MEDIA_URL,
-    #     })
-    #
-    #     return self.render_to_response(context)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     comments = article_service.get_comments(self.object)
-    #
-    #     user = self.request.user
-    #     teacher = get_teacher(user)
-    #     form = self.get_form()
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('problem', pk=self.object.pk)
-    #     else:
-    #         context = self.get_context_data(object=self.object)
-    #         context.update({
-    #             'user': user,
-    #             'form': form,
-    #             'date_created': self.object.date_created,
-    #             'deadline': self.object.deadline,
-    #             'comments': comments,
-    #             'teacher': teacher,
-    #             'errors': form.errors,
-    #         })
-    #         return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({
+            'form': forms.LectureUpdateForm(instance=self.object),
+            'date_created': self.object.date_created,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
+        })
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+
+        if form.is_valid():
+            form.save()
+            return redirect('lecture', pk=self.object.pk)
+        else:
+            context = self.get_context_data(object=self.object)
+            context.update({
+                'user': self.request.user,
+                'form': form,
+                'teacher': users_service.get_teacher(self.request.user),
+                'errors': form.errors,
+            })
+            return render(request, self.template_name, context)
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -318,7 +299,7 @@ class ProblemView(DetailView):
         self.object = self.get_object()
 
         teacher = users_service.get_teacher(self.request.user)
-        solutions = article_service.solutions_by_problem(self.object)
+        solutions = article_service.solutions_by_problem(self.object).order_by('checked')
 
         student = users_service.get_student(self.request.user)
         solution = article_service.solution_find(self.object, student) if student else None
@@ -407,34 +388,21 @@ class ProblemUpdateView(UpdateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        comments = article_service.get_comments(self.object)
-
-        teacher = users_service.get_teacher(self.request.user)
-        student = users_service.get_student(self.request.user)
-
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
         context = self.get_context_data(object=self.object)
-
         context.update({
-            'form': form,
+            'form': forms.ProblemUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
-            'comments': comments,
-            'teacher': teacher,
-            'student': student,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
         })
 
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        comments = article_service.get_comments(self.object)
 
-        user = self.request.user
-        teacher = users_service.get_teacher(user)
-        form = self.get_form()
+        form = forms.ProblemUpdateForm(request.POST, request.FILES, instance=self.object)
 
         if form.is_valid():
             form.save()
@@ -442,12 +410,9 @@ class ProblemUpdateView(UpdateView):
         else:
             context = self.get_context_data(object=self.object)
             context.update({
-                'user': user,
+                'user': self.request.user,
                 'form': form,
-                'date_created': self.object.date_created,
-                'deadline': self.object.deadline,
-                'comments': comments,
-                'teacher': teacher,
+                'teacher': users_service.get_teacher(self.request.user),
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
@@ -489,37 +454,8 @@ class ProblemTakeView(CreateView):
             solution = form.save(commit=False)
             solution.problem = problem
             solution.student = student
-            solution_code = solution.solution_code
-            max_execution_time = problem.max_execution_time
-            tests = None
-            if problem.test_file:
-                if settings.WORKFLOW == 's3':
-                    if problem.test_file:
-                        tests = read_json_s3(problem.test_file)
 
-                if settings.WORKFLOW == 'local':
-                    tests = read_json_local(problem.test_file.path)
-
-            score = code_solver.test_student_solution(
-                code=solution_code,
-                exec_time=max_execution_time,
-                tests=tests
-            )
-
-            if timezone.now() > problem.deadline:
-                score = score / 2
-
-            score = round(score, 2)
-
-            previous_solutions = Solution.objects.filter(student=student).filter(problem=problem)
-            if previous_solutions:
-                if score > previous_solutions[0].score:
-                    previous_solutions.delete()
-                    solution.score = score
-                    solution.save()
-            else:
-                solution.score = score
-                solution.save()
+            code_solver.problem_take(solution)
 
             return redirect('problem', pk=problem_id)
         else:
@@ -529,9 +465,74 @@ class ProblemTakeView(CreateView):
 
 @method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemSolutionListView(ListView):
-    pass
+    model = Solution
+    context_object_name = 'solutions'
+    template_name = 'problems/problem_solutions.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        problem_id = self.kwargs.get('pk')
+        problem = Problem.objects.get(id=problem_id)
+        queryset = Solution.objects.filter(problem=problem)
+        queryset = queryset.order_by('checked', '-date_solved')
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        self.object_list = self.get_queryset()
+        context = super().get_context_data(*args, **kwargs)
+
+        teacher = users_service.get_teacher(user)
+        solutions = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+
+        context.update({
+            'solutions': solutions,
+            'teacher': teacher,
+        })
+
+        return self.render_to_response(context)
 
 
 @method_decorator([login_required], name='dispatch')
 class ProblemSolutionView(DetailView):
-    pass
+    model = Solution
+    context_object_name = 'solution'
+    template_name = 'problems/solution.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        solution_code = self.object.solution_code
+
+        context = super().get_context_data(**kwargs)
+        context['solution_code'] = solution_code
+
+        teacher = users_service.get_teacher(request.user)
+        if teacher and not self.object.checked:
+            form = forms.CheckSolutionForm(instance=self.object)
+            form.fields['formatted_score'].initial = self.object.points
+            context['form'] = form
+            context['teacher'] = teacher
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = forms.CheckSolutionForm(request.POST, instance=self.object)
+
+        if form.is_valid():
+            solution = form.save(commit=False)
+            max_points = self.object.problem.max_points
+
+            formatted_score = form.cleaned_data.get('formatted_score')
+            score = formatted_score / max_points
+            solution.score = min(score, 1)
+
+            solution.checked = True
+            solution.save()
+
+            return redirect('solution', pk=self.object.pk)
+        else:
+            context = {'form': form, 'solution_code': self.object.solution_code}
+            return self.render_to_response(context)

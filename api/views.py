@@ -77,7 +77,7 @@ def group_data(request, pk):
         result['data'].append({
             'first_name': table_service.highlight_search(student.first_name, request),
             'last_name': table_service.highlight_search(student.last_name, request),
-            'score_percentage': f'{round(student.total_score, 3) * 100}%',
+            'score_percentage': f'{round(round(student.total_score, 3) * 100, 1)}%',
             'problems_solved': student.problems_solved,
         })
 

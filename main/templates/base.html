@@ -4,36 +4,48 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- ***** ***** ***** ***** ***** ***** ***** Meta ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bulma.min.css">
+    <!-- ***** ***** ***** ***** ***** ***** ***** Favicon ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <!-- ***** ***** ***** ***** ***** ***** ***** Title ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
+    <title>{% block title %}Web Testing Service{% endblock %}</title>
 
+    <!-- ***** ***** ***** ***** ***** ***** ***** Bootstrap ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">#}
 
+    <!-- ***** ***** ***** ***** ***** ***** ***** jQuery scripts ***** ***** ***** ***** ***** ***** ***** ***** -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+    <!-- ***** ***** ***** ***** ***** ***** ***** jQuery DataTable ***** ***** ***** ***** ***** ***** ***** ***** -->
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bulma.min.css">
+
+    <!-- ***** ***** ***** ***** ***** ***** ***** Pretty Calendar ***** ***** ***** ***** ***** ***** ***** ***** -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
 
+    <!-- ***** ***** ***** ***** ***** ***** ***** Font Awesome Icons ***** ***** ***** ***** ***** ***** ***** -->
     <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
 
+    <!-- ***** ***** ***** ***** ***** ***** ***** Fonts ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&display=swap" rel="stylesheet">
 
+    <!-- ***** ***** ***** ***** ***** ***** ***** Custom Styles ***** ***** ***** ***** ***** ***** ***** ***** -->
     <link href="{% sass_src 'styles/style.scss' %}" rel="stylesheet" type="text/css">
 
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    <title>{% block title %}Web Testing Service{% endblock %}</title>
 </head>
 <body>
 
-<div>
-    {% include '_header.html' with user=user %}
-</div>
+{% include '_header.html' with user=user %}
 <main>
     {% block content %}
 
@@ -43,14 +55,6 @@
 {#<aside>#}
 {##}
 {#</aside>#}
-
-{# ----------> ONLY FOR DEBUG <---------- #}
-{#<script>#}
-{#    // Reload the page every 3 seconds (3000 milliseconds)#}
-{#    setInterval(function() {#}
-{#        location.reload();#}
-{#    }, 1000);#}
-{#</script>#}
 
 <script src="{% static 'js/main.js' %}"></script>
 

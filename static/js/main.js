@@ -19,6 +19,9 @@ const studentsTableOptions = {
     ],
     dom: 'Bfrtip',
     iDisplayLength: 15,
+    oLanguage: {
+      sEmptyTable: 'No students in this group'
+    },
 };
 
 const initStudentsTable = function (options) {
