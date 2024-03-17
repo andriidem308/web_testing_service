@@ -20,7 +20,10 @@
     <ul class="side-navigation">
         <li id="notifications">
             <a class="side-navigation__icon_link" href="">
-                <div class="notification__counter"></div><i class="fa-solid fa-bell"></i>
+                {% if unread_notifications %}
+                    <div class="notification__counter"></div>
+                {% endif %}
+                <i class="fa-solid fa-bell"></i>
             </a>
 
             <div class="notification-menu">
