@@ -1,17 +1,17 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-
+from main.models import Student
 from web_testing_service.settings import EMAIL_HOST_USER
 
 
 def lecture_added_notify(lecture):
     teacher = lecture.teacher
     lecture_headline = lecture.headline
-    groups = lecture.groups
+    groups = lecture.groups.all()
 
-    # recipients = Student.objects.filter(group__in=groups)
-    # recipients_email_list = [recipient.user.email for recipient in recipients]
+    #recipients = Student.objects.filter(group__in=groups)
+    #recipients_email_list = [recipient.user.email for recipient in recipients]
     recipients_email_list = ['nikiforovsh@gmail.com', 'andriidem308@gmail.com']
 
     subject = f'New lecture "{lecture_headline}"'
@@ -26,7 +26,7 @@ def lecture_added_notify(lecture):
 def problem_added_notify(problem):
     teacher = problem.teacher
     problem_headline = problem.headline
-    groups = problem.groups
+    groups = problem.groups.all()
 
     # recipients = Student.objects.filter(group__in=groups)
     # recipients_email_list = [recipient.user.email for recipient in recipients]
