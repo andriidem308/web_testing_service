@@ -6,22 +6,20 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.decorators import student_required, teacher_required
 from main import forms
-from main.models import Group, Lecture, Problem, Solution, Student, Teacher
+from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
 from main.services import article_service, code_solver, paginate_service, users_service
-
+from main.services.notification_service import create_new_problem_notifications
 from main.services.mail_notification import problem_added_notify, lecture_added_notify
 from web_testing_service.settings import MEDIA_URL
 
 
-def test(request):
-    context = {'comments': ['Comment 1', 'Comment 2', 'Comment 3']}
-    return render(request, 'index.html', context=context)
-
-
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
     return render(request, 'index.html')
 
 
+@method_decorator([login_required], name='dispatch')
 class GroupListView(ListView):
     model = Group
     context_object_name = 'groups'
@@ -49,6 +47,7 @@ class GroupListView(ListView):
         return self.render_to_response(context)
 
 
+@method_decorator([login_required], name='dispatch')
 class GroupView(DetailView):
     model = Group
     context_object_name = 'group'
@@ -111,6 +110,7 @@ class GroupDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
 
 
+@method_decorator([login_required], name='dispatch')
 class LectureListView(ListView):
     model = Lecture
     context_object_name = 'lectures'
@@ -138,6 +138,7 @@ class LectureListView(ListView):
         return self.render_to_response(context)
 
 
+@method_decorator([login_required], name='dispatch')
 class LectureView(DetailView):
     model = Lecture
     context_object_name = 'lecture'
@@ -249,6 +250,7 @@ class LectureDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
 
 
+@method_decorator([login_required], name='dispatch')
 class ProblemListView(ListView):
     model = Problem
     context_object_name = 'problems'
@@ -290,6 +292,7 @@ class ProblemListView(ListView):
         return context
 
 
+@method_decorator([login_required], name='dispatch')
 class ProblemView(DetailView):
     model = Problem
     context_object_name = 'problem'
@@ -362,6 +365,7 @@ class ProblemCreateView(CreateView):
 
         if form.is_valid():
             problem = form.save()
+            create_new_problem_notifications(problem)
             problem_added_notify(problem)
             return redirect('problems')
         else:
@@ -473,8 +477,7 @@ class ProblemSolutionListView(ListView):
     def get_queryset(self):
         problem_id = self.kwargs.get('pk')
         problem = Problem.objects.get(id=problem_id)
-        queryset = Solution.objects.filter(problem=problem)
-        queryset = queryset.order_by('checked', '-date_solved')
+        queryset = article_service.solutions_by_problem(problem)
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -484,9 +487,11 @@ class ProblemSolutionListView(ListView):
         context = super().get_context_data(*args, **kwargs)
 
         teacher = users_service.get_teacher(user)
+        problem = Problem.objects.get(id=self.kwargs.get('pk'))
         solutions = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
 
         context.update({
+            'problem': problem,
             'solutions': solutions,
             'teacher': teacher,
         })
@@ -536,3 +541,12 @@ class ProblemSolutionView(DetailView):
         else:
             context = {'form': form, 'solution_code': self.object.solution_code}
             return self.render_to_response(context)
+
+
+def view_notification(request, pk):
+    notification = Notification.objects.get(id=pk)
+    object_type = notification.object_type
+    object_id = notification.object_id
+    notification.is_seen = True
+    notification.save()
+    return redirect(object_type, pk=object_id)

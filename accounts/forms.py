@@ -2,26 +2,48 @@ import re
 
 from django import forms
 from django.contrib.auth import get_user_model
+
 from django.contrib.auth.forms import (AuthenticationForm as BaseAuthenticationForm, UserCreationForm,
                                        PasswordChangeForm as BasePasswordChangeForm)
+from django.contrib.auth.password_validation import validate_password
+from django.core.validators import ValidationError
 from django.db import transaction
 
 from main.models import Student, Teacher, Group
+from web_testing_service.settings import SECRET_KEY_TEACHER
 
 User = get_user_model()
 
 
+def password_weak_validator(value):
+    try:
+        validate_password(value)
+    except ValidationError as e:
+        print(e)
+        raise ValidationError('Password is too weak')
+
+
+def secret_key_validator(value):
+    if value:
+        if value != SECRET_KEY_TEACHER:
+            raise forms.ValidationError(
+                'Invalid secret key',
+                code='secret_key_mismatch',
+            )
+    else:
+        raise forms.ValidationError(
+            'Secret key is not entered',
+            code='secret_key_mismatch',
+        )
+
+
 class AuthenticationForm(BaseAuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={
-        # 'autocomplete': 'off',
-        'class': 'pretty-input',
-        'placeholder': 'Username',
-    }))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        # 'autocomplete': 'off',
-        'class': 'pretty-input',
-        'placeholder': 'Password',
-    }))
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'autocomplete': 'off', 'class': 'pretty-input', 'placeholder': 'Username'}),
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'autocomplete': 'off', 'class': 'pretty-input', 'placeholder': 'Password'})
+    )
 
     def clean(self):
         username = self.cleaned_data['username']
@@ -33,28 +55,53 @@ class AuthenticationForm(BaseAuthenticationForm):
 
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Name"}),
-                                 max_length=32, label='')
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': 'Surname'}),
-                                max_length=32, label='')
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': 'Username'}),
-                               max_length=64, label='')
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'pretty-input', 'placeholder': 'E-mail'}),
-                             max_length=64, label='')
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Password'}),
-                                label='')
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Name", 'autocomplete': 'off'}),
+        max_length=32,
+        label=''
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': 'Surname', 'autocomplete': 'off'}),
+        max_length=32,
+        label=''
+    )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': 'Username', 'autocomplete': 'off'}),
+        max_length=64,
+        label='',
+        error_messages={'unique': 'User already exists'}
+    )
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': 'pretty-input', 'placeholder': 'E-mail', 'autocomplete': 'off'}),
+        max_length=64,
+        label=''
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Password', 'autocomplete': 'off'}),
+        label='',
+    )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Password confirmation'}), label='')
+        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Password confirmation', 'autocomplete': 'off'}),
+        label='',
+        validators=[password_weak_validator],
+    )
 
     secret_key = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Access key'}),
-        label='', required=False)
-    group = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'pretty-input'}),
-                                   queryset=Group.objects.all(), label='', empty_label='Select Group', required=False)
+        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Secret key', 'autocomplete': 'off'}),
+        label='',
+        required=False,
+        validators=[secret_key_validator]
+    )
+    group = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'pretty-input'}), queryset=Group.objects.all(),
+        label='',
+        empty_label='Select Group',
+        required=False
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'group', 'secret_key')
+        fields = ('group', 'first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'secret_key')
 
     def __init__(self, *args, **kwargs):
         user_type = kwargs.pop('user_type', None)

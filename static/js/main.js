@@ -123,6 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
     "use strict";
     initStudentsTable(studentsTableOptions);
 
+    let notifications = document.querySelectorAll('.notification__message');
+    notifications.forEach(function (element) {
+        element.innerHTML = element.textContent;
+    });
+
     let testFileInput = document.getElementById('id_test_file');
     if (testFileInput) {
         testFileInput.addEventListener('change', displayFileName);

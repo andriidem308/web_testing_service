@@ -36,7 +36,7 @@ def solutions_by_student(student):
 
 
 def solutions_by_problem(problem):
-    solutions = Solution.objects.filter(problem=problem).order_by('date_solved')
+    solutions = Solution.objects.filter(problem=problem).order_by('checked', '-date_solved')
     return solutions
 
 

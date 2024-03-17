@@ -6,7 +6,6 @@ from main.views import *
 
 urlpatterns = [
     path('', index, name='home'),
-    path('test/', test, name='test'),
 
     path('problems/', ProblemListView.as_view(), name='problems'),
     path('problems/add/', ProblemCreateView.as_view(), name='problem_add'),
@@ -28,6 +27,8 @@ urlpatterns = [
     path('groups/<int:pk>/', GroupView.as_view(), name='group'),
     path('groups/<int:pk>/edit/', GroupUpdateView.as_view(), name='group_edit'),
     path('groups/<int:pk>/delete/', GroupDeleteView.as_view(), name='group_delete'),
+
+    path('view_notification/<int:pk>', view_notification, name='view_notification'),
 
     path('create_all_models/', create_all_models, name='create_all_models'),
     path('create_teachers/', create_teachers, name='create_teachers'),

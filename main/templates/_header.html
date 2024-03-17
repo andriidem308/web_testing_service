@@ -9,17 +9,44 @@
     </div>
 
     <ul class="navigation">
-        <li><a href="{% url 'lectures' %}">Lectures</a></li>
-        <li><a href="{% url 'problems' %}">Problems</a></li>
+        <li class="navigation-item"><a href="{% url 'lectures' %}">Lectures</a></li>
+        <li class="navigation-item"><a href="{% url 'problems' %}">Problems</a></li>
         {% if user.is_teacher %}
-            <li><a href="{% url 'groups' %}">Groups</a></li>
+            <li class="navigation-item"><a href="{% url 'groups' %}">Groups</a></li>
         {% endif %}
-        <li><a href="">Tests</a></li>
+        <li class="navigation-item"><a href="">Tests</a></li>
     </ul>
 
     <ul class="side-navigation">
-        <li>
-            <a href=""><i class="fa-solid fa-bars"></i></a>
+        <li id="notifications">
+            <a class="side-navigation__icon_link" href="">
+                {% if unread_notifications %}
+                    <div class="notification__counter"></div>
+                {% endif %}
+                <i class="fa-solid fa-bell"></i>
+            </a>
+
+            <div class="notification-menu">
+            {% for notification in notifications %}
+                <a class="notification__link" href="{% url 'view_notification' pk=notification.pk %}">
+                    <div class="notification__body">
+                        <span class="notification__message">{{ notification.message }}</span>
+                        <span class="notification__received">{{ notification.created_at|date:'d/m/Y, H:i'}}</span>
+                    </div>
+                    <div class="notification__seen">{% if notification.is_seen %}{% else %}<i class="fa-solid fa-circle">{% endif %}</i></div>
+                </a>
+            {% empty %}
+                <div class="notification__link">
+                    <div class="notification__body">
+                        <span class="notification__message">No notifications</span>
+                    </div>
+                    <div class="notification__seen"></div>
+                </div>
+            {% endfor %}
+            </div>
+        </li>
+        <li id="other-links">
+            <a class="side-navigation__icon_link" href=""><i class="fa-solid fa-bars"></i></a>
             <ul class="sub-menu">
                 <li>
                     <a href="https://mechmat.knu.ua/" class="icon-link"><i class="navigation-icon fa-solid fa-building-un"></i>
@@ -30,20 +57,14 @@
                         Library</a>
                 </li>
                 <li>
-                    <a href="https://github.com/andriidem308/django_eolimp"><i class="navigation-icon fa-brands fa-github"></i>
+                    <a href="https://github.com/andriidem308/web_testing_service"><i class="navigation-icon fa-brands fa-github"></i>
                         Github</a>
                 </li>
             </ul>
         </li>
-
         {#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
-        {% if user.is_authenticated %}
-{#            <li><a href=""><i class="fa-solid fa-bell"></i></a></li>#}
-            <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
-            <li><a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
-        {% else %}
-            <li><a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a></li>
-        {% endif %}
+        <li><a class="side-navigation__icon_link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
+        <li><a class="side-navigation__icon_link" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
 
 
     </ul>
