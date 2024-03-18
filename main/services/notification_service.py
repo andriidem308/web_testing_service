@@ -111,7 +111,6 @@ def create_problem_taken_notification(solution):
     teacher = solution.problem.teacher
     message = f'<b>{solution.student}</b> take a problem <b>"{problem_headline}"</b> '
     object_type = 'solution'
-    print("ZALUPA: ", solution.id)
     create_notification(teacher.user, message, object_type, solution.id)
 
 
