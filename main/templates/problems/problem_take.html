@@ -18,11 +18,9 @@
             <br>
 
             <div class="buttons-row">
-                <button class="pretty-button primary">Save</button>
-                <button class="pretty-button danger">Cancel</button>
+                <button class="pretty-button primary" type="submit">Save</button>
+                <a class="pretty-button danger" href="{% url 'problem' pk=problem.pk %}">Cancel</a>
             </div>
-
-
         </form>
     </div>
 
