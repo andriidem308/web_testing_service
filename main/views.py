@@ -8,8 +8,8 @@ from accounts.decorators import student_required, teacher_required
 from main import forms
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
 from main.services import article_service, code_solver, paginate_service, users_service
-from main.services.notification_service import create_new_problem_notifications
-from main.services.mail_notification import problem_added_notify, lecture_added_notify
+from main.services.notification_service import create_new_problem_notifications, mail_problem_added_notify, \
+    mail_lecture_added_notify, create_new_lecture_notification, create_solution_checked_notification
 from web_testing_service.settings import MEDIA_URL
 
 
@@ -197,7 +197,8 @@ class LectureCreateView(CreateView):
         form = forms.LectureCreateForm(teacher, request.POST)
         if form.is_valid():
             lecture = form.save()
-            lecture_added_notify(lecture)
+            mail_lecture_added_notify(lecture)
+            create_new_lecture_notification(lecture)
             return redirect('lectures')
         else:
             context = {'form': form, 'user': user}
@@ -366,7 +367,7 @@ class ProblemCreateView(CreateView):
         if form.is_valid():
             problem = form.save()
             create_new_problem_notifications(problem)
-            problem_added_notify(problem)
+            mail_problem_added_notify(problem)
             return redirect('problems')
         else:
             comment_form, comments = article_service.comment_method(self.object, self.request)
@@ -535,6 +536,8 @@ class ProblemSolutionView(DetailView):
             solution.score = min(score, 1)
 
             solution.checked = True
+
+            create_solution_checked_notification(solution)
             solution.save()
 
             return redirect('solution', pk=self.object.pk)
