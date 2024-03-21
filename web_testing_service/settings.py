@@ -13,7 +13,7 @@ SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'localhost']
 
 # APPS
 INSTALLED_APPS = [
@@ -149,3 +149,13 @@ if WORKFLOW == 's3':
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 if WORKFLOW == 'local':
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:5672'.format(
+    os.getenv('RABBITMQ_DEFAULT_USER', "guest"),
+    os.getenv('RABBITMQ_DEFAULT_PASS', "guest"),
+    os.getenv('RABBITMQ_DEFAULT_HOST', "localhost"),
+)
+
+CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

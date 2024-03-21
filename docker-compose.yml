@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    volumes:
+      - static:/static
+      - /:/app
+    env_file:
+      - .env
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+#  rabbitmq:
+#    image: "rabbitmq:3.8-rc-management"
+#    container_name: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#
+#  celery:
+#    build: .
+#    container_name: celery
+#    env_file:
+#      - .env
+#    command: celery -A web_testing_service worker --loglevel=info
+#    depends_on:
+#      - backend
+#    volumes:
+#      - /:/app
+
+  database:
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - /:/app
+
+
+volumes:
+  static:
+    driver: local

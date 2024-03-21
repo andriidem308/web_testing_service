@@ -1,0 +1,6 @@
+/venv*
+/localtest
+
+passwords.txt
+db.sqlite3
+#.env
