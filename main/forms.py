@@ -11,8 +11,6 @@ class GroupCreateForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(GroupCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
-        # for field in self.fields.values():
-        #     field.label = ''
 
     class Meta:
         model = Group
