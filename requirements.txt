@@ -9,6 +9,7 @@ django-storages==1.14.2
 djangorestframework==3.14.0
 Faker==22.6.0
 jmespath==1.0.1
+gunicorn==20.1.0
 libsass==0.23.0
 pydantic==2.6.1
 pydantic_core==2.16.2

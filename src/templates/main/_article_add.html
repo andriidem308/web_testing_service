@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="article-fields-bottom">
-                {% if teacher and type == 'problem' %}
+                {% if type == 'problem' %}
                     <div id="selectedFiles" class="test-file">
                         <label class="{% if form.test_file.errors %}danger-outline{% else %}{% endif %}files-input pretty-button dark" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
                         {{ form.test_file }}

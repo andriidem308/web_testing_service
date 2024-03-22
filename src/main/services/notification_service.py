@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 from main.models import Notification, Student
-from web_testing_service.settings import EMAIL_HOST_USER
+from core.settings import EMAIL_HOST_USER
 
 mail_notifications_types = ('problem', 'problem', 'problem', 'solution')
 

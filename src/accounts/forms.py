@@ -10,7 +10,7 @@ from django.core.validators import ValidationError
 from django.db import transaction
 
 from main.models import Student, Teacher, Group
-from web_testing_service.settings import SECRET_KEY_TEACHER
+from core.settings import SECRET_KEY_TEACHER
 
 User = get_user_model()
 
