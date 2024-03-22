@@ -7,15 +7,17 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from accounts.decorators import student_required, teacher_required
 from main import forms
 from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
-from main.services import article_service, code_solver, paginate_service, users_service
+from main.services import article_service, paginate_service, users_service
+from main.services import code_solver
 from main.services.notification_service import create_new_problem_notifications, mail_problem_added_notify, \
     mail_lecture_added_notify, create_new_lecture_notification, create_solution_checked_notification
-from web_testing_service.settings import MEDIA_URL
+from core.settings import MEDIA_URL
 
 
 def index(request):
     if request.user.is_authenticated:
         return redirect('profile')
+
     return render(request, 'index.html')
 
 
@@ -201,7 +203,7 @@ class LectureCreateView(CreateView):
             create_new_lecture_notification(lecture)
             return redirect('lectures')
         else:
-            context = {'form': form, 'user': user}
+            context = {'form': form}
             return render(request, self.template_name, context)
 
 
@@ -353,15 +355,12 @@ class ProblemCreateView(CreateView):
     template_name = 'problems/problem_add.html'
 
     def get(self, request, *args, **kwargs):
-        user = self.request.user
-        teacher = Teacher.objects.get(user=user)
-        form = forms.ProblemCreateForm(teacher=teacher)
-        context = {'form': form, 'teacher': teacher}
+        teacher = Teacher.objects.get(user=self.request.user)
+        context = {'form': forms.ProblemCreateForm(teacher)}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        user = self.request.user
-        teacher = Teacher.objects.get(user=user)
+        teacher = Teacher.objects.get(user=self.request.user)
         form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
@@ -370,17 +369,7 @@ class ProblemCreateView(CreateView):
             mail_problem_added_notify(problem)
             return redirect('problems')
         else:
-            comment_form, comments = article_service.comment_method(self.object, self.request)
-            context = self.get_context_data(problem=self.object)
-
-            context.update({
-                'user': user,
-                'form': form,
-                'date_created': self.object.date_created.strftime('%d/%m/%Y, %H:%M'),
-                'deadline': self.object.deadline.strftime('%d/%m/%Y, %H:%M'),
-                'comment_form': comment_form,
-                'comments': comments,
-            })
+            context = {'form': form}
             return render(request, self.template_name, context)
 
 

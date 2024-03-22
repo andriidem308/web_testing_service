@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView as BaseLoginView, PasswordChangeView as BasePasswordChangeView
 from django.shortcuts import redirect, render
@@ -21,14 +23,14 @@ def profile(request):
         user_type = None
         person = None
 
-    return render(request, 'profile.html',
+    return render(request, 'accounts/profile.html',
                   context={'user': user, 'person': person, 'user_type': user_type})
 
 
 class LoginView(BaseLoginView):
     model = User
     form_class = AuthenticationForm
-    template_name = 'login.html'
+    template_name = 'accounts/login.html'
 
     def get(self, request, *args, **kwargs):
         next_page = request.GET.get('next') or ''
@@ -40,7 +42,7 @@ class LoginView(BaseLoginView):
 class SignUpView(CreateView):
     model = User
     form_class = SignUpForm
-    template_name = 'signup.html'
+    template_name = 'accounts/signup.html'
 
     def get(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
@@ -66,10 +68,10 @@ class SignUpView(CreateView):
 class PasswordChangeView(BasePasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('profile')
-    template_name = 'password_change.html'
+    template_name = 'accounts/password_change.html'
 
 
 def forbidden_view(request, user_type):
     next_page = request.GET.get('next')
     context = {'user_type': user_type, 'next_page': next_page}
-    return render(request, 'forbidden.html', context=context)
+    return render(request, 'accounts/forbidden.html', context=context)

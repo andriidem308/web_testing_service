@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from main.models import Solution
 from main.services.notification_service import mail_student_take_problem_notify, create_problem_taken_notification
-from web_testing_service import settings
+from core import settings
 
 
 def read_json_s3(file_field):

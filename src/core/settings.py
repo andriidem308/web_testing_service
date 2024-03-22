@@ -11,9 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 
-DEBUG = os.getenv('DEBUG')
+# DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
 
 # APPS
 INSTALLED_APPS = [
@@ -44,15 +45,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'web_testing_service.urls'
+ROOT_URLCONF = 'core.urls'
 
 # TEMPLATES
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'main/templates',
-            BASE_DIR / 'accounts/templates',
+            BASE_DIR / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'web_testing_service.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 # DATABASES
 DATABASES = {
@@ -113,7 +113,12 @@ STATICFILES_FINDERS = [
 ]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
 
 SASS_PROCESSOR_ROOT = STATIC_ROOT
 
