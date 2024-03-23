@@ -12,9 +12,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 
 # DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.127.0.0.1']
 
 # APPS
 INSTALLED_APPS = [
@@ -118,9 +120,9 @@ STATICFILES_DIRS = [
 ]
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
 
-SASS_PROCESSOR_ROOT = STATIC_ROOT
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Email notification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
