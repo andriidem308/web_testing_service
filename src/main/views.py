@@ -6,7 +6,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.decorators import student_required, teacher_required
 from main import forms
-from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
+from main.forms import QuestionCreateForm
+from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification, Test
 from main.services import article_service, paginate_service, users_service
 from main.services import code_solver
 from main.services.notification_service import create_new_problem_notifications, mail_problem_added_notify, \
@@ -533,6 +534,60 @@ class ProblemSolutionView(DetailView):
         else:
             context = {'form': form, 'solution_code': self.object.solution_code}
             return self.render_to_response(context)
+
+@method_decorator([login_required], name='dispatch')
+class TestListView(ListView):
+    model = Test
+    context_object_name = 'tests'
+    template_name = 'tests/tests.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('-date_updated')
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
+
+        context = super().get_context_data(*args, **kwargs)
+        tests = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+        teacher = users_service.get_teacher(request.user)
+        context['tests'] = tests
+        context['teacher'] = teacher
+        return self.render_to_response(context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestCreateView(CreateView):
+    model = Test
+    form_class = forms.TestCreateForm
+    template_name = 'tests/test_add.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = forms.TestCreateForm()
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
+
+
+def create_question(request):
+    if request.method == 'POST':
+        form = QuestionCreateForm(request.POST or None)
+
+        if form.is_valid():
+            question = form.save()
+            context = {'question': question}
+            return render(request, 'tests/question_add.html', context=context)
+
+    context = {'form': QuestionCreateForm()}
+    return render(request, 'tests/question_add.html', context=context)
 
 
 def view_notification(request, pk):

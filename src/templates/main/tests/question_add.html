@@ -1,0 +1,16 @@
+
+
+<form hx-post="{% url 'create_question' %}"
+      hx-on="htmx:afterRequest: this.remove()"
+      hx-trigger="click from:#submit-all">
+    <div class="row">
+        <div class="col-4 col-md-3">
+            <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+            {{ form.content }}
+        </div>
+        <div class="col-4 col-md-3">
+            <label for="{{ form.value.id_for_label }}">{{ form.value.label }}</label>
+            {{ form.value }}
+        </div>
+    </div>
+</form>

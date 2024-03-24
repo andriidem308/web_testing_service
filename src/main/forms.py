@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Lecture, Group, Problem, Comment, Attachment, Solution
+from main.models import Lecture, Group, Problem, Comment, Attachment, Solution, Test, Question, Answer
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -228,3 +228,33 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'class': 'pretty-textarea', 'cols': '64', 'rows': '10'}),
         }
+
+
+
+class TestCreateForm(forms.ModelForm):
+    headline = forms.CharField(max_length=255, widget=forms.TextInput())
+
+    class Meta:
+        model = Test
+        fields = ('headline', )
+
+
+class QuestionCreateForm(forms.ModelForm):
+    content = forms.CharField(max_length=255, widget=forms.TextInput())
+    value = forms.FloatField(widget=forms.NumberInput(attrs={'min': 0, 'max': 100, 'step': 1}))
+
+    class Meta:
+        model = Question
+        fields = ('content', 'value', )
+
+
+class AnswerCreateForm(forms.ModelForm):
+    content = forms.CharField(max_length=255, widget=forms.TextInput())
+    is_correct = forms.ChoiceField(widget=forms.CheckboxInput())
+
+    class Meta:
+        model = Answer
+        fields = ('content', 'is_correct', )
+
+
+

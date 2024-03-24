@@ -106,6 +106,32 @@ class Problem(Article):
 class Lecture(Article):
     pass
 
+class Test(Article):
+    pass
+
+class Question(models.Model):
+    test = models.ForeignKey(Test, related_name='test_question', on_delete=models.CASCADE)
+    content = models.CharField(max_length=255)
+    value = models.FloatField(default=1.0)
+
+    def __str__(self):
+        return self.content
+
+    def get_answers(self):
+        answer_objects = Answer.objects.filter(question=self)
+        answers_data = []
+        return answers_data
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, related_name='question_answer', on_delete=models.CASCADE)
+    content = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.content
+
+
 
 class Attachment(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)

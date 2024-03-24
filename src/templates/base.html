@@ -42,8 +42,10 @@
     <!-- ***** ***** ***** ***** ***** ***** ***** Custom Styles ***** ***** ***** ***** ***** ***** ***** ***** -->
     <link href="{% sass_src 'styles/style.scss' %}" rel="stylesheet" type="text/css">
 
+     <!-- ***** ***** ***** ***** ***** ***** ***** Custom Styles ***** ***** ***** ***** ***** ***** ***** ***** -->
+     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% if user.is_authenticated %}
     {% include '_header.html' with user=user %}
 {% endif %}
