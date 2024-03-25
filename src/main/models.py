@@ -111,7 +111,7 @@ class Attachment(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
-    content = models.FileField(upload_to='media/lectures/attachments/')
+    content = models.FileField(upload_to='lectures/attachments/')
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)

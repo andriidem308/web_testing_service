@@ -11,9 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 
-# DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
-DEBUG = True
-# DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '167.172.178.178', '*']
 CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1']
@@ -141,11 +139,11 @@ SASS_PROCESSOR_ROOT = STATIC_ROOT
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 # MEDIA FILES
 MEDIA_URL = '/media/'
@@ -156,16 +154,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = "profile"
+LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-WORKFLOW = os.getenv("WORKFLOW")
 
-if WORKFLOW == 's3':
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+WORKFLOW = os.getenv('WORKFLOW')
+
 if WORKFLOW == 'local':
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+elif WORKFLOW == 's3':
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
