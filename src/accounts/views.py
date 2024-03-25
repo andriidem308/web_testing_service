@@ -23,7 +23,7 @@ def profile(request):
         user_type = None
         person = None
 
-    context = {'user': user, 'person': person, 'user_type': user_type, 'all_users'}
+    context = {'user': user, 'person': person, 'user_type': user_type}
 
     return render(request, 'accounts/profile.html', context=context)
 
