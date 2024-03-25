@@ -577,7 +577,7 @@ class TestCreateView(CreateView):
         return render(request, self.template_name, context)
 
 
-def create_question(request):
+def question_add(request):
     if request.method == 'POST':
         form = QuestionCreateForm(request.POST or None)
 

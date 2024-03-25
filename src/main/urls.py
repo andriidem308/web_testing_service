@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('tests/', TestListView.as_view(), name='tests'),
     path('tests/add/', TestCreateView.as_view(), name='test_add'),
-    path('test/create_question/', create_question, name='create_question'),
+    path('questions/add', question_add, name='question_add'),
 
     path('view_notification/<int:pk>', view_notification, name='view_notification'),
 

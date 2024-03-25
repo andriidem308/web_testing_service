@@ -1,6 +1,6 @@
 
 
-<form hx-post="{% url 'create_question' %}"
+<form hx-post="{% url 'question_add' %}"
       hx-on="htmx:afterRequest: this.remove()"
       hx-trigger="click from:#submit-all">
     <div class="row">

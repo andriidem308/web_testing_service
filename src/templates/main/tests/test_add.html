@@ -4,13 +4,21 @@
 
 
 {% block content %}
-    <main class="container">
-        <h1>New Test</h1>
-        <br>
-        <br>
-        <br>
-        <ul class="dynamic-list">
-        </ul>
-    </main>
+    <h1>New Test</h1>
+
+    <div id="question-forms">
+        {% include 'tests/question_add.html' %}
+    </div>
+    
+    <br>
+    <ul class="dynamic-list">
+    </ul>
+
+    <button type="button" class="btn btn-success me-2"
+            hx-get="{% url 'question_add' %}"
+            hx-target="#question-forms"
+            hx-swap="beforeend">Add Question</button>
+
+    <button type="submit" id="submit-all">Submit all</button>
 
 {% endblock %}
