@@ -15,8 +15,8 @@ SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
-CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '167.172.178.178', '*']
+CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1']
 
 # APPS
 INSTALLED_APPS = [
@@ -55,6 +55,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
+            BASE_DIR / 'templates' / 'main',
+            BASE_DIR / 'templates' / 'accounts',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,6 +80,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'wts',
+#         'USER': 'wts',
+#         'PASSWORD': 'wts',
+#         'HOST': '10.114.0.4',
+#         'PORT': '',
+#     }
+# }
 
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
@@ -122,7 +135,7 @@ STATICFILES_DIRS = [
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 
 # Email notification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
