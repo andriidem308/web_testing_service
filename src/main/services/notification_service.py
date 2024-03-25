@@ -14,9 +14,8 @@ def mail_lecture_added_notify(lecture):
     lecture_headline = lecture.headline
     groups = lecture.groups.all()
 
-    #recipients = Student.objects.filter(group__in=groups)
-    #recipients_email_list = [recipient.user.email for recipient in recipients]
-    recipients_email_list = []
+    recipients = Student.objects.filter(group__in=groups)
+    recipients_email_list = [recipient.user.email for recipient in recipients]
 
     subject = f'New lecture "{lecture_headline}"'
     message = render_to_string('messages/lecture_add.html', {'lecture_title': lecture.headline, 'teacher': teacher})
