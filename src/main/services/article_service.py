@@ -92,6 +92,8 @@ def comment_method(article, request):
             new_comment.article = article
             new_comment.user = request.user
             new_comment.save()
+
+
     else:
         comment_form = CommentForm()
     return comment_form, comments

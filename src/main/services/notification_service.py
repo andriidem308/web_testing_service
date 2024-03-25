@@ -109,11 +109,21 @@ def create_solution_checked_notification(solution):
 def create_problem_taken_notification(solution):
     problem_headline = solution.problem.headline
     teacher = solution.problem.teacher
-    message = f'<b>{solution.student}</b> take a problem <b>"{problem_headline}"</b> '
+    message = f'<b>{solution.student}</b> solved the problem <b>"{problem_headline}"</b> '
     object_type = 'solution'
     create_notification(teacher.user, message, object_type, solution.id)
 
 
-def create_article_commented_notification():
-    pass
+def create_article_commented_notification(comment):
+    user = comment.user
+    headline = comment.headline
+    groups = comment.article.groups.all()
+    recipients = list(Student.objects.filter(group__in=groups))
+    recipients.append(comment.article.teacher)
+    recipients.remove(user)
+
+    print(recipients)
+
+    message = f'<b>{user}</b> left a comment on  <b>"{headline}"</b> '
+
 
