@@ -2,6 +2,7 @@ from main.models import Problem, Lecture, Comment, Attachment, Teacher, Solution
 from typing import List
 
 from main.forms import CommentForm, AttachmentForm
+from main.services.notification_service import create_article_commented_notification
 
 
 def problem_all() -> List[Problem]:
@@ -92,6 +93,9 @@ def comment_method(article, request):
             new_comment.article = article
             new_comment.user = request.user
             new_comment.save()
+            create_article_commented_notification(new_comment)
+
+
     else:
         comment_form = CommentForm()
     return comment_form, comments
