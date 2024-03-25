@@ -23,8 +23,11 @@ def profile(request):
         user_type = None
         person = None
 
-    return render(request, 'accounts/profile.html',
-                  context={'user': user, 'person': person, 'user_type': user_type})
+    all_users = User.objects.all()
+
+    context = {'user': user, 'person': person, 'user_type': user_type, 'all_users': all_users}
+
+    return render(request, 'accounts/profile.html', context=context)
 
 
 class LoginView(BaseLoginView):
