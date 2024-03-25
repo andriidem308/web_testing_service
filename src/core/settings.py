@@ -13,7 +13,8 @@ SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '167.172.178.178', '*']
+ALLOWED_HOSTS = [
+    '127.0.0.1', 'localhost', '167.172.178.178', '*', 'www.web-testing-service.online', 'web-testing-service.online']
 CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1']
 
 # APPS
