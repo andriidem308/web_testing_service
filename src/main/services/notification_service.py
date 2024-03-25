@@ -4,6 +4,8 @@ from django.template.loader import render_to_string
 from main.models import Notification, Student
 from core.settings import EMAIL_HOST_USER
 
+from accounts.models import User
+
 mail_notifications_types = ('problem', 'problem', 'problem', 'solution')
 
 
@@ -36,7 +38,6 @@ def mail_problem_added_notify(problem):
     send_mail(subject, '', EMAIL_HOST_USER, recipients_email_list, html_message=message)
 
 
-
 # def mail_test_added_notify(test):
 #     teacher = test.teacher
 #     test_headline = test.headline
@@ -49,6 +50,7 @@ def mail_problem_added_notify(problem):
 #     subject = f'New problem "{test_headline}"'
 #     message = render_to_string('messages/test_add.html', {'test_title': test_headline, 'teacher': teacher})
 #     send_mail(subject, '', EMAIL_HOST_USER, recipients_email_list, html_message=message)
+
 
 def mail_student_take_problem_notify(solution):
     student = solution.student
@@ -116,14 +118,15 @@ def create_problem_taken_notification(solution):
 
 def create_article_commented_notification(comment):
     user = comment.user
-    headline = comment.headline
+    headline = comment.article.headline
     groups = comment.article.groups.all()
-    recipients = list(Student.objects.filter(group__in=groups))
-    recipients.append(comment.article.teacher)
+
+    recipients = list(User.objects.filter(student__group__in=groups))
+    recipients.append(comment.article.teacher.user)
     recipients.remove(user)
 
-    print(recipients)
+    object_type = comment.article.__class__.__name__.lower()
+    message = f'<b>{user}</b> left a comment on <b>"{headline}"</b>'
 
-    message = f'<b>{user}</b> left a comment on  <b>"{headline}"</b> '
-
-
+    for recipient in recipients:
+        create_notification(recipient, message, object_type, comment.article.id)
