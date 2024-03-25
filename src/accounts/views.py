@@ -23,9 +23,7 @@ def profile(request):
         user_type = None
         person = None
 
-    all_users = User.objects.all()
-
-    context = {'user': user, 'person': person, 'user_type': user_type, 'all_users': all_users}
+    context = {'user': user, 'person': person, 'user_type': user_type, 'all_users'}
 
     return render(request, 'accounts/profile.html', context=context)
 
