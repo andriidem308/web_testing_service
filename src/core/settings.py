@@ -15,7 +15,7 @@ DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 'localhost', '167.172.178.178', '*', 'www.web-testing-service.online', 'web-testing-service.online']
-CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1', 'http://*.web-testing-service.online']
 
 # APPS
 INSTALLED_APPS = [
@@ -73,23 +73,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # DATABASES
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'wts',
-#         'USER': 'wts',
-#         'PASSWORD': 'wts',
-#         'HOST': '10.114.0.4',
-#         'PORT': '',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'wts',
+        'USER': 'wts',
+        'PASSWORD': 'wts',
+        'HOST': '10.114.0.4',
+        'PORT': '',
+    }
+}
 
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
