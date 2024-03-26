@@ -14,8 +14,19 @@ SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [
-    '127.0.0.1', 'localhost', '167.172.178.178', '*', 'www.web-testing-service.online', 'web-testing-service.online']
-CSRF_TRUSTED_ORIGINS = ['http://*167.172.178.178', 'http://*.134.122.84.248', 'http://*.127.0.0.1', 'http://*.web-testing-service.online']
+    '127.0.0.1',
+    'localhost',
+    '167.172.178.178',
+    'www.web-testing-service.online',
+    'web-testing-service.online'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://*.127.0.0.1', 'https://*.127.0.0.1',
+    'http://*167.172.178.178', 'https://*167.172.178.178',
+    'http://*.134.122.84.248', 'https://*.134.122.84.248',
+    'http://*.web-testing-service.online', 'https://*.web-testing-service.online',
+]
 
 # APPS
 INSTALLED_APPS = [
