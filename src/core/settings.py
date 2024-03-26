@@ -14,8 +14,8 @@ SECRET_KEY_TEACHER = os.getenv('SECRET_KEY_TEACHER')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
+    '127.0.0.1', 'localhost',
+    'django',
     '167.172.178.178',
     'www.web-testing-service.online',
     'web-testing-service.online'
@@ -98,7 +98,8 @@ elif os.getenv('DATABASE') == 'postgres':
             'NAME': 'wts',
             'USER': 'wts',
             'PASSWORD': 'wts',
-            'HOST': '10.114.0.4',
+            'HOST': '134.122.84.248',
+            # 'HOST': '10.114.0.4',
             'PORT': '',
         }
     }
