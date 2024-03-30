@@ -58,8 +58,7 @@ $(function () {
 });
 
 
-function createTestFileTile(rawFilename, clearFilename) {
-    "use strict";
+function createTestFileTile(clearFilename, downloadURL=null) {
 
     const selectedFiles = document.getElementById('selectedFiles');
     const testFileTile = document.createElement('a');
@@ -69,8 +68,10 @@ function createTestFileTile(rawFilename, clearFilename) {
     testFileTile.classList.add('pretty-button');
     testFileTile.classList.add('dark');
 
-    testFileTile.setAttribute('href', rawFilename);
-    testFileTile.setAttribute('download', clearFilename);
+    if (downloadURL) {
+        testFileTile.setAttribute('href', downloadURL);
+        testFileTile.setAttribute('download', clearFilename);
+    }
     testFileTile.setAttribute('id', 'test_file_content');
 
     selectedFiles.appendChild(testFileTile);
@@ -80,7 +81,8 @@ function createTestFileTile(rawFilename, clearFilename) {
 function displayFileName() {
     "use strict";
 
-    const testFileInput = document.getElementById('id_test_file');
+    const testFileInput = document.getElementById(
+        'id_test_file') || document.getElementById('id_attachment');
 
     if (testFileInput.files.length > 0) {
         const oldTestFile = document.getElementById('test_file_content');
@@ -90,29 +92,27 @@ function displayFileName() {
         }
 
         const clearFilename = testFileInput.files[0].name;
-        const rawFilename = '/media/problems/test_files/' + clearFilename;
 
-        createTestFileTile(rawFilename, clearFilename);
+        createTestFileTile(clearFilename);
     }
 }
 
 function testFileService() {
 
     const selectedFiles = document.getElementById('selectedFiles');
-    const testFileInput = document.getElementById('id_test_file');
+    const testFileInput = document.getElementById(
+        'id_test_file') || document.getElementById('id_attachment');
 
     if (testFileInput) {
         testFileInput.style.display = 'none';
 
-        // testFileInput.setAttribute('onchange', 'displayFileName()');
-
         const oldTestFile = document.querySelector('#selectedFiles a');
         selectedFiles.innerHTML = selectedFiles.innerHTML.replace(/Currently:.*Change:/s, '');
         if (oldTestFile) {
-            const rawFilename = oldTestFile.getAttribute('href');
-            const clearFilename = rawFilename.split('/').pop().split('?')[0];
+            const downloadURL = oldTestFile.getAttribute('href');
+            const clearFilename = downloadURL.split('/').pop().split('?')[0];
 
-            createTestFileTile(rawFilename, clearFilename);
+            createTestFileTile(clearFilename, downloadURL);
         }
     }
 }

@@ -102,20 +102,24 @@ class Problem(Article):
 
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
 
+    @property
+    def filename(self):
+        return str(self.test_file).split('/')[-1]
+
+    @property
+    def file_url(self):
+        return self.test_file.url
 
 class Lecture(Article):
-    pass
+    attachment = models.FileField(upload_to='lectures/attachments/', null=True, blank=True)
 
+    @property
+    def filename(self):
+        return str(self.attachment).split('/')[-1]
 
-class Attachment(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-
-    content = models.FileField(upload_to='lectures/attachments/')
-
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now_add=True)
-
+    @property
+    def file_url(self):
+        return self.attachment.url
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -60,6 +60,11 @@
                         <label class="{% if form.test_file.errors %}danger-outline{% else %}{% endif %}files-input pretty-button dark" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
                         {{ form.test_file }}
                     </div>
+                {% elif type == 'lecture' %}
+                    <div id="selectedFiles" class="test-file">
+                        <label class="files-input pretty-button dark" id="test-file-label" for="id_attachment"><i class="fa-solid fa-upload"></i>&nbsp;Attachment</label>
+                        {{ form.attachment }}
+                    </div>
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
