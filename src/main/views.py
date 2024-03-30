@@ -17,8 +17,7 @@ from core.settings import MEDIA_URL
 def index(request):
     if request.user.is_authenticated:
         return redirect('profile')
-
-    return render(request, 'index.html')
+    return redirect('login')
 
 
 @method_decorator([login_required], name='dispatch')

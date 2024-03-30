@@ -45,24 +45,6 @@
             {% endfor %}
             </div>
         </li>
-        <li id="other-links">
-            <a class="side-navigation__icon_link" href=""><i class="fa-solid fa-bars"></i></a>
-            <ul class="sub-menu">
-                <li>
-                    <a href="https://mechmat.knu.ua/" class="icon-link"><i class="navigation-icon fa-solid fa-building-un"></i>
-                        Faculty</a>
-                </li>
-                <li>
-                    <a href="https://mechmat.knu.ua/golovna/fakul-tet/biblioteka/" class="icon-link"><i class="navigation-icon fas fa-thin fa-book"></i>
-                        Library</a>
-                </li>
-                <li>
-                    <a href="https://github.com/andriidem308/web_testing_service"><i class="navigation-icon fa-brands fa-github"></i>
-                        Github</a>
-                </li>
-            </ul>
-        </li>
-        {#    <li><a href=""><i class="fa-regular fa-bell"></i></a></li>#}
         <li><a class="side-navigation__icon_link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
         <li><a class="side-navigation__icon_link" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
 

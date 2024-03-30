@@ -98,7 +98,8 @@ elif os.getenv('DATABASE') == 'postgres':
             'NAME': 'wts',
             'USER': 'wts',
             'PASSWORD': 'wts',
-            'HOST': '10.114.0.4',
+            # 'HOST': '10.114.0.4',
+            'HOST': '134.122.84.248',
             'PORT': '',
         }
     }

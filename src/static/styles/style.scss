@@ -38,6 +38,12 @@ header {
   a {
     img {
       height: 2.22222222rem;
+
+      &:hover {
+        filter: brightness(74%) sepia(10) saturate(20) hue-rotate(356deg);
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-5px);
+      }
     }
 
     &:hover {
@@ -250,10 +256,6 @@ header {
   }
 }
 
-#other-links:hover .sub-menu {
-  display: block;
-}
-
 #notifications:hover .notification-menu {
   display: block;
 }
@@ -275,11 +277,9 @@ header {
   align-items: center;
   justify-content: center;
 
-  height: 100%;
-  margin: auto;
-
   color: $dark;
 
+  text-align: center;
 
   h1 {
     font-size: 54px;
@@ -442,7 +442,6 @@ main {
 }
 
 .column {
-  margin-top: -100px;
   min-width: 320px;
   vertical-align: middle;
   align-self: center !important;
@@ -807,6 +806,8 @@ main {
   .current {
     @extend .pretty-button.action;
 
+    border-color: $action;
+
     margin: 0 12px;
     padding: 4px 12px;
   }
@@ -817,4 +818,70 @@ main {
 
   margin: 0 12px;
   padding: 4px 12px;
+}
+
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  background-color: $dark;
+  color: $light;
+
+  font-weight: 500;
+
+  a {
+    color: $light;
+  }
+}
+
+.footer__right, .footer__left, .footer__mid {
+  flex: 1 1 0;
+
+  width: 210px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer__mid .logo {
+  flex: none;
+}
+
+.footer__right ul {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+
+  i {
+    font-size: 24px;
+
+    &:hover {
+      color: $action;
+      //font-size: 28px;
+
+      transform: translateY(-5px);
+      transition: 0.3s ease-in-out;
+
+    }
+  }
+}
+
+@media (max-width: 400px)  {
+  footer {
+    flex-direction: column;
+    height: 120px;
+    //justify-content: ;
+  }
 }
