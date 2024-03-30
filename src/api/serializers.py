@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from main.models import Teacher, Student, Group, Article, Problem, Lecture, Solution, Comment, Attachment
+from main.models import Teacher, Student, Group, Article, Problem, Lecture, Solution, Comment
 
 from django.contrib.auth import get_user_model
 
@@ -62,12 +62,6 @@ class ProblemSerializer(serializers.ModelSerializer):
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = '__all__'
-
-
-class AttachmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Attachment
         fields = '__all__'
 
 

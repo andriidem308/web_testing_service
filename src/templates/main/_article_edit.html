@@ -59,11 +59,18 @@
                 </div>
             </div>
             <div class="article-fields-bottom">
-                {% if teacher and problem %}
-                    <div id="selectedFiles" class="test-file">
-                        <label class="files-input pretty-button dark" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
-                        {{ form.test_file }}
-                    </div>
+                {% if teacher %}
+                    {% if problem %}
+                        <div id="selectedFiles" class="test-file">
+                            <label class="files-input pretty-button dark" id="test-file-label" for="id_test_file"><i class="fa-solid fa-upload"></i>&nbsp;Test file</label>
+                            {{ form.test_file }}
+                        </div>
+                    {% elif lecture %}
+                        <div id="selectedFiles" class="test-file">
+                            <label class="files-input pretty-button dark" id="test-file-label" for="id_attachment"><i class="fa-solid fa-upload"></i>&nbsp;Attachment</label>
+                            {{ form.attachment }}
+                        </div>
+                    {% endif %}
                 {% endif %}
                 <hr>
                 <div class="action-buttons">

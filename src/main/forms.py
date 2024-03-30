@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Lecture, Group, Problem, Comment, Attachment, Solution
+from main.models import Lecture, Group, Problem, Comment, Solution
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -45,6 +45,8 @@ class LectureCreateForm(forms.ModelForm):
         required=False,
     )
 
+    attachment = forms.FileField(required=False)
+
     def __init__(self, teacher, *args, **kwargs):
         super(LectureCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
@@ -52,7 +54,7 @@ class LectureCreateForm(forms.ModelForm):
 
     class Meta:
         model = Lecture
-        fields = ['headline', 'content', 'groups']
+        fields = ['headline', 'content', 'groups', 'attachment', ]
 
     def save(self, **kwargs):
         instance = super(LectureCreateForm, self).save(commit=False)
@@ -73,9 +75,11 @@ class LectureUpdateForm(forms.ModelForm):
         required=False,
     )
 
+    attachment = forms.FileField()
+
     class Meta:
         model = Lecture
-        fields = ['headline', 'content', 'groups']
+        fields = ['headline', 'content', 'groups', 'attachment', ]
 
     def __init__(self, *args, **kwargs):
         super(LectureUpdateForm, self).__init__(*args, **kwargs)
@@ -200,25 +204,6 @@ class CheckSolutionForm(forms.ModelForm):
     class Meta:
         model = Solution
         fields = ['formatted_score']
-
-
-class AttachmentForm(forms.ModelForm):
-    def __init__(self, teacher, *args, **kwargs):
-        super(AttachmentForm, self).__init__(*args, **kwargs)
-        self.teacher = teacher
-
-    class Meta:
-        model = Attachment
-        fields = ['content', ]
-        widgets = {
-            'content': forms.TextInput(attrs={
-                "name": "images",
-                "type": "File",
-                "multiple": "True",
-                "style": "display: none;",
-                'onchange': 'displayFileName()',
-            })
-        }
 
 
 class CommentForm(forms.ModelForm):

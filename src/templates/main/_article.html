@@ -41,12 +41,22 @@
             </div>
             <div class="article-fields-bottom">
                 <hr>
-                {% if teacher and problem %}
-                <div class="test-file">
-                    <a class="pretty-button primary test-file-tile" download="{{ article.test_file }}" href="{{ MEDIA_URL }}{{ article.test_file }}">
-                        <i class="fa-solid fa-download"></i>&nbsp;{{ test_filename }}
-                    </a>
-                </div>
+                {% if teacher %}
+                    {% if problem and problem.test_file or lecture and lecture.attachment %}
+                    <div class="test-file">
+                        <a class="pretty-button primary test-file-tile" download="{{ article.filename }}" href="{{ article.file_url }}">
+                            <i class="fa-solid fa-download"></i>&nbsp;{{ article.filename }}
+                        </a>
+                    </div>
+                    {% endif %}
+                {% elif student %}
+                    {% if lecture and lecture.attachment %}
+                        <div class="test-file">
+                            <a class="pretty-button primary test-file-tile" download="{{ article.filename }}" href="{{ article.file_url }}">
+                                <i class="fa-solid fa-download"></i>&nbsp;{{ article.filename }}
+                            </a>
+                        </div>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

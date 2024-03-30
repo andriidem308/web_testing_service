@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 
 from api import serializers
 from api.services import table_service
-from main.models import Group, Teacher, Student, Article, Problem, Lecture, Attachment, Comment, Solution
+from main.models import Group, Teacher, Student, Article, Problem, Lecture, Comment, Solution
 from main.services.users_service import get_students_by_group
 
 
@@ -41,12 +41,6 @@ class LectureViewSet(viewsets.ModelViewSet):
     queryset = Lecture.objects.select_related('teacher').all()
     permission_classes = [permissions.AllowAny, ]
     serializer_class = serializers.LectureSerializer
-
-
-class AttachmentViewSet(viewsets.ModelViewSet):
-    queryset = Attachment.objects.select_related('teacher', 'article').all()
-    permission_classes = [permissions.AllowAny, ]
-    serializer_class = serializers.AttachmentSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):

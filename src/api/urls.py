@@ -12,7 +12,6 @@ router.register('students', views.StudentViewSet, 'api_students')
 router.register('articles', views.ArticleViewSet, 'api_articles')
 router.register('problems', views.ProblemViewSet, 'api_problems')
 router.register('lectures', views.LectureViewSet, 'api_lectures')
-router.register('attachments', views.AttachmentViewSet, 'api_attachments')
 router.register('comments', views.CommentViewSet, 'api_comments')
 router.register('solutions', views.SolutionViewSet, 'api_solutions')
 

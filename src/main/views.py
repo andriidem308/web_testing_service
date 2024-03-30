@@ -195,13 +195,15 @@ class LectureCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = forms.LectureCreateForm(teacher, request.POST)
+        form = forms.LectureCreateForm(teacher, request.POST, request.FILES)
         if form.is_valid():
             lecture = form.save()
             mail_lecture_added_notify(lecture)
             create_new_lecture_notification(lecture)
             return redirect('lectures')
         else:
+            print(form.errors)
+
             context = {'form': form}
             return render(request, self.template_name, context)
 
@@ -313,8 +315,6 @@ class ProblemView(DetailView):
 
         comment_form, comments = article_service.comment_method(self.object, self.request)
 
-        test_filename = str(self.object.test_file).split('/')[-1]
-
         context.update({
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
@@ -324,7 +324,6 @@ class ProblemView(DetailView):
             'student': student,
             'solution': solution,
             'solutions': solutions,
-            'test_filename': test_filename,
             'MEDIA_URL': MEDIA_URL,
         })
 
