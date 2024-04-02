@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from accounts.models import User
@@ -206,4 +205,3 @@ class Question(models.Model):
         if self.answer_4_correct:
             correct_answers.append(self.answer_4)
         return correct_answers
-

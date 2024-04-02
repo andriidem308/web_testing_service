@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import *
+from main.models import Group, Problem, Solution, Lecture, Comment, Test, Question
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -11,12 +11,10 @@ class GroupCreateForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(GroupCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
-        # for field in self.fields.values():
-        #     field.label = ''
 
     class Meta:
         model = Group
-        fields = ['name', ]
+        fields = ('name', )
 
     def save(self, **kwargs):
         instance = super(GroupCreateForm, self).save(commit=False)
@@ -31,7 +29,7 @@ class GroupUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Group
-        fields = ['name', ]
+        fields = ('name', )
 
 
 class LectureCreateForm(forms.ModelForm):
@@ -157,7 +155,8 @@ class TestUpdateForm(forms.ModelForm):
 
 
 class QuestionCreateForm(forms.ModelForm):
-    content = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input question-input', 'placeholder': 'Question'}))
+    content = forms.CharField(max_length=255, widget=forms.TextInput(
+        attrs={'class': 'pretty-input question-input', 'placeholder': 'Question'}))
 
     answer_1 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
     answer_2 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
@@ -175,7 +174,7 @@ class QuestionCreateForm(forms.ModelForm):
                   'answer_1', 'answer_1_correct',
                   'answer_2', 'answer_2_correct',
                   'answer_3', 'answer_3_correct',
-                  'answer_4', 'answer_4_correct', )
+                  'answer_4', 'answer_4_correct',)
 
     def __init__(self, test, *args, **kwargs):
         super(QuestionCreateForm, self).__init__(*args, **kwargs)

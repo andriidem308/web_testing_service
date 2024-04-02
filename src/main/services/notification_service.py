@@ -22,7 +22,6 @@ def mail_lecture_added_notify(lecture):
     send_mail(subject, '', EMAIL_HOST_USER, recipients_email_list, html_message=message)
 
 
-
 def mail_problem_added_notify(problem):
     teacher = problem.teacher
     problem_headline = problem.headline
@@ -59,7 +58,10 @@ def mail_student_take_problem_notify(solution):
     # teacher_email = teacher.user.email
     teacher_email = ""
     subject = f'New solution for problem "{problem_headline}" from {student}'
-    message = render_to_string('messages/student_take_form.html', {'teacher': teacher, 'problem_title': problem_headline, 'student': student})
+    message = render_to_string(
+        template_name='messages/student_take_form.html',
+        context={'teacher': teacher, 'problem_title': problem_headline, 'student': student}
+    )
     send_mail(subject, '', EMAIL_HOST_USER, [teacher_email], html_message=message)
 
 

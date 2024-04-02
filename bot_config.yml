@@ -1,4 +1,4 @@
-number_of_teachers: 3
+number_of_teachers: 16
 group_names:
   - Statistics
   - Mathematics
@@ -8,4 +8,5 @@ group_names:
   - Art Science
   - Computer Science
   - System Analysis
-max_students_per_group: 50
+  - Applied Mathematics
+max_students_per_group: 40

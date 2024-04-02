@@ -28,7 +28,7 @@ def filter_students(request, students_list):
 
 def select_students(request, students_list):
     params = get_table_parameters(request)
-    selected_students = students_list[params['offset']:params['offset']+params['size']]
+    selected_students = students_list[params['offset']:params['offset'] + params['size']]
     return selected_students
 
 

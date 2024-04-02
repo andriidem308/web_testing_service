@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main.models import *
+from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Comment, Notification, Test, Question
 
 admin.site.register(Teacher)
 admin.site.register(Student)

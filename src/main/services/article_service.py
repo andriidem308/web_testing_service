@@ -1,7 +1,7 @@
-from main.models import Problem, Lecture, Comment, Teacher, Solution
 from typing import List
 
 from main.forms import CommentForm
+from main.models import Comment, Lecture, Problem, Solution
 from main.services.notification_service import create_article_commented_notification
 
 

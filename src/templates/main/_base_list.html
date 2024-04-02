@@ -27,8 +27,9 @@
             <div class="item-top-row">
                 {% if problems or lectures or tests %}
                     <a href="{% url object_name pk=item.pk %}"><h2>{{ item.headline }}</h2></a>
-                    <button class="delete-button" onclick="showArticleDeleteConfirmation({{ item.id }})"><i class="fa-solid fa-trash-can"></i></button>
-                    <div class="delete-confirmation card" id="delete-confirmation-{{ item.id }}">
+                    {% if item.teacher.user == user %}
+                        <button class="delete-button" onclick="showArticleDeleteConfirmation({{ item.id }})"><i class="fa-solid fa-trash-can"></i></button>
+                        <div class="delete-confirmation card" id="delete-confirmation-{{ item.id }}">
                         <h3>Do you want delete {{ object_name }} "{{ item.headline }}" ?</h3>
                         <div class="delete-confirmation-buttons">
                             <button class="pretty-button primary" onclick="closeArticleDeleteConfirmation({{ item.id }})">Cancel</button>
@@ -41,12 +42,12 @@
                             {% endif %}
                         </div>
                     </div>
-
+                    {% endif %}
                 {% elif groups %}
-                    <h2>{{ item.name }}</h2>
+                    <a href="{% url object_name pk=item.pk %}"><h2>{{ item.name }}</h2></a>
                 {% elif solutions %}
                     <div class="solution_item__header">
-                        <h2>{{ item.problem.headline }} | {{ item.student.group }}</h2>
+                        <a href="{% url object_name pk=item.pk %}"><h2>{{ item.problem.headline }} | {{ item.student.group }}</h2></a>
                         {% if item.checked %}
                             <div class="rounded-tile success notHover">
                                 Checked

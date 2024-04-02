@@ -2,11 +2,7 @@ from django.forms import DateTimeInput
 
 
 class TimePicker(DateTimeInput):
-    # template_name = 'TimePicker.html'
-
     def get_context(self, name, value, attrs):
-
-
         datetimepicker_id = 'id_{name}'.format(name=name)
         print(datetimepicker_id)
         if attrs is None:
