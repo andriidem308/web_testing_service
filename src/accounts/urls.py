@@ -10,5 +10,4 @@ urlpatterns = [
     path('signup/<str:user_type>/', SignUpView.as_view(), name='signup'),
     path('password_change/', PasswordChangeView.as_view(), name='password_change'),
     path('forbidden/<str:user_type>/', forbidden_view, name='forbidden'),
-
 ]

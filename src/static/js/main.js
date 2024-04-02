@@ -45,6 +45,22 @@ function closeDeleteConfirmation() {
     document.getElementById("delete-confirmation").classList.remove('active-flex');
 }
 
+function showArticleDeleteConfirmation(articleID) {
+    "use strict";
+
+    document.getElementById("disabled-area").classList.add('active');
+    document.getElementById("delete-confirmation-" + articleID).classList.add('active-flex');
+}
+
+function closeArticleDeleteConfirmation(articleID) {
+    "use strict";
+
+    document.getElementById("disabled-area").classList.remove('active');
+    document.getElementById("delete-confirmation-" + articleID).classList.remove('active-flex');
+}
+
+
+
 // ----------------------------------------------------------------
 
 

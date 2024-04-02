@@ -2,15 +2,14 @@ import re
 
 from django import forms
 from django.contrib.auth import get_user_model
-
 from django.contrib.auth.forms import (AuthenticationForm as BaseAuthenticationForm, UserCreationForm,
                                        PasswordChangeForm as BasePasswordChangeForm)
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import ValidationError
 from django.db import transaction
 
-from main.models import Student, Teacher, Group
 from core.settings import SECRET_KEY_TEACHER
+from main.models import Student, Teacher, Group
 
 User = get_user_model()
 
@@ -47,7 +46,7 @@ class AuthenticationForm(BaseAuthenticationForm):
 
     def clean(self):
         username = self.cleaned_data['username']
-        if re.fullmatch('\w+@\w+\.\w\w+', username):
+        if re.fullmatch(r'\w+@\w+\.\w\w+', username):
             user = User.objects.get(email=username)
             self.cleaned_data['username'] = user.username
 
@@ -81,7 +80,8 @@ class SignUpForm(UserCreationForm):
         label='',
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'pretty-input', 'placeholder': 'Password confirmation', 'autocomplete': 'off'}),
+        widget=forms.PasswordInput(
+            attrs={'class': 'pretty-input', 'placeholder': 'Password confirmation', 'autocomplete': 'off'}),
         label='',
         validators=[password_weak_validator],
     )
@@ -120,11 +120,11 @@ class SignUpForm(UserCreationForm):
         if user_type == 'student':
             user._is_student = True
             user.save()
-            student = Student.objects.create(user=user, group=self.cleaned_data['group'])
+            Student.objects.create(user=user, group=self.cleaned_data['group'])
         elif user_type == 'teacher':
             user._is_teacher = True
             user.save()
-            teacher = Teacher.objects.create(user=user)
+            Teacher.objects.create(user=user)
 
         return user
 

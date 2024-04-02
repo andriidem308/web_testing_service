@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from accounts.models import User
@@ -110,6 +109,7 @@ class Problem(Article):
     def file_url(self):
         return self.test_file.url
 
+
 class Lecture(Article):
     attachment = models.FileField(upload_to='lectures/attachments/', null=True, blank=True)
 
@@ -120,6 +120,7 @@ class Lecture(Article):
     @property
     def file_url(self):
         return self.attachment.url
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -167,3 +168,40 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class Test(Article):
+    score = models.FloatField(null=True, blank=True)
+
+
+class Question(models.Model):
+    test = models.ForeignKey(Test, related_name='test_question', on_delete=models.CASCADE)
+    content = models.CharField(max_length=255)
+
+    answer_1 = models.CharField(max_length=255)
+    answer_2 = models.CharField(max_length=255)
+    answer_3 = models.CharField(max_length=255)
+    answer_4 = models.CharField(max_length=255)
+
+    answer_1_correct = models.BooleanField(default=False)
+    answer_2_correct = models.BooleanField(default=False)
+    answer_3_correct = models.BooleanField(default=False)
+    answer_4_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.content
+
+    @property
+    def answers(self):
+        return [self.answer_1, self.answer_2, self.answer_3, self.answer_4]
+
+    @property
+    def correct_answers(self):
+        correct_answers = []
+        if self.answer_1_correct:
+            correct_answers.append(self.answer_1)
+        if self.answer_2_correct:
+            correct_answers.append(self.answer_2)
+        if self.answer_3_correct:
+            correct_answers.append(self.answer_3)
+        if self.answer_4_correct:
+            correct_answers.append(self.answer_4)
+        return correct_answers

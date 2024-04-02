@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import yaml
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.utils import timezone
 from faker import Faker
 
@@ -13,10 +13,6 @@ from main.models import Teacher, Student, Group, Problem, Lecture
 from main.services.logging_service import log_user
 
 User = get_user_model()
-
-
-def index(request):
-    return HttpResponse('<h1>Hello!</h1>')
 
 
 def create_teachers(request):
@@ -56,7 +52,7 @@ def create_groups(request):
 
     for group_name in group_names:
         teacher = random.choice(teachers)
-        group_name_full = f'{group_name} - 2'
+        group_name_full = f'{group_name} - 4'
         if not Group.objects.filter(name=group_name_full).exists():
             group = Group.objects.create(
                 teacher=teacher,
@@ -88,7 +84,7 @@ def create_students(request):
                 username = email.split('@')[0]
                 password = fake.password()
 
-                if not User.objects.filter(email=email).exists():
+                if not (User.objects.filter(email=email).exists() or User.objects.filter(username=username).exists()):
                     user = User.objects.create_student_user(username, email, password, first_name, last_name)
                     student = Student.objects.create(user=user, group=group)
                     student.save()

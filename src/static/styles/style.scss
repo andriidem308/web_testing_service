@@ -164,6 +164,7 @@ header {
 .navigation {
   flex: 2 1 0;
 }
+
 .side-navigation {
   flex: 1 1 0;
 }
@@ -176,7 +177,6 @@ header {
 
   line-height: $nav-height;
   height: 100%;
-  //flex: 1 1 0;
 }
 
 .side-navigation {
@@ -368,7 +368,7 @@ $main-margin: 20px;
 
 main {
   min-height: calc(100vh - #{$nav-height} - 2 * #{$main-margin});
-  margin: $main-margin auto;
+  margin: $main-margin auto $footer-height + $main-margin;
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -677,7 +677,7 @@ main {
 }
 
 .add-item {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .group-actions {
@@ -689,7 +689,6 @@ main {
 
 .students-table {
   border-radius: 12px;
-  //padding: 1.5rem 2rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
 
   text-align: left;
@@ -717,12 +716,13 @@ main {
     }
 
   }
+
   tbody td {
     padding: 0.5rem 2rem;
   }
 
   tbody tr:last-child {
-    padding-bottom: 1rem ;
+    padding-bottom: 1rem;
 
     td:first-child {
       border-bottom-left-radius: 12px;
@@ -777,14 +777,12 @@ main {
   a.current {
     @extend .pretty-button, .action;
 
+    border-color: $action !important;
+
     margin: 0 12px;
     padding: 6px 12px;
   }
 }
-
-//#id_test_file {
-//  display: none;
-//}
 
 .pagination {
   margin: 20px auto;
@@ -821,12 +819,11 @@ main {
 }
 
 
-
 footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 80px;
+  height: $footer-height;
 
   padding: 20px;
 
@@ -859,6 +856,22 @@ footer {
   flex: none;
 }
 
+.blank-screen {
+  display: none;
+  height: calc(100% - 60px);
+  width: 100%;
+
+  position: absolute;
+  top: 60px;
+  left: 0;
+
+  background-color: $light;
+}
+
+.add-question, .save-questions {
+  margin: 8px 16px;
+}
+
 .footer__right ul {
   display: flex;
   flex-direction: row;
@@ -869,7 +882,6 @@ footer {
 
     &:hover {
       color: $action;
-      //font-size: 28px;
 
       transform: translateY(-5px);
       transition: 0.3s ease-in-out;
@@ -878,10 +890,66 @@ footer {
   }
 }
 
-@media (max-width: 400px)  {
+.question__header {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  input {
+    width: 100%;
+  }
+}
+
+.question__answer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  label {
+    display: inline-block;
+    width: 15px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+  }
+
+  input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.delete-button {
+  width: 30px;
+  height: 30px;
+
+
+  border: none;
+  background: transparent;
+
+  color: $danger;
+
+  font-size: 18px;
+
+
+  &:hover {
+    cursor: pointer;
+    color: $danger-hover;
+    transition: 0.3s ease-in-out;
+  }
+}
+
+@media (max-width: 400px) {
   footer {
     flex-direction: column;
     height: 120px;
-    //justify-content: ;
   }
 }

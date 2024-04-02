@@ -55,4 +55,7 @@ superuser:
 
 app:
 	$(MANAGE) startapp $(app)
+
+lint:
+	flake8 .
 # <------------------------->

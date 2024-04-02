@@ -1,5 +1,3 @@
-import os
-
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView as BaseLoginView, PasswordChangeView as BasePasswordChangeView
 from django.shortcuts import redirect, render
@@ -48,7 +46,6 @@ class SignUpView(CreateView):
     def get(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
         form = SignUpForm(user_type=user_type)
-
 
         context = {'form': form, 'user_type': user_type}
         return render(request, self.template_name, context)

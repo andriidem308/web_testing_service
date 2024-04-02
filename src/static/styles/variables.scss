@@ -29,6 +29,7 @@ $primary-light: #cee2f3;
 $primary-light-hover: #96c3ee;
 
 $nav-height: 60px;
+$footer-height: 80px;
 
 * {
   margin: 0;
@@ -66,26 +67,95 @@ $nav-height: 60px;
   }
 }
 
-.primary { @include common-style($primary, $primary-hover, $primary-void-hover);}
-.action { @include common-style($action, $action-hover, $action-void-hover);}
-.danger { @include common-style($danger, $danger-hover, $danger-void-hover);}
-.success { @include common-style($success, $success-hover, $success-void-hover);}
-.dark { @include common-style($dark, $dark-hover, $dark-void-hover);}
-.light { @include common-style($light, $light-hover, $light-hover, $dark);}
+.primary {
+  @include common-style($primary, $primary-hover, $primary-void-hover);
+}
 
-.primary-text {color: $primary !important;}
-.action-text {color: $action !important;}
-.danger-text {color: $danger !important;}
-.success-text {color: $success !important;}
-.dark-text {color: $dark !important;}
-.light-text {color: $light !important;}
+.action {
+  @include common-style($action, $action-hover, $action-void-hover);
+}
 
-.primary-hover { &:hover { color: $light !important; background-color: $primary !important;} }
-.action-hover { &:hover { color: $light !important; background-color: $action !important;} }
-.danger-hover { &:hover { color: $light !important; background-color: $danger !important;} }
-.success-hover { &:hover { color: $light !important; background-color: $success !important;} }
-.dark-hover { &:hover { color: $dark !important; background-color: $dark !important;} }
-.light-hover { &:hover { color: $light !important; background-color: $light !important;} }
+.danger {
+  @include common-style($danger, $danger-hover, $danger-void-hover);
+}
+
+.success {
+  @include common-style($success, $success-hover, $success-void-hover);
+}
+
+.dark {
+  @include common-style($dark, $dark-hover, $dark-void-hover);
+}
+
+.light {
+  @include common-style($light, $light-hover, $light-hover, $dark);
+}
+
+.primary-text {
+  color: $primary !important;
+}
+
+.action-text {
+  color: $action !important;
+}
+
+.danger-text {
+  color: $danger !important;
+}
+
+.success-text {
+  color: $success !important;
+}
+
+.dark-text {
+  color: $dark !important;
+}
+
+.light-text {
+  color: $light !important;
+}
+
+.primary-hover {
+  &:hover {
+    color: $light !important;
+    background-color: $primary !important;
+  }
+}
+
+.action-hover {
+  &:hover {
+    color: $light !important;
+    background-color: $action !important;
+  }
+}
+
+.danger-hover {
+  &:hover {
+    color: $light !important;
+    background-color: $danger !important;
+  }
+}
+
+.success-hover {
+  &:hover {
+    color: $light !important;
+    background-color: $success !important;
+  }
+}
+
+.dark-hover {
+  &:hover {
+    color: $dark !important;
+    background-color: $dark !important;
+  }
+}
+
+.light-hover {
+  &:hover {
+    color: $light !important;
+    background-color: $light !important;
+  }
+}
 
 /* -------------- BODY -------------- */
 
@@ -118,16 +188,37 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, {
   padding: 0;
 }
 
-h1 {font-size: 2.25rem;}
-h2 {font-size: 1.75rem;}
-h3 {font-size: 1.25rem;}
-h4 {font-size: 1.10rem;}
-h5 {font-size: 1rem;}
-h6 {font-size: 0.875rem;}
+h1 {
+  font-size: 2.25rem;
+}
 
-ol, ul {padding: 0;}
+h2 {
+  font-size: 1.75rem;
+}
 
-mark {padding: 0;}
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1.10rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h6 {
+  font-size: 0.875rem;
+}
+
+ol, ul {
+  padding: 0;
+}
+
+mark {
+  padding: 0;
+}
 
 .pretty-button {
   padding: 8px 16px;
@@ -180,7 +271,13 @@ mark {padding: 0;}
 }
 
 .items-header__filters {
-  margin: 20px 0;
+  margin: 8px 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 16px;
+
 }
 
 .button-bordered {
@@ -200,10 +297,6 @@ mark {padding: 0;}
 
   &:hover {
     background-color: $primary-light-hover;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
   }
 
 }
@@ -285,7 +378,6 @@ mark {padding: 0;}
 }
 
 .danger-outline {
-  //outline-color: $danger;
   outline: 2px solid $danger;
   border-color: transparent !important;
 }
@@ -319,7 +411,6 @@ mark {padding: 0;}
     background-color: $grey-hover;
   }
 }
-
 
 
 @media (min-width: 320px) {

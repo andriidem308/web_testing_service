@@ -5,13 +5,11 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from accounts.decorators import student_required, teacher_required
-from main import forms
-from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
-from main.services import article_service, paginate_service, users_service
-from main.services import code_solver
-from main.services.notification_service import create_new_problem_notifications, mail_problem_added_notify, \
-    mail_lecture_added_notify, create_new_lecture_notification, create_solution_checked_notification
 from core.settings import MEDIA_URL
+from main.forms import GroupCreateForm, GroupUpdateForm, LectureCreateForm, LectureUpdateForm, TestCreateForm, \
+    TestUpdateForm, QuestionCreateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm, CheckSolutionForm
+from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test
+from main.services import article_service, code_solver, notification_service, paginate_service, users_service
 
 
 def index(request):
@@ -66,7 +64,7 @@ class GroupView(DetailView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class GroupCreateView(CreateView):
     model = Group
-    form_class = forms.GroupCreateForm
+    form_class = GroupCreateForm
     template_name = 'groups/group_add.html'
 
     def get_form_kwargs(self):
@@ -78,14 +76,14 @@ class GroupCreateView(CreateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = forms.GroupCreateForm(teacher=teacher)
+        form = GroupCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = request.user
         teacher = Teacher.objects.get(user=user)
-        form = forms.GroupCreateForm(teacher, request.POST)
+        form = GroupCreateForm(teacher, request.POST)
         if form.is_valid():
             form.save()
             return redirect('groups')
@@ -97,7 +95,7 @@ class GroupCreateView(CreateView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class GroupUpdateView(UpdateView):
     model = Group
-    form_class = forms.GroupUpdateForm
+    form_class = GroupUpdateForm
     template_name = 'groups/group_edit.html'
     success_url = reverse_lazy('groups')
 
@@ -182,24 +180,24 @@ class LectureView(DetailView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class LectureCreateView(CreateView):
     model = Lecture
-    form_class = forms.LectureCreateForm
+    form_class = LectureCreateForm
     template_name = 'lectures/lecture_add.html'
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = forms.LectureCreateForm(teacher=teacher)
+        form = LectureCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
         teacher = Teacher.objects.get(user=user)
-        form = forms.LectureCreateForm(teacher, request.POST, request.FILES)
+        form = LectureCreateForm(teacher, request.POST, request.FILES)
         if form.is_valid():
             lecture = form.save()
-            mail_lecture_added_notify(lecture)
-            create_new_lecture_notification(lecture)
+            notification_service.mail_lecture_added_notify(lecture)
+            notification_service.create_new_lecture_notification(lecture)
             return redirect('lectures')
         else:
             print(form.errors)
@@ -211,7 +209,7 @@ class LectureCreateView(CreateView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class LectureUpdateView(UpdateView):
     model = Lecture
-    form_class = forms.LectureUpdateForm
+    form_class = LectureUpdateForm
     template_name = 'lectures/lecture_edit.html'
     success_url = reverse_lazy('lectures')
 
@@ -219,7 +217,7 @@ class LectureUpdateView(UpdateView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         context.update({
-            'form': forms.LectureUpdateForm(instance=self.object),
+            'form': LectureUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
             'teacher': users_service.get_teacher(self.request.user),
             'student': users_service.get_student(self.request.user),
@@ -252,6 +250,157 @@ class LectureDeleteView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
+
+
+@method_decorator([login_required], name='dispatch')
+class TestListView(ListView):
+    model = Test
+    context_object_name = 'tests'
+    template_name = 'tests/tests.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('-date_updated')
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
+
+        context = super().get_context_data(*args, **kwargs)
+        tests = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+        teacher = users_service.get_teacher(request.user)
+        context['tests'] = tests
+        context['teacher'] = teacher
+        return self.render_to_response(context)
+
+
+@method_decorator([login_required], name='dispatch')
+class TestView(DetailView):
+    model = Test
+    context_object_name = 'test'
+    template_name = 'tests/test.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+
+        teacher = users_service.get_teacher(self.request.user)
+        student = users_service.get_student(self.request.user)
+
+        context.update({
+            'date_created': self.object.date_created,
+            'teacher': teacher,
+            'student': student,
+        })
+
+        return self.render_to_response(context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestCreateView(CreateView):
+    model = Test
+    form_class = TestCreateForm
+    template_name = 'tests/test_add.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = TestCreateForm(teacher=teacher)
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = TestCreateForm(teacher, request.POST, request.FILES)
+        if form.is_valid():
+            test = form.save()
+            notification_service.mail_lecture_added_notify(test)
+            notification_service.create_new_lecture_notification(test)
+            return redirect('questions', pk=test.pk)
+        else:
+            print(form.errors)
+            context = {'form': form}
+            return render(request, self.template_name, context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestUpdateView(UpdateView):
+    model = Test
+    form_class = TestUpdateForm
+    template_name = 'tests/test_edit.html'
+    success_url = reverse_lazy('tests')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({
+            'form': TestUpdateForm(instance=self.object),
+            'date_created': self.object.date_created,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
+        })
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+
+        if form.is_valid():
+            form.save()
+            return redirect('test', pk=self.object.pk)
+        else:
+            context = self.get_context_data(object=self.object)
+            context.update({
+                'user': self.request.user,
+                'form': form,
+                'teacher': users_service.get_teacher(self.request.user),
+                'errors': form.errors,
+            })
+            return render(request, self.template_name, context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestDeleteView(DeleteView):
+    model = Test
+    success_url = reverse_lazy('tests')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
+def questions(request, **kwargs):
+    test = Test.objects.get(pk=kwargs.get('pk'))
+    context = {
+        'test': test,
+        'form': QuestionCreateForm(test),
+    }
+    return render(request, 'tests/add_questions.html', context=context)
+
+
+def question_add(request, **kwargs):
+    test = Test.objects.get(pk=kwargs.get('pk'))
+
+    if request.method == 'POST':
+        form = QuestionCreateForm(test, request.POST or None)
+
+        print(form.errors)
+
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.save()
+            context = {'question': question, 'test': test}
+            return render(request, 'tests/question_add.html', context=context)
+
+    context = {'form': QuestionCreateForm(test), 'test': test}
+    return render(request, 'tests/question_add.html', context=context)
 
 
 @method_decorator([login_required], name='dispatch')
@@ -349,22 +498,22 @@ class ProblemView(DetailView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemCreateView(CreateView):
     model = Problem
-    form_class = forms.ProblemCreateForm
+    form_class = ProblemCreateForm
     template_name = 'problems/problem_add.html'
 
     def get(self, request, *args, **kwargs):
         teacher = Teacher.objects.get(user=self.request.user)
-        context = {'form': forms.ProblemCreateForm(teacher)}
+        context = {'form': ProblemCreateForm(teacher)}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         teacher = Teacher.objects.get(user=self.request.user)
-        form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
+        form = ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
             problem = form.save()
-            create_new_problem_notifications(problem)
-            mail_problem_added_notify(problem)
+            notification_service.create_new_problem_notifications(problem)
+            notification_service.mail_problem_added_notify(problem)
             return redirect('problems')
         else:
             context = {'form': form}
@@ -374,7 +523,7 @@ class ProblemCreateView(CreateView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemUpdateView(UpdateView):
     model = Problem
-    form_class = forms.ProblemUpdateForm
+    form_class = ProblemUpdateForm
     template_name = 'problems/problem_edit.html'
     success_url = reverse_lazy('problems')
 
@@ -382,7 +531,7 @@ class ProblemUpdateView(UpdateView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         context.update({
-            'form': forms.ProblemUpdateForm(instance=self.object),
+            'form': ProblemUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
             'teacher': users_service.get_teacher(self.request.user),
@@ -394,7 +543,7 @@ class ProblemUpdateView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        form = forms.ProblemUpdateForm(request.POST, request.FILES, instance=self.object)
+        form = ProblemUpdateForm(request.POST, request.FILES, instance=self.object)
 
         if form.is_valid():
             form.save()
@@ -422,7 +571,7 @@ class ProblemDeleteView(DeleteView):
 @method_decorator([login_required, student_required], name='dispatch')
 class ProblemTakeView(CreateView):
     model = Solution
-    form_class = forms.ProblemTakeForm
+    form_class = ProblemTakeForm
     template_name = 'problems/problem_take.html'
 
     def get(self, request, *args, **kwargs):
@@ -430,7 +579,7 @@ class ProblemTakeView(CreateView):
         student = Student.objects.get(user=user)
         problem = Problem.objects.get(id=kwargs.get('pk'))
 
-        form = forms.ProblemTakeForm(problem=problem, student=student)
+        form = ProblemTakeForm(problem=problem, student=student)
         context = {'form': form, 'student': student, 'problem': problem}
         return render(request, self.template_name, context)
 
@@ -441,7 +590,7 @@ class ProblemTakeView(CreateView):
         user = self.request.user
         student = Student.objects.get(user=user)
 
-        form = forms.ProblemTakeForm(problem, student, request.POST)
+        form = ProblemTakeForm(problem, student, request.POST)
         if form.is_valid():
             solution = form.save(commit=False)
             solution.problem = problem
@@ -502,7 +651,7 @@ class ProblemSolutionView(DetailView):
 
         teacher = users_service.get_teacher(request.user)
         if teacher and not self.object.checked:
-            form = forms.CheckSolutionForm(instance=self.object)
+            form = CheckSolutionForm(instance=self.object)
             form.fields['formatted_score'].initial = self.object.points
             context['form'] = form
             context['teacher'] = teacher
@@ -512,7 +661,7 @@ class ProblemSolutionView(DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        form = forms.CheckSolutionForm(request.POST, instance=self.object)
+        form = CheckSolutionForm(request.POST, instance=self.object)
 
         if form.is_valid():
             solution = form.save(commit=False)
@@ -524,7 +673,7 @@ class ProblemSolutionView(DetailView):
 
             solution.checked = True
 
-            create_solution_checked_notification(solution)
+            notification_service.create_solution_checked_notification(solution)
             solution.save()
 
             return redirect('solution', pk=self.object.pk)

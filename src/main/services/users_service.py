@@ -41,7 +41,6 @@ def filter_common_queryset(queryset, user, show_all=False):
     return result
 
 
-
 def get_students_by_group(group):
     students = Student.objects.filter(group=group)
     return students

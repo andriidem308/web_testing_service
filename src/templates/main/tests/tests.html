@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block title %}Tests{% endblock %}
+
+{% block content %}
+    {% include '_base_list.html' with items=tests list_name='Tests' add_url='test_add' object_name='test' base_url='tests' %}
+{% endblock %}
