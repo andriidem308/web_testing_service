@@ -6,7 +6,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.decorators import student_required, teacher_required
 from main import forms
-from main.models import Group, Lecture, Problem, Solution, Student, Teacher, Notification
+from main.models import *
 from main.services import article_service, paginate_service, users_service
 from main.services import code_solver
 from main.services.notification_service import create_new_problem_notifications, mail_problem_added_notify, \
@@ -252,6 +252,157 @@ class LectureDeleteView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
+
+
+@method_decorator([login_required], name='dispatch')
+class TestListView(ListView):
+    model = Test
+    context_object_name = 'tests'
+    template_name = 'tests/tests.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('-date_updated')
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        show_all = request.GET.get('show_all')
+
+        queryset = self.get_queryset()
+        self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
+
+        context = super().get_context_data(*args, **kwargs)
+        tests = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
+        teacher = users_service.get_teacher(request.user)
+        context['tests'] = tests
+        context['teacher'] = teacher
+        return self.render_to_response(context)
+
+
+@method_decorator([login_required], name='dispatch')
+class TestView(DetailView):
+    model = Test
+    context_object_name = 'test'
+    template_name = 'tests/test.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+
+        teacher = users_service.get_teacher(self.request.user)
+        student = users_service.get_student(self.request.user)
+
+        context.update({
+            'date_created': self.object.date_created,
+            'teacher': teacher,
+            'student': student,
+        })
+
+        return self.render_to_response(context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestCreateView(CreateView):
+    model = Test
+    form_class = forms.TestCreateForm
+    template_name = 'tests/test_add.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = forms.TestCreateForm(teacher=teacher)
+        context = {'form': form, 'teacher': teacher}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        teacher = Teacher.objects.get(user=user)
+        form = forms.TestCreateForm(teacher, request.POST, request.FILES)
+        if form.is_valid():
+            test = form.save()
+            mail_lecture_added_notify(test)
+            create_new_lecture_notification(test)
+            return redirect('questions', pk=test.pk)
+        else:
+            print(form.errors)
+            context = {'form': form}
+            return render(request, self.template_name, context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestUpdateView(UpdateView):
+    model = Test
+    form_class = forms.TestUpdateForm
+    template_name = 'tests/test_edit.html'
+    success_url = reverse_lazy('tests')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({
+            'form': forms.TestUpdateForm(instance=self.object),
+            'date_created': self.object.date_created,
+            'teacher': users_service.get_teacher(self.request.user),
+            'student': users_service.get_student(self.request.user),
+        })
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+
+        if form.is_valid():
+            form.save()
+            return redirect('test', pk=self.object.pk)
+        else:
+            context = self.get_context_data(object=self.object)
+            context.update({
+                'user': self.request.user,
+                'form': form,
+                'teacher': users_service.get_teacher(self.request.user),
+                'errors': form.errors,
+            })
+            return render(request, self.template_name, context)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class TestDeleteView(DeleteView):
+    model = Test
+    success_url = reverse_lazy('tests')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
+def questions(request, **kwargs):
+    test = Test.objects.get(pk=kwargs.get('pk'))
+    context = {
+        'test': test,
+        'form': forms.QuestionCreateForm(test),
+    }
+    return render(request, 'tests/add_questions.html', context=context)
+
+
+def question_add(request, **kwargs):
+    test = Test.objects.get(pk=kwargs.get('pk'))
+
+    if request.method == 'POST':
+        form = forms.QuestionCreateForm(test, request.POST or None)
+
+        print(form.errors)
+
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.save()
+            context = {'question': question, 'test': test}
+            return render(request, 'tests/question_add.html', context=context)
+
+    context = {'form': forms.QuestionCreateForm(test), 'test': test}
+    return render(request, 'tests/question_add.html', context=context)
 
 
 @method_decorator([login_required], name='dispatch')

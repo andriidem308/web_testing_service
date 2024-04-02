@@ -20,11 +20,28 @@
 </div>
 
 <div class="items-list">
+    <div class="disabled-area" id="disabled-area"></div>
+
     {% for item in items %}
-        <a class="card item-card" href="{% url object_name pk=item.pk %}">
+        <div class="card item-card" href="{% url object_name pk=item.pk %}">
             <div class="item-top-row">
-                {% if problems or lectures%}
-                    <h2>{{ item.headline }}</h2>
+                {% if problems or lectures or tests %}
+                    <a href="{% url object_name pk=item.pk %}"><h2>{{ item.headline }}</h2></a>
+                    <button class="delete-button" onclick="showArticleDeleteConfirmation({{ item.id }})"><i class="fa-solid fa-trash-can"></i></button>
+                    <div class="delete-confirmation card" id="delete-confirmation-{{ item.id }}">
+                        <h3>Do you want delete {{ object_name }} "{{ item.headline }}" ?</h3>
+                        <div class="delete-confirmation-buttons">
+                            <button class="pretty-button primary" onclick="closeArticleDeleteConfirmation({{ item.id }})">Cancel</button>
+                            {% if problems %}
+                                <a class="pretty-button danger" href="{% url 'problem_delete' pk=item.id %}">Delete</a>
+                            {% elif lectures %}
+                                <a class="pretty-button danger" href="{% url 'lecture_delete' pk=item.id %}">Delete</a>
+                            {% elif tests %}
+                                <a class="pretty-button danger" href="{% url 'test_delete' pk=item.id %}">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
                 {% elif groups %}
                     <h2>{{ item.name }}</h2>
                 {% elif solutions %}
@@ -40,7 +57,6 @@
                             </div>
                         {% endif %}
                     </div>
-
                 {% endif %}
             </div>
 
@@ -78,8 +94,7 @@
                 </div>
             {% endif %}
 
-
-            {% if problems or lectures%}
+            {% if problems or lectures or tests %}
                 <hr>
                 <div class="article-content">
                     {{ item.content }}
@@ -89,7 +104,7 @@
                     <div><b>Teacher:</b>&nbsp;{{ item.teacher }}</div>
                 </div>
             {% endif %}
-        </a>
+        </div>
     {% endfor %}
 </div>
 

@@ -28,6 +28,14 @@ urlpatterns = [
     path('groups/<int:pk>/edit/', GroupUpdateView.as_view(), name='group_edit'),
     path('groups/<int:pk>/delete/', GroupDeleteView.as_view(), name='group_delete'),
 
+    path('tests/', TestListView.as_view(), name='tests'),
+    path('tests/add/', TestCreateView.as_view(), name='test_add'),
+    path('tests/<int:pk>/', TestView.as_view(), name='test'),
+    path('tests/<int:pk>/edit/', TestUpdateView.as_view(), name='test_edit'),
+    path('tests/<int:pk>/delete/', TestDeleteView.as_view(), name='test_delete'),
+    path('tests/<int:pk>/questions/', questions, name='questions'),
+    path('tests/<int:pk>/questions/add', question_add, name='question_add'),
+
     path('view_notification/<int:pk>', view_notification, name='view_notification'),
 
     path('create_all_models/', create_all_models, name='create_all_models'),

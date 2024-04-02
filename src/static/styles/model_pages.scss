@@ -28,6 +28,12 @@
   width: 100%;
   flex-direction: column;
   justify-content: center;
+
+  a > h2 {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .group-container, .article-container {
@@ -385,7 +391,14 @@
 
 
   .delete-confirmation-buttons {
-    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    gap: 48px;
+
+    margin-top: 16px;
   }
 
 }
@@ -474,6 +487,14 @@
   //    text-decoration: underline;
   //  }
   //}
+}
+
+.item-top-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
 }
 
 .item-top-row, .created-row, .article-values {

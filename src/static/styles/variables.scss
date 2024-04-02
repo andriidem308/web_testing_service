@@ -29,6 +29,7 @@ $primary-light: #cee2f3;
 $primary-light-hover: #96c3ee;
 
 $nav-height: 60px;
+$footer-height: 80px;
 
 * {
   margin: 0;
@@ -180,7 +181,13 @@ mark {padding: 0;}
 }
 
 .items-header__filters {
-  margin: 20px 0;
+  margin: 8px 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 16px;
+
 }
 
 .button-bordered {
@@ -200,10 +207,6 @@ mark {padding: 0;}
 
   &:hover {
     background-color: $primary-light-hover;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
   }
 
 }
@@ -256,6 +259,10 @@ mark {padding: 0;}
     cursor: pointer;
   }
 }
+
+//.question-input {
+//  width: ;
+//}
 
 .pretty-textarea {
   width: calc(100% - 4px);

@@ -138,28 +138,30 @@
             {% endif %}
         </div>
     </div>
-    <div class="article-comments">
-        <h2 class="comments-headline">Comments</h2>
-        {% if user.is_authenticated %}
-            <form class="leave-comment card" method="POST">
-                {% csrf_token %}
-                <h3>Leave a comment</h3>
-                {{ comment_form.content  }}
-                <button class="pretty-button primary">Comment</button>
-            </form>
-        {% endif %}
-        {% for comment in comments %}
-            <div class="comment card">
-                <div class="comment-top">
-                    <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
-                    <div class="separator">•</div>
-                    <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
+    {% if problem or lecture %}
+        <div class="article-comments">
+            <h2 class="comments-headline">Comments</h2>
+            {% if user.is_authenticated %}
+                <form class="leave-comment card" method="POST">
+                    {% csrf_token %}
+                    <h3>Leave a comment</h3>
+                    {{ comment_form.content  }}
+                    <button class="pretty-button primary">Comment</button>
+                </form>
+            {% endif %}
+            {% for comment in comments %}
+                <div class="comment card">
+                    <div class="comment-top">
+                        <div class="author"><b>{{ comment.user.get_full_name }}</b></div>
+                        <div class="separator">•</div>
+                        <div class="commented">{{ comment.date_created|date:'d/m/Y H:i' }}</div>
+                    </div>
+                    <div class="comment-bottom">
+                        {{ comment.content }}
+                    </div>
                 </div>
-                <div class="comment-bottom">
-                    {{ comment.content }}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 

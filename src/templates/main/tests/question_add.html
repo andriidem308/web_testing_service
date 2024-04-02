@@ -1,0 +1,35 @@
+<form hx-post="{% url 'question_add' pk=test.pk %}"
+      hx-on="click from:#close-question: this.remove()"
+      hx-trigger="click from:#submit-all">
+    <div class="card">
+        <div class="question__header">
+{#            <label for="{{ form.content.id_for_label }}"></label>#}
+            {{ form.content }}
+            <button class="delete-button" id="close-question"
+                    hx-on="click: this.parentElement.parentElement.parentElement.remove()"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+        <div class="question__answers">
+            <div class="question__answer">
+                <label for="{{ form.answer_1.id_for_label }}">1.</label>
+                {{ form.answer_1 }}
+                {{ form.answer_1_correct }}
+            </div>
+            <div class="question__answer">
+                <label for="{{ form.answer_2.id_for_label }}">2.</label>
+                {{ form.answer_2 }}
+                {{ form.answer_2_correct }}
+            </div>
+            <div class="question__answer">
+                <label for="{{ form.answer_3.id_for_label }}">3.</label>
+                {{ form.answer_3 }}
+                {{ form.answer_3_correct }}
+            </div>
+            <div class="question__answer">
+                <label for="{{ form.answer_4.id_for_label }}">4.</label>
+                {{ form.answer_4 }}
+                {{ form.answer_4_correct }}
+            </div>
+        </div>
+
+    </div>
+</form>

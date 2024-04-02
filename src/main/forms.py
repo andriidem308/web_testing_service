@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Lecture, Group, Problem, Comment, Solution
+from main.models import *
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -91,6 +91,100 @@ class LectureUpdateForm(forms.ModelForm):
         instance.date_updated = timezone.now()
         instance.save()
         self.save_m2m()
+        return instance
+
+
+class TestCreateForm(forms.ModelForm):
+    headline = forms.CharField(max_length=255,
+                               widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
+    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
+
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
+    score = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'pretty-input', 'placeholder': ''}),
+        required=False)
+
+    def __init__(self, teacher, *args, **kwargs):
+        super(TestCreateForm, self).__init__(*args, **kwargs)
+        self.teacher = teacher
+        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
+
+    class Meta:
+        model = Test
+        fields = ['headline', 'content', 'groups', 'score']
+
+    def save(self, **kwargs):
+        commit = kwargs.pop('commit', True)
+        instance = super(TestCreateForm, self).save(commit=False)
+        instance.teacher = self.teacher
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
+
+class TestUpdateForm(forms.ModelForm):
+    headline = forms.CharField(max_length=255,
+                               widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Headline"}))
+    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
+
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.none(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+    )
+
+    class Meta:
+        model = Test
+        fields = ['headline', 'content', 'groups', ]
+
+    def __init__(self, *args, **kwargs):
+        super(TestUpdateForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
+
+    def save(self, **kwargs):
+        instance = super(TestUpdateForm, self).save(commit=False)
+        instance.date_updated = timezone.now()
+        instance.save()
+        self.save_m2m()
+        return instance
+
+
+class QuestionCreateForm(forms.ModelForm):
+    content = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input question-input', 'placeholder': 'Question'}))
+
+    answer_1 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
+    answer_2 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
+    answer_3 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
+    answer_4 = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'pretty-input'}))
+
+    answer_1_correct = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    answer_2_correct = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    answer_3_correct = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    answer_4_correct = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+
+    class Meta:
+        model = Question
+        fields = ('content',
+                  'answer_1', 'answer_1_correct',
+                  'answer_2', 'answer_2_correct',
+                  'answer_3', 'answer_3_correct',
+                  'answer_4', 'answer_4_correct', )
+
+    def __init__(self, test, *args, **kwargs):
+        super(QuestionCreateForm, self).__init__(*args, **kwargs)
+        self.test = test
+
+    def save(self, **kwargs):
+        instance = super(QuestionCreateForm, self).save(commit=False)
+        instance.test = self.test
+        instance.save()
         return instance
 
 

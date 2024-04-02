@@ -43,6 +43,17 @@
                         </div>
                     </div>
                 {% endif %}
+                {% if type == 'test' %}
+                    <div class="article-values">
+                        <div class="max-points"><b>Max score:</b>&nbsp;&nbsp;&nbsp;
+                            {% if form.score.errors %}
+                                {{ form.score|add_class:"danger-outline" }}
+                            {% else %}
+                                {{ form.score }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
                 <hr>
                 <b>Content:</b>
                 <div class="article-content">
@@ -68,11 +79,18 @@
                 {% endif %}
                 <hr>
                 <div class="action-buttons">
-                    <button class="pretty-button primary" type="submit">Save</button>
+                    {% if type == 'test' %}
+                        <button class="pretty-button primary" type="submit" id="submit-all">Save and add questions</button>
+                    {% else %}
+                        <button class="pretty-button primary" type="submit">Save</button>
+                    {% endif %}
+
                     {% if type == 'problem' %}
                         <a class="pretty-button danger" href="{% url 'problems' %}">Cancel</a>
                     {% elif type == 'lecture' %}
                         <a class="pretty-button danger" href="{% url 'lectures' %}">Cancel</a>
+                    {% elif type == 'test' %}
+                        <a class="pretty-button danger" href="{% url 'tests' %}">Cancel</a>
                     {% endif %}
                 </div>
 

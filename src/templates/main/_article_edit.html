@@ -128,7 +128,13 @@
         <h3>Do you want delete "{{ article.headline }}" ?</h3>
         <div class="delete-confirmation-buttons">
             <button class="pretty-button primary" onclick="closeDeleteConfirmation()">Cancel</button>
-            <a class="pretty-button danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
+            {% if problem %}
+                <a class="pretty-button danger" href="{% url 'problem_delete' pk=article.id %}">Delete</a>
+            {% elif lecture %}
+                <a class="pretty-button danger" href="{% url 'lecture_delete' pk=article.id %}">Delete</a>
+            {% elif test %}
+                <a class="pretty-button danger" href="{% url 'test_delete' pk=article.id %}">Delete</a>
+            {% endif %}
         </div>
     </div>
 </div>

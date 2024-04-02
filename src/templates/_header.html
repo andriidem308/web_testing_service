@@ -14,7 +14,7 @@
         {% if user.is_teacher %}
             <li class="navigation-item"><a href="{% url 'groups' %}">Groups</a></li>
         {% endif %}
-        <li class="navigation-item"><a href="">Tests</a></li>
+        <li class="navigation-item"><a href="{% url 'tests' %}">Tests</a></li>
     </ul>
 
     <ul class="side-navigation">
