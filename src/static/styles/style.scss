@@ -4,7 +4,7 @@
 
 /* -------------- HEADER -------------- */
 
-header {
+.desktop-header {
   width: 100%;
   height: $nav-height;
   padding: 0 10%;
@@ -12,6 +12,18 @@ header {
   display: flex;
   justify-content: space-between;
   align-content: center;
+}
+
+.mobile-header {
+  width: 100%;
+  height: $nav-height;
+  padding: 0 10%;
+  background-color: $primary;
+  //display: flex;
+  justify-content: space-between;
+  align-content: center;
+
+  display: none;
 }
 
 .navigation-item a, .side-navigation__icon_link {
@@ -363,7 +375,6 @@ header {
 
 }
 
-
 $main-margin: 20px;
 
 main {
@@ -495,97 +506,7 @@ main {
   }
 }
 
-/* -------------- MEDIA -------------- */
-
-@media (min-width: 1200px) {
-  main {
-    max-width: 1140px;
-  }
-
-  .navigation-item a {
-    font-size: 22px;
-  }
-
-  .side-navigation li {
-    margin-right: 12px;
-  }
-
-  .lecture-container {
-    flex-direction: row;
-  }
-
-  .lecture-side {
-    display: flex;
-    flex-direction: column;
-
-    .attachments {
-      min-width: 320px;
-    }
-
-    .comments {
-      min-width: 320px;
-    }
-  }
-}
-
-@media (max-width: 1200px) {
-  main {
-    max-width: 960px;
-  }
-
-  .navigation-item a {
-    font-size: 20px;
-  }
-
-  .side-navigation li {
-    margin-right: 8px;
-  }
-
-  .lecture-container {
-    flex-direction: column;
-  }
-
-  .lecture-side {
-    display: flex;
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 992px) {
-  main {
-    max-width: 720px;
-  }
-
-  .navigation-item a {
-    font-size: 16px;
-  }
-
-  .side-navigation li {
-    margin-right: 4px;
-  }
-
-}
-
-@media (max-width: 768px) {
-  main {
-    max-width: 540px;
-    margin: $main-margin auto;
-    padding: 0;
-  }
-
-  .navigation-item a {
-    font-size: 14px;
-  }
-
-  .side-navigation li {
-    margin-right: 2px;
-  }
-
-}
-
-@media (max-width: 576px) {
-}
-
+/* -------------- OTHERS -------------- */
 .article-container {
 
   display: flex;
@@ -818,7 +739,6 @@ main {
   padding: 4px 12px;
 }
 
-
 footer {
   position: fixed;
   bottom: 0;
@@ -946,6 +866,186 @@ footer {
     transition: 0.3s ease-in-out;
   }
 }
+/* ------------------------------------ */
+
+.mobile-header__left, .mobile-header__right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-header__right {
+  gap: 16px;
+  font-size: 24px;
+  color: $light;
+
+  i {
+    color: $light;
+  }
+
+  .notification__counter {
+    top: 2px;
+  }
+}
+
+#mobileMenuOpen {
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+}
+
+#mobileMenu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 12;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background-color: $primary;
+  padding: 100px;
+
+  text-align: center;
+
+  ul li a {
+    color: $light;
+    font-weight: bold;
+    font-size: 24px;
+
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    gap: 100px;
+    //align-items: center;
+
+  }
+
+}
+
+#mobileMenuClose {
+  z-index: 13;
+  color: $light;
+
+  background-color: transparent;
+  font-size: 36px;
+  border: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* -------------- MEDIA -------------- */
+
+@media (min-width: 1200px) {
+  main {
+    max-width: 1140px;
+  }
+
+  .navigation-item a {
+    font-size: 22px;
+  }
+
+  .side-navigation li {
+    margin-right: 12px;
+  }
+
+  .lecture-container {
+    flex-direction: row;
+  }
+
+  .lecture-side {
+    display: flex;
+    flex-direction: column;
+
+    .attachments {
+      min-width: 320px;
+    }
+
+    .comments {
+      min-width: 320px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  main {
+    max-width: 960px;
+  }
+
+  .navigation-item a {
+    font-size: 20px;
+  }
+
+  .side-navigation li {
+    margin-right: 8px;
+  }
+
+  .lecture-container {
+    flex-direction: column;
+  }
+
+  .lecture-side {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 992px) {
+  main {
+    max-width: 720px;
+  }
+
+  .navigation-item a {
+    font-size: 16px;
+  }
+
+  .side-navigation li {
+    margin-right: 4px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  main {
+    max-width: 540px;
+    margin: $main-margin auto;
+    padding: 0;
+
+  }
+
+  .desktop-header {
+    display: none;
+  }
+
+  .mobile-header {
+    display: flex;
+  }
+
+
+  .navigation-item a {
+    font-size: 14px;
+  }
+
+  .side-navigation li {
+    margin-right: 2px;
+  }
+
+}
+
+@media (max-width: 576px) {
+}
 
 @media (max-width: 425px) {
 
@@ -999,3 +1099,5 @@ footer {
 
 
 }
+
+/* ------------------------------------ */
