@@ -78,10 +78,12 @@
 
             <div id="mobileMenu">
                 <ul>
-                    <li><a href="">Lectures</a></li>
-                    <li><a href="">Problems</a></li>
-                    <li><a href="">Tests</a></li>
-                    <li><a href="">Groups</a></li>
+                    <li><a href="{% url 'lectures' %}">Lectures</a></li>
+                    <li><a href="{% url 'problems' %}">Problems</a></li>
+                    <li><a href="{% url 'tests' %}">Tests</a></li>
+                    {% if user.is_teacher %}
+                        <li><a href="{% url 'groups' %}">Groups</a></li>
+                    {% endif %}
                     <button id="mobileMenuClose">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
