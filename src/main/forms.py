@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Group, Problem, Solution, Lecture, Comment, Test, Question
+from main.models import Group, Problem, Solution, Lecture, Comment, Test, Question, StudentAnswer
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -152,6 +152,22 @@ class TestUpdateForm(forms.ModelForm):
         instance.save()
         self.save_m2m()
         return instance
+
+
+class QuestionTakeForm(forms.ModelForm):
+    answer1_picked = forms.BooleanField(required=False)
+    answer2_picked = forms.BooleanField(required=False)
+    answer3_picked = forms.BooleanField(required=False)
+    answer4_picked = forms.BooleanField(required=False)
+
+    def __init__(self, test, student, *args, **kwargs):
+        super(QuestionTakeForm, self).__init__(*args, **kwargs)
+        self.test = test
+        self.student = student
+
+    class Meta:
+        model = StudentAnswer
+        fields = ['answer1_picked', 'answer2_picked', 'answer3_picked', 'answer4_picked']
 
 
 class QuestionCreateForm(forms.ModelForm):

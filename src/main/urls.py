@@ -6,7 +6,8 @@ from main.views import (GroupCreateView, GroupDeleteView, GroupListView, GroupUp
                         LectureCreateView, LectureDeleteView, LectureListView, LectureUpdateView, LectureView,
                         ProblemCreateView, ProblemDeleteView, ProblemListView, ProblemSolutionListView,
                         ProblemSolutionView, ProblemTakeView, ProblemUpdateView, ProblemView, question_add, questions,
-                        TestCreateView, TestDeleteView, TestListView, TestUpdateView, TestView, view_notification)
+                        TestCreateView, TestDeleteView, TestListView, TestUpdateView, TestView, view_notification,
+                        TestTakeView)
 
 urlpatterns = [
     path('', index, name='home'),
@@ -37,6 +38,7 @@ urlpatterns = [
     path('tests/<int:pk>/', TestView.as_view(), name='test'),
     path('tests/<int:pk>/edit/', TestUpdateView.as_view(), name='test_edit'),
     path('tests/<int:pk>/delete/', TestDeleteView.as_view(), name='test_delete'),
+    path('tests/<int:pk>/take/', TestTakeView.as_view(), name='test_take'),
     path('tests/<int:pk>/questions/', questions, name='questions'),
     path('tests/<int:pk>/questions/add', question_add, name='question_add'),
 

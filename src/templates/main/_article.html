@@ -71,6 +71,14 @@
                     {% endfor %}
                 </div>
             {% endif %}
+            {% if student and test %}
+                {% if student_answer %}
+                {% else %}
+                    <div class="article-solutions card">
+                        <a class="pretty-button action" href="{% url 'test_take' pk=test.id %}">Take Test</a>
+                    </div>
+                {% endif %}
+            {% endif %}
             {% if student and problem %}
                 {% if solution %}
                     <div class="article-solutions card">

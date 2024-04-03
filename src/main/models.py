@@ -205,3 +205,20 @@ class Question(models.Model):
         if self.answer_4_correct:
             correct_answers.append(self.answer_4)
         return correct_answers
+
+
+class StudentAnswer(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, related_name='test_answer', on_delete=models.CASCADE)
+    score = models.FloatField()
+
+
+    def get_owner(self):
+        return self.student
+
+    def get_owner_name(self):
+        return self.student.user.get_full_name()
+
+    @property
+    def points(self):
+        return round(self.score * self.test.score, 1)

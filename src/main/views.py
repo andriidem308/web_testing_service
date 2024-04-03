@@ -7,7 +7,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from accounts.decorators import student_required, teacher_required
 from core.settings import MEDIA_URL
 from main.forms import GroupCreateForm, GroupUpdateForm, LectureCreateForm, LectureUpdateForm, TestCreateForm, \
-    TestUpdateForm, QuestionCreateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm, CheckSolutionForm
+    TestUpdateForm, QuestionCreateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm, CheckSolutionForm, \
+    QuestionTakeForm
 from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test
 from main.services import article_service, code_solver, notification_service, paginate_service, users_service
 
@@ -292,11 +293,12 @@ class TestView(DetailView):
 
         teacher = users_service.get_teacher(self.request.user)
         student = users_service.get_student(self.request.user)
-
+        #student_answer = article_service.student_answer_find(self.object, student) if student else None
         context.update({
             'date_created': self.object.date_created,
             'teacher': teacher,
             'student': student,
+            #'student_answer': student_answer,
         })
 
         return self.render_to_response(context)
@@ -401,6 +403,46 @@ def question_add(request, **kwargs):
 
     context = {'form': QuestionCreateForm(test), 'test': test}
     return render(request, 'tests/question_add.html', context=context)
+
+
+@method_decorator([login_required, student_required], name='dispatch')
+class TestTakeView(CreateView):
+    model = Test
+    template_name = 'tests/test_take.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        student = Student.objects.get(user=user)
+        test = Test.objects.get(id=kwargs.get('pk'))
+        context = {'student': student, 'test': test}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        test_id = kwargs.get('pk')
+        test = Problem.objects.get(id=test_id)
+
+        user = self.request.user
+        student = Student.objects.get(user=user)
+
+
+def question_show(request, **kwargs):
+    test = Test.objects.get(pk=kwargs.get('pk'))
+    user = request.user
+    student = Student.objects.get(user=user)
+
+    if request.method == 'POST':
+        form = QuestionTakeForm(test, student)
+
+        print(form.errors)
+
+        if form.is_valid():
+            student_answers = form.save(commit=False)
+            student_answers.save()
+            context = {'student_answers': student_answers, 'test': test}
+            return render(request, 'tests/question_show.html', context=context)
+
+    context = {'form': QuestionTakeForm(test, student), 'test': test}
+    return render(request, 'tests/question_show.html', context=context)
 
 
 @method_decorator([login_required], name='dispatch')

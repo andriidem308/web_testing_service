@@ -12,7 +12,8 @@ flake8==7.0.0
 jmespath==1.0.1
 gunicorn==20.1.0
 libsass==0.23.0
-psycopg2==2.9.9
+#psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pydantic==2.6.1
 pydantic_core==2.16.2
 python-dateutil==2.8.2
