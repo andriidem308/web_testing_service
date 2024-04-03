@@ -1,54 +1,110 @@
 {% load static %}
 
 <header>
-    <div class="logo">
-        <a href="{% url 'home' %}">
-{#            <img src="{% static 'img/logo.png' %}" alt="">#}
-            <img src="{% static 'img/logo_text.png' %}" alt="Web Testing Service">
-        </a>
+    <div class="desktop-header">
+        <div class="logo">
+            <a href="{% url 'home' %}">
+                {#            <img src="{% static 'img/logo.png' %}" alt="">#}
+                <img src="{% static 'img/logo_text.png' %}" alt="Web Testing Service">
+            </a>
+        </div>
+
+        <ul class="navigation">
+            <li class="navigation-item"><a href="{% url 'lectures' %}">Lectures</a></li>
+            <li class="navigation-item"><a href="{% url 'problems' %}">Problems</a></li>
+            <li class="navigation-item"><a href="{% url 'tests' %}">Tests</a></li>
+            {% if user.is_teacher %}
+                <li class="navigation-item"><a href="{% url 'groups' %}">Groups</a></li>
+            {% endif %}
+        </ul>
+
+        <ul class="side-navigation">
+            <li id="notifications">
+                <a class="side-navigation__icon_link" href="">
+                    {% if unread_notifications %}
+                        <div class="notification__counter"></div>
+                    {% endif %}
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+
+                <div class="notification-menu">
+                    {% for notification in notifications %}
+                        <a class="notification__link" href="{% url 'view_notification' pk=notification.pk %}">
+                            <div class="notification__body">
+                                <span class="notification__message">{{ notification.message }}</span>
+                                <span class="notification__received">{{ notification.created_at|date:'d/m/Y, H:i'}}</span>
+                            </div>
+                            <div class="notification__seen">{% if notification.is_seen %}{% else %}<i class="fa-solid fa-circle">{% endif %}</i></div>
+                        </a>
+                    {% empty %}
+                        <div class="notification__link">
+                            <div class="notification__body">
+                                <span class="notification__message">No notifications</span>
+                            </div>
+                            <div class="notification__seen"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </li>
+            <li><a class="side-navigation__icon_link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
+            <li><a class="side-navigation__icon_link" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+
+
+        </ul>
     </div>
 
-    <ul class="navigation">
-        <li class="navigation-item"><a href="{% url 'lectures' %}">Lectures</a></li>
-        <li class="navigation-item"><a href="{% url 'problems' %}">Problems</a></li>
-        {% if user.is_teacher %}
-            <li class="navigation-item"><a href="{% url 'groups' %}">Groups</a></li>
-        {% endif %}
-        <li class="navigation-item"><a href="{% url 'tests' %}">Tests</a></li>
-    </ul>
-
-    <ul class="side-navigation">
-        <li id="notifications">
-            <a class="side-navigation__icon_link" href="">
-                {% if unread_notifications %}
-                    <div class="notification__counter"></div>
-                {% endif %}
-                <i class="fa-solid fa-bell"></i>
-            </a>
-
-            <div class="notification-menu">
-            {% for notification in notifications %}
-                <a class="notification__link" href="{% url 'view_notification' pk=notification.pk %}">
-                    <div class="notification__body">
-                        <span class="notification__message">{{ notification.message }}</span>
-                        <span class="notification__received">{{ notification.created_at|date:'d/m/Y, H:i'}}</span>
-                    </div>
-                    <div class="notification__seen">{% if notification.is_seen %}{% else %}<i class="fa-solid fa-circle">{% endif %}</i></div>
+    <div class="mobile-header">
+        <div class="mobile-header__left">
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    {#            <img src="{% static 'img/logo.png' %}" alt="">#}
+                    <img src="{% static 'img/logo_text.png' %}" alt="Web Testing Service">
                 </a>
-            {% empty %}
-                <div class="notification__link">
-                    <div class="notification__body">
-                        <span class="notification__message">No notifications</span>
-                    </div>
-                    <div class="notification__seen"></div>
-                </div>
-            {% endfor %}
             </div>
-        </li>
-        <li><a class="side-navigation__icon_link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i></a></li>
-        <li><a class="side-navigation__icon_link" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+        </div>
 
+        <div class="mobile-header__right">
+            <div id="notifications">
+                <a class="side-navigation__icon_link" href="">
+                    {% if unread_notifications %}
+                        <div class="notification__counter"></div>
+                    {% endif %}
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+            </div>
+            <button id="mobileMenuOpen">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-    </ul>
+            <div id="mobileMenu">
+                <ul>
+                    <li><a href="">Lectures</a></li>
+                    <li><a href="">Problems</a></li>
+                    <li><a href="">Tests</a></li>
+                    <li><a href="">Groups</a></li>
+                    <button id="mobileMenuClose">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </ul>
+
+            </div>
+        </div>
+    </div>
 </header>
 
+<script>
+    let mobileMenu = $('#mobileMenu');
+
+    $('#mobileMenuOpen').click(function (){
+        setTimeout(function() {
+            mobileMenu.slideDown(600).css('display', 'flex');
+        }, 30);
+    });
+
+    $('#mobileMenuClose').click(function (){
+        setTimeout(function() {
+            mobileMenu.slideUp(300);
+        }, 300);
+    });
+
+</script>
