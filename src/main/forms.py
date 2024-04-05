@@ -155,19 +155,19 @@ class TestUpdateForm(forms.ModelForm):
 
 
 class QuestionTakeForm(forms.ModelForm):
-    answer1_picked = forms.BooleanField(required=False)
-    answer2_picked = forms.BooleanField(required=False)
-    answer3_picked = forms.BooleanField(required=False)
-    answer4_picked = forms.BooleanField(required=False)
+    answer_1_picked = forms.BooleanField(required=False)
+    answer_2_picked = forms.BooleanField(required=False)
+    answer_3_picked = forms.BooleanField(required=False)
+    answer_4_picked = forms.BooleanField(required=False)
 
-    def __init__(self, test, student, *args, **kwargs):
+    def __init__(self, question, student, *args, **kwargs):
         super(QuestionTakeForm, self).__init__(*args, **kwargs)
-        self.test = test
+        self.question = question
         self.student = student
 
     class Meta:
         model = StudentAnswer
-        fields = ['answer1_picked', 'answer2_picked', 'answer3_picked', 'answer4_picked']
+        fields = ['answer_1_picked', 'answer_2_picked', 'answer_3_picked', 'answer_4_picked']
 
 
 class QuestionCreateForm(forms.ModelForm):

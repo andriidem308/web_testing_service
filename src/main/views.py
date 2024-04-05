@@ -9,7 +9,7 @@ from core.settings import MEDIA_URL
 from main.forms import GroupCreateForm, GroupUpdateForm, LectureCreateForm, LectureUpdateForm, TestCreateForm, \
     TestUpdateForm, QuestionCreateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm, CheckSolutionForm, \
     QuestionTakeForm
-from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test
+from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test, Question
 from main.services import article_service, code_solver, notification_service, paginate_service, users_service
 
 
@@ -405,43 +405,34 @@ def question_add(request, **kwargs):
     return render(request, 'tests/question_add.html', context=context)
 
 
-@method_decorator([login_required, student_required], name='dispatch')
-class TestTakeView(CreateView):
-    model = Test
-    template_name = 'tests/test_take.html'
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        student = Student.objects.get(user=user)
-        test = Test.objects.get(id=kwargs.get('pk'))
-        context = {'student': student, 'test': test}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        test_id = kwargs.get('pk')
-        test = Problem.objects.get(id=test_id)
-
-        user = self.request.user
-        student = Student.objects.get(user=user)
+def test_take(request, **kwargs):
+    user = request.user
+    test = Test.objects.get(pk=kwargs.get('pk'))
+    questions = Question.objects.filter(test=test)
+    student = Student.objects.get(user=user)
+    context = {
+        'test': test,
+        'student': student,
+        'questions': questions,
+    }
+    return render(request, 'tests/test_take.html', context=context)
 
 
 def question_show(request, **kwargs):
-    test = Test.objects.get(pk=kwargs.get('pk'))
+    question = Question.objects.get(pk=kwargs.get('pk'))
     user = request.user
     student = Student.objects.get(user=user)
+    form = QuestionTakeForm(question, student)
+    student_answers = form.save(commit=False)
 
     if request.method == 'POST':
-        form = QuestionTakeForm(test, student)
-
         print(form.errors)
-
         if form.is_valid():
-            student_answers = form.save(commit=False)
             student_answers.save()
-            context = {'student_answers': student_answers, 'test': test}
+            context = {'student_answers': student_answers, 'question': question}
             return render(request, 'tests/question_show.html', context=context)
 
-    context = {'form': QuestionTakeForm(test, student), 'test': test}
+    context = {'form': QuestionTakeForm(question, student), 'question': question, 'student_answers': student_answers}
     return render(request, 'tests/question_show.html', context=context)
 
 

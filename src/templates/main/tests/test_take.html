@@ -1,4 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ test.headline }} {% endblock %}
+{% block content %}
+<div id="question-forms">
+    <h1>Test: {{ test.headline }}</h1>
 
+
+    {% for question in questions %}
+    <form method="post" hx-post="{% url 'question_show' pk=question.pk %}">
+        {% csrf_token %}
+        {% include 'tests/question_show.html' with pk=question.pk %}
+    </form>
+    {% endfor %}
+
+    <button type="submit">Submit</button>
+
+</div>
+{% endblock %}

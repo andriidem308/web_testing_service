@@ -1,0 +1,25 @@
+<h1>{{ question.content }}</h1>
+
+<div class="card">
+    <div class="question__header">
+        {# <label for="{{ question.content }}"></label>#}
+    </div>
+    <div class="question__answers">
+        <div class="question__answer">
+            <label for="{{ form.answer_1_picked.id_for_label }}">1.{{ question.answer_1 }}</label>
+            {{ form.answer_1_picked }}
+        </div>
+        <div class="question__answer">
+            <label for="{{ form.answer_2_picked.id_for_label }}">2.{{ question.answer_2 }}</label>
+            {{ form.answer_2_picked }}
+        </div>
+        <div class="question__answer">
+            <label for="{{ form.answer_3_picked.id_for_label }}">3.{{ question.answer_3 }}</label>
+            {{ form.answer_3_picked }}
+        </div>
+        <div class="question__answer">
+            <label for="{{ form.answer_4_picked.id_for_label }}">4.{{ question.answer_4 }}</label>
+            {{ form.answer_4_picked }}
+        </div>
+    </div>
+</div>
