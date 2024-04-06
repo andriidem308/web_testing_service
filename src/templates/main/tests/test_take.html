@@ -38,34 +38,34 @@
     </form>
 
 
-    <script>
-        let formCards = document.querySelectorAll('form .card');
-        formCards.forEach(function (formCard) {
-            let answers = formCard.querySelectorAll('.question-take__answer')
-            let answersArray = Array.from(answers);
-
-            for (let i = answersArray.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [answersArray[i], answersArray[j]] = [answersArray[j], answersArray[i]];
-            }
-
-            let fragment = document.createDocumentFragment();
-            let cnt = 1;
-            answersArray.forEach(node => {
-                let label = node.querySelector('label')
-                label.textContent = cnt + '. ' + label.textContent
-                cnt++;
-                fragment.appendChild(node);
-                
-                console.log(node)
-                
-                
-            });
-
-            formCard.querySelector('.question-take__answers').appendChild(fragment);
-
-        });
-
-    </script>
+{#    <script>#}
+{#        let formCards = document.querySelectorAll('form .card');#}
+{#        formCards.forEach(function (formCard) {#}
+{#            let answers = formCard.querySelectorAll('.question-take__answer')#}
+{#            let answersArray = Array.from(answers);#}
+{##}
+{#            for (let i = answersArray.length - 1; i > 0; i--) {#}
+{#                const j = Math.floor(Math.random() * (i + 1));#}
+{#                [answersArray[i], answersArray[j]] = [answersArray[j], answersArray[i]];#}
+{#            }#}
+{##}
+{#            let fragment = document.createDocumentFragment();#}
+{#            let cnt = 1;#}
+{#            answersArray.forEach(node => {#}
+{#                let label = node.querySelector('label')#}
+{#                label.textContent = cnt + '. ' + label.textContent#}
+{#                cnt++;#}
+{#                fragment.appendChild(node);#}
+{#                #}
+{#                console.log(node)#}
+{#                #}
+{#                #}
+{#            });#}
+{##}
+{#            formCard.querySelector('.question-take__answers').appendChild(fragment);#}
+{##}
+{#        });#}
+{##}
+{#    </script>#}
 
 {% endblock %}
