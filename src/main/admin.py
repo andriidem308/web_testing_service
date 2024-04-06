@@ -1,14 +1,17 @@
 from django.contrib import admin
 
-from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Comment, Notification, Test, Question
+from main import models
 
-admin.site.register(Teacher)
-admin.site.register(Student)
-admin.site.register(Group)
-admin.site.register(Problem)
-admin.site.register(Solution)
-admin.site.register(Lecture)
-admin.site.register(Comment)
-admin.site.register(Notification)
-admin.site.register(Test)
-admin.site.register(Question)
+
+admin.site.register(models.Teacher)
+admin.site.register(models.Student)
+admin.site.register(models.Group)
+admin.site.register(models.Problem)
+admin.site.register(models.Solution)
+admin.site.register(models.Lecture)
+admin.site.register(models.Comment)
+admin.site.register(models.Notification)
+admin.site.register(models.Test)
+admin.site.register(models.Question)
+admin.site.register(models.TestSolution)
+admin.site.register(models.StudentAnswer)

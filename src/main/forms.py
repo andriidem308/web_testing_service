@@ -155,19 +155,31 @@ class TestUpdateForm(forms.ModelForm):
 
 
 class QuestionTakeForm(forms.ModelForm):
-    answer_1_picked = forms.BooleanField(required=False)
-    answer_2_picked = forms.BooleanField(required=False)
-    answer_3_picked = forms.BooleanField(required=False)
-    answer_4_picked = forms.BooleanField(required=False)
+    answer_1 = forms.BooleanField(required=False)
+    answer_2 = forms.BooleanField(required=False)
+    answer_3 = forms.BooleanField(required=False)
+    answer_4 = forms.BooleanField(required=False)
 
-    def __init__(self, question, student, *args, **kwargs):
+    def __init__(self, test_solution, question, *args, **kwargs):
         super(QuestionTakeForm, self).__init__(*args, **kwargs)
+        self.test_solution = test_solution
         self.question = question
-        self.student = student
+
+        self.fields['answer_1'].widget.attrs['id'] = f"{self.question.id}_answer_1"
+        self.fields['answer_2'].widget.attrs['id'] = f"{self.question.id}_answer_2"
+        self.fields['answer_3'].widget.attrs['id'] = f"{self.question.id}_answer_3"
+        self.fields['answer_4'].widget.attrs['id'] = f"{self.question.id}_answer_4"
 
     class Meta:
         model = StudentAnswer
-        fields = ['answer_1_picked', 'answer_2_picked', 'answer_3_picked', 'answer_4_picked']
+        fields = ['answer_1', 'answer_2', 'answer_3', 'answer_4']
+
+    def save(self, **kwargs):
+        instance = super(QuestionTakeForm, self).save(commit=False)
+        instance.test_solution = self.test_solution
+        instance.question = self.question
+        instance.save()
+        return instance
 
 
 class QuestionCreateForm(forms.ModelForm):

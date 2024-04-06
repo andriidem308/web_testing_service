@@ -212,6 +212,12 @@ class TestSolution(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     score = models.FloatField()
 
+    class Meta:
+        unique_together = ('test', 'student',)
+
+    @property
+    def points(self):
+        return round(self.score * self.test.score, 1)
 
 
 class StudentAnswer(models.Model):

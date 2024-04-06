@@ -9,7 +9,8 @@ from core.settings import MEDIA_URL
 from main.forms import GroupCreateForm, GroupUpdateForm, LectureCreateForm, LectureUpdateForm, TestCreateForm, \
     TestUpdateForm, QuestionCreateForm, ProblemCreateForm, ProblemUpdateForm, ProblemTakeForm, CheckSolutionForm, \
     QuestionTakeForm
-from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test, Question
+from main.models import Teacher, Student, Group, Problem, Solution, Lecture, Notification, Test, Question, \
+    StudentAnswer, TestSolution
 from main.services import article_service, code_solver, notification_service, paginate_service, users_service
 
 
@@ -294,10 +295,14 @@ class TestView(DetailView):
         teacher = users_service.get_teacher(self.request.user)
         student = users_service.get_student(self.request.user)
         #student_answer = article_service.student_answer_find(self.object, student) if student else None
+        test_solution = TestSolution.objects.filter(student=student, test=self.object)
+        test_solution = test_solution[0] if test_solution else None
+
         context.update({
             'date_created': self.object.date_created,
             'teacher': teacher,
             'student': student,
+            'test_solution': test_solution
             #'student_answer': student_answer,
         })
 
@@ -408,32 +413,104 @@ def question_add(request, **kwargs):
 def test_take(request, **kwargs):
     user = request.user
     test = Test.objects.get(pk=kwargs.get('pk'))
-    questions = Question.objects.filter(test=test)
+
+    questions = Question.objects.filter(test=test).order_by('?')
     student = Student.objects.get(user=user)
+
+    test_solution = TestSolution(test=test, student=student, score=0)
+    student_answers_forms = [QuestionTakeForm(test_solution, question) for question in questions]
+
+    if request.method == 'POST':
+        correct_answers = 0
+        total_answers = len(questions)
+
+        answer_forms = []
+
+        for question in questions:
+            form = QuestionTakeForm(test_solution, question, request.POST)
+
+            if not form.is_valid():
+                break
+
+            print(
+                f'''
+                {form.cleaned_data['answer_1']}, {question.answer_1_correct},
+                {form.cleaned_data['answer_2']} == {question.answer_2_correct},
+                {form.cleaned_data['answer_3']} == {question.answer_3_correct},
+                {form.cleaned_data['answer_4']} == {question.answer_4_correct},
+                '''
+            )
+
+            if all([
+                form.cleaned_data['answer_1'] == question.answer_1_correct,
+                form.cleaned_data['answer_2'] == question.answer_2_correct,
+                form.cleaned_data['answer_3'] == question.answer_3_correct,
+                form.cleaned_data['answer_4'] == question.answer_4_correct,
+            ]):
+                correct_answers += 1
+
+            answer_forms.append(form)
+
+        else:
+            test_solution.score = correct_answers / total_answers
+            test_solution.save()
+
+            for form in answer_forms:
+                form.save()
+
+            return redirect('test', pk=test.pk)
+
     context = {
         'test': test,
         'student': student,
         'questions': questions,
+        'student_answers_forms': student_answers_forms,
     }
     return render(request, 'tests/test_take.html', context=context)
 
 
 def question_show(request, **kwargs):
-    question = Question.objects.get(pk=kwargs.get('pk'))
-    user = request.user
-    student = Student.objects.get(user=user)
-    form = QuestionTakeForm(question, student)
-    student_answers = form.save(commit=False)
+    pass
 
-    if request.method == 'POST':
-        print(form.errors)
-        if form.is_valid():
-            student_answers.save()
-            context = {'student_answers': student_answers, 'question': question}
-            return render(request, 'tests/question_show.html', context=context)
 
-    context = {'form': QuestionTakeForm(question, student), 'question': question, 'student_answers': student_answers}
-    return render(request, 'tests/question_show.html', context=context)
+# def test_take(request, **kwargs):
+#     user = request.user
+#     test = Test.objects.get(pk=kwargs.get('pk'))
+#     questions = Question.objects.filter(test=test)
+#     student = Student.objects.get(user=user)
+#     #
+#     student_answers_forms = [QuestionTakeForm(question, student) for question in questions]
+#
+#     # print(student_answers_forms)
+#
+#     context = {
+#         'test': test,
+#         'student': student,
+#         'questions': questions,
+#         'student_answers_forms': student_answers_forms,
+#     }
+#     return render(request, 'tests/test_take.html', context=context)
+#
+#
+# def question_show(request, **kwargs):
+#     question = Question.objects.get(pk=kwargs.get('pk'))
+#     user = request.user
+#     student = Student.objects.get(user=user)
+#     form = QuestionTakeForm(question, student)
+#     # student_answer = form.save(commit=False)
+#
+#     if request.method == 'POST':
+#         print(form.errors)
+#         if form.is_valid():
+#             student_answer = form.save(commit=False)
+#             student_answer.save()
+#
+#             # student_answers.save()
+#             context = {'student_answer': student_answer, 'question': question}
+#             return render(request, 'tests/question_show.html', context=context)
+#
+#     context = {'form': form, 'question': question}
+#     return render(request, 'tests/question_show.html', context=context)
 
 
 @method_decorator([login_required], name='dispatch')
