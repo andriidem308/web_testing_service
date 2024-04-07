@@ -98,7 +98,6 @@ elif os.getenv('DATABASE') == 'postgres':
             'NAME': 'wts',
             'USER': 'wts',
             'PASSWORD': 'wts',
-            # 'HOST': '10.114.0.4',
             'HOST': '134.122.84.248',
             'PORT': '',
         }
@@ -144,7 +143,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
 
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, '..', 'static_content')
