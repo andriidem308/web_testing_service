@@ -67,7 +67,7 @@ TEMPLATES = [
             BASE_DIR / 'templates',
             BASE_DIR / 'templates' / 'main',
             BASE_DIR / 'templates' / 'accounts',
-        ],
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,9 +144,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
 
-SASS_PROCESSOR_ROOT = STATIC_ROOT
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, '..', 'static_content')
 
 # Email notification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
