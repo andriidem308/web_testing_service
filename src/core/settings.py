@@ -145,7 +145,7 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, '..', 'static_content')
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 
 # Email notification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
