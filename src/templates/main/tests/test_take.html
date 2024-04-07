@@ -7,6 +7,9 @@
     <form method="post" enctype="multipart/form-data" novalidate autocomplete="off">
     {% csrf_token %}
     {% for form in student_answers_forms %}
+{#        <form id="answerForm-{{ forloop.counter }}" method="post" enctype="multipart/form-data" novalidate#}
+{#              autocomplete="off">#}
+{#            {% csrf_token %}#}
             <div class="card">
                 <div class="question-take__header">
                     <h2>{{ form.question.content }}</h2>
@@ -14,58 +17,79 @@
                 <div class="question-take__answers">
                     <div class="question-take__answer">
                         {{ form.answer_1 }}
+{#                        <label for="{{ form.answer_1.id_for_label }}">1. {{ form.question.answer_1 }}</label>#}
                         <label for="{{ form.answer_1.id_for_label }}">{{ form.question.answer_1 }}</label>
                     </div>
                     <div class="question-take__answer">
                         {{ form.answer_2 }}
+{#                        <label for="{{ form.answer_2.id_for_label }}">2. {{ form.question.answer_2 }}</label>#}
                         <label for="{{ form.answer_2.id_for_label }}">{{ form.question.answer_2 }}</label>
                     </div>
                     <div class="question-take__answer">
                         {{ form.answer_3 }}
+{#                        <label for="{{ form.answer_3.id_for_label }}">3. {{ form.question.answer_3 }}</label>#}
                         <label for="{{ form.answer_3.id_for_label }}">{{ form.question.answer_3 }}</label>
                     </div>
                     <div class="question-take__answer">
                         {{ form.answer_4 }}
+{#                        <label for="{{ form.answer_4.id_for_label }}">4. {{ form.question.answer_4 }}</label>#}
                         <label for="{{ form.answer_4.id_for_label }}">{{ form.question.answer_4 }}</label>
                     </div>
                 </div>
             </div>
+{#        </form>#}
     {% endfor %}
-        <div class="question-take__buttons">
-            <button type="submit" class="pretty-button primary">Save answers</button>
-            <a type="submit" class="pretty-button danger">Cancel</a>
-        </div>
+    <div class="question-take__buttons">
+        <button type="submit" class="pretty-button primary">Save answers</button>
+{#        <button id="submit-all" type="submit" class="pretty-button primary">Save answers</button>#}
+        <a class="pretty-button danger">Cancel</a>
+    </div>
     </form>
 
 
-{#    <script>#}
-{#        let formCards = document.querySelectorAll('form .card');#}
-{#        formCards.forEach(function (formCard) {#}
-{#            let answers = formCard.querySelectorAll('.question-take__answer')#}
-{#            let answersArray = Array.from(answers);#}
-{##}
-{#            for (let i = answersArray.length - 1; i > 0; i--) {#}
-{#                const j = Math.floor(Math.random() * (i + 1));#}
-{#                [answersArray[i], answersArray[j]] = [answersArray[j], answersArray[i]];#}
-{#            }#}
-{##}
-{#            let fragment = document.createDocumentFragment();#}
-{#            let cnt = 1;#}
-{#            answersArray.forEach(node => {#}
-{#                let label = node.querySelector('label')#}
-{#                label.textContent = cnt + '. ' + label.textContent#}
-{#                cnt++;#}
-{#                fragment.appendChild(node);#}
-{#                #}
-{#                console.log(node)#}
-{#                #}
-{#                #}
-{#            });#}
-{##}
-{#            formCard.querySelector('.question-take__answers').appendChild(fragment);#}
-{##}
-{#        });#}
-{##}
-{#    </script>#}
+
+
+    <script>
+        const formCards = document.querySelectorAll('form .card');
+
+        let formsCounter = 1;
+        formCards.forEach(function (formCard) {
+            const inputFields = formCard.querySelectorAll('input[type="checkbox"]');
+            inputFields.forEach(function (inputField) {
+                const inputFieldID = inputField.getAttribute('id');
+                inputField.setAttribute('name', inputFieldID);
+                {#console.log(inputField.getAttribute('name'));#}
+            });
+
+            {#console.log(inputFields)#}
+
+            formsCounter++;
+        });
+
+        formCards.forEach(function (formCard) {
+            let answers = formCard.querySelectorAll('.question-take__answer')
+            let answersArray = Array.from(answers);
+
+            for (let i = answersArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [answersArray[i], answersArray[j]] = [answersArray[j], answersArray[i]];
+            }
+
+            let fragment = document.createDocumentFragment();
+            let cnt = 1;
+            answersArray.forEach(node => {
+                let label = node.querySelector('label')
+                label.textContent = cnt + '. ' + label.textContent
+                fragment.appendChild(node);
+
+                console.log(node);
+                cnt++;
+            });
+
+            formCard.querySelector('.question-take__answers').appendChild(fragment);
+        });
+    </script>
+
+
 
 {% endblock %}

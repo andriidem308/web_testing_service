@@ -4,19 +4,19 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from accounts.forms import AuthenticationForm, SignUpForm, PasswordChangeForm
-from accounts.models import User
-from main.models import Student, Teacher
+from accounts import forms
+from accounts import models
+from main import models as models_main
 
 
 def profile(request):
-    user: User = request.user
+    user: models.User = request.user
     if user.is_teacher:
         user_type = 'teacher'
-        person = Teacher.objects.get(user=user)
+        person = models_main.Teacher.objects.get(user=user)
     elif user.is_student:
         user_type = 'student'
-        person = Student.objects.get(user=user)
+        person = models_main.Student.objects.get(user=user)
     else:
         user_type = None
         person = None
@@ -27,32 +27,35 @@ def profile(request):
 
 
 class LoginView(BaseLoginView):
-    model = User
-    form_class = AuthenticationForm
+    model = models.User
+    form_class = forms.AuthenticationForm
     template_name = 'accounts/login.html'
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('profile')
+
         next_page = request.GET.get('next') or ''
-        form = AuthenticationForm()
+        form = forms.AuthenticationForm()
         context = {'form': form, 'next_page': next_page}
         return render(request, self.template_name, context)
 
 
 class SignUpView(CreateView):
-    model = User
-    form_class = SignUpForm
+    model = models.User
+    form_class = forms.SignUpForm
     template_name = 'accounts/signup.html'
 
     def get(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
-        form = SignUpForm(user_type=user_type)
+        form = forms.SignUpForm(user_type=user_type)
 
         context = {'form': form, 'user_type': user_type}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user_type = kwargs.get('user_type')
-        form = SignUpForm(request.POST, user_type=user_type)
+        form = forms.SignUpForm(request.POST, user_type=user_type)
         if form.is_valid():
             user = form.save(user_type)
             login(self.request, user)
@@ -64,12 +67,6 @@ class SignUpView(CreateView):
 
 
 class PasswordChangeView(BasePasswordChangeView):
-    form_class = PasswordChangeForm
+    form_class = forms.PasswordChangeForm
     success_url = reverse_lazy('profile')
     template_name = 'accounts/password_change.html'
-
-
-def forbidden_view(request, user_type):
-    next_page = request.GET.get('next')
-    context = {'user_type': user_type, 'next_page': next_page}
-    return render(request, 'accounts/forbidden.html', context=context)

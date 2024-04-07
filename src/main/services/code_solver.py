@@ -86,12 +86,11 @@ def problem_take(solution):
         if score >= previous_solution[0].score:
             previous_solution.delete()
             solution.score = score
-            mail_student_take_problem_notify(solution)
             solution.save()
+            mail_student_take_problem_notify(solution)
             create_problem_taken_notification(solution)
-
     else:
         solution.score = score
-        mail_student_take_problem_notify(solution)
         solution.save()
+        mail_student_take_problem_notify(solution)
         create_problem_taken_notification(solution)
