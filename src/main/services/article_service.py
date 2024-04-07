@@ -1,7 +1,7 @@
 from typing import List
 
 from main.forms import CommentForm
-from main.models import Comment, Lecture, Problem, Solution
+from main.models import Comment, Lecture, Problem, Solution, StudentAnswer
 from main.services.notification_service import create_article_commented_notification
 
 
@@ -81,3 +81,11 @@ def comment_method(article, request):
     else:
         comment_form = CommentForm()
     return comment_form, comments
+
+
+def student_answer_find(test, student):
+    print(StudentAnswer.objects.all())
+    student_answer = StudentAnswer.objects.filter(student=student, test=test.id)
+    if student_answer:
+        student_answer = student_answer[0]
+    return student_answer

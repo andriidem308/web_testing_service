@@ -71,6 +71,46 @@
                     {% endfor %}
                 </div>
             {% endif %}
+
+
+            {% if student and test %}
+                {% if test_solution %}
+                    <div class="article-solutions card">
+                        <div class="solution-headline">
+                            <h3>Your solution</h3>
+                            <h4 class="rounded-tile success">Taken</h4>
+                        </div>
+                        <div class="solution-score center">
+                            {% if test_solution.score > 0.8 %}
+                                <div class="score rounded-tile success notHover">
+                                    {{ test_solution.points }} / {{ test_solution.test.score }}
+                                </div>
+                            {% elif solution.score > 0.5 %}
+                                <div class="score rounded-tile action notHover">
+                                    {{ test_solution.points }} / {{ test_solution.test.score }}
+                                </div>
+                            {% else %}
+                                <div class="score rounded-tile danger notHover">
+                                    {{ test_solution.points }} / {{ test_solution.test.score }}
+                                </div>
+                            {% endif %}
+                            <div class="taken">
+                                <div class="taken-time">{{ test_solution.date_solved|date:'H:i'}}</div>
+                                <div class="taken-date">{{ test_solution.date_solved|date:'d/m/Y'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="article-solutions card">
+                        <div class="solution-headline">
+                            <h3>Your solution</h3>
+                            <h4 class="rounded-tile danger">None</h4>
+                        </div>
+                        <a class="pretty-button action" href="{% url 'test_take' pk=test.id %}">Take Test</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
             {% if student and problem %}
                 {% if solution %}
                     <div class="article-solutions card">
@@ -138,6 +178,7 @@
             {% endif %}
         </div>
     </div>
+
     {% if problem or lecture %}
         <div class="article-comments">
             <h2 class="comments-headline">Comments</h2>

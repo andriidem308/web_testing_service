@@ -205,3 +205,26 @@ class Question(models.Model):
         if self.answer_4_correct:
             correct_answers.append(self.answer_4)
         return correct_answers
+
+
+class TestSolution(models.Model):
+    test = models.ForeignKey(Test, related_name='test_solution', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    score = models.FloatField()
+
+    class Meta:
+        unique_together = ('test', 'student',)
+
+    @property
+    def points(self):
+        return round(self.score * self.test.score, 1)
+
+
+class StudentAnswer(models.Model):
+    test_solution = models.ForeignKey(TestSolution, related_name='student_answer', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='student_answer', on_delete=models.CASCADE)
+
+    answer_1 = models.BooleanField(default=False)
+    answer_2 = models.BooleanField(default=False)
+    answer_3 = models.BooleanField(default=False)
+    answer_4 = models.BooleanField(default=False)

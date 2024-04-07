@@ -13,3 +13,6 @@ urlpatterns = [
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+
+handler403 = 'main.error_views.e403_handle'
+handler404 = 'main.error_views.e404_handle'

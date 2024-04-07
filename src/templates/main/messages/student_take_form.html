@@ -4,13 +4,17 @@
     <title>New Solution!</title>
 </head>
 <body>
-    <p>Dear <b>{{teacher}}</b>,</p>
+    <p>Dear <b>{{ teacher }}</b>,</p>
     <br>
-    <p>We'd like to inform you that <b>{{student}}</b> has submitted the solution for problem <b>"{{ problem_title }}"</b> </p>
+    <p>We'd like to inform you that <b>{{ student }}</b> has submitted the solution for problem <b>"{{ solution.problem.headline }}"</b> </p>
     <p>If you'd like to review the solution, please click on the link below:</p>
-    <!--<p><a href="[Solution Link]">View Solution</a></p>-->
+    <br>
+    <p>To access the new solution, simply <a href="https://www.web-testing-service.online{% url 'login' %}">log in to your web-testing portal</a> and navigate to the <a href="https://www.web-testing-service.online{% url 'solution' pk=solution.id %}">Solution page</a>.</p>
+    <br>
+    <p>Now it's time to show the world what you're made of! Prepare to embark on this exciting task, armed with your unique talents and the knowledge you've gained throughout your course. We can't wait to see the amazing results you'll achieve.</p>
+    <br>
+    <p>If you have any questions or need clarification, don't hesitate to reach out to us. Our dedicated support team is always here to assist you. Just drop us a message at <a href="mailto:webtestingservice.info@gmail.com">webtestingservice.info@gmail.com</a>, and we'll be more than happy to provide guidance.</p>
     <br>
     <p>Thank you for your attention to this matter.</p>
-    <br>
 </body>
 </html>

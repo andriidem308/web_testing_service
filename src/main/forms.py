@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from main.models import Group, Problem, Solution, Lecture, Comment, Test, Question
+from main import models
 
 
 class GroupCreateForm(forms.ModelForm):
@@ -13,7 +13,7 @@ class GroupCreateForm(forms.ModelForm):
         self.teacher = teacher
 
     class Meta:
-        model = Group
+        model = models.Group
         fields = ('name', )
 
     def save(self, **kwargs):
@@ -28,7 +28,7 @@ class GroupUpdateForm(forms.ModelForm):
                            widget=forms.TextInput(attrs={'class': 'pretty-input', 'placeholder': "Group Name"}))
 
     class Meta:
-        model = Group
+        model = models.Group
         fields = ('name', )
 
 
@@ -38,7 +38,7 @@ class LectureCreateForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
@@ -48,10 +48,10 @@ class LectureCreateForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(LectureCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
-        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
+        self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.teacher)
 
     class Meta:
-        model = Lecture
+        model = models.Lecture
         fields = ['headline', 'content', 'groups', 'attachment', ]
 
     def save(self, **kwargs):
@@ -68,7 +68,7 @@ class LectureUpdateForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
@@ -76,13 +76,13 @@ class LectureUpdateForm(forms.ModelForm):
     attachment = forms.FileField()
 
     class Meta:
-        model = Lecture
+        model = models.Lecture
         fields = ['headline', 'content', 'groups', 'attachment', ]
 
     def __init__(self, *args, **kwargs):
         super(LectureUpdateForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
+            self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.instance.teacher)
 
     def save(self, **kwargs):
         instance = super(LectureUpdateForm, self).save(commit=False)
@@ -98,7 +98,7 @@ class TestCreateForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
@@ -110,10 +110,10 @@ class TestCreateForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(TestCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
-        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
+        self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.teacher)
 
     class Meta:
-        model = Test
+        model = models.Test
         fields = ['headline', 'content', 'groups', 'score']
 
     def save(self, **kwargs):
@@ -132,19 +132,19 @@ class TestUpdateForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea(attrs={'class': 'pretty-textarea'}))
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
 
     class Meta:
-        model = Test
+        model = models.Test
         fields = ['headline', 'content', 'groups', ]
 
     def __init__(self, *args, **kwargs):
         super(TestUpdateForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
+            self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.instance.teacher)
 
     def save(self, **kwargs):
         instance = super(TestUpdateForm, self).save(commit=False)
@@ -152,6 +152,41 @@ class TestUpdateForm(forms.ModelForm):
         instance.save()
         self.save_m2m()
         return instance
+
+
+class QuestionTakeForm(forms.ModelForm):
+    answer_1 = forms.BooleanField(required=False)
+    answer_2 = forms.BooleanField(required=False)
+    answer_3 = forms.BooleanField(required=False)
+    answer_4 = forms.BooleanField(required=False)
+
+    def __init__(self, test_solution, question, *args, **kwargs):
+        super(QuestionTakeForm, self).__init__(*args, **kwargs)
+        self.test_solution = test_solution
+        self.question = question
+
+        self.fields['answer_1'].widget.attrs['id'] = f"{self.question.id}_answer_1"
+        self.fields['answer_2'].widget.attrs['id'] = f"{self.question.id}_answer_2"
+        self.fields['answer_3'].widget.attrs['id'] = f"{self.question.id}_answer_3"
+        self.fields['answer_4'].widget.attrs['id'] = f"{self.question.id}_answer_4"
+
+    class Meta:
+        model = models.StudentAnswer
+        fields = ['answer_1', 'answer_2', 'answer_3', 'answer_4']
+
+    def save(self, **kwargs):
+        instance = super(QuestionTakeForm, self).save(commit=False)
+        instance.test_solution = self.test_solution
+        instance.question = self.question
+        instance.save()
+        return instance
+
+    def clean(self):
+        super(QuestionTakeForm, self).clean()
+        self.cleaned_data['answer_1'] = bool(self.data.get(f'{self.question.id}_answer_1'))
+        self.cleaned_data['answer_2'] = bool(self.data.get(f'{self.question.id}_answer_2'))
+        self.cleaned_data['answer_3'] = bool(self.data.get(f'{self.question.id}_answer_3'))
+        self.cleaned_data['answer_4'] = bool(self.data.get(f'{self.question.id}_answer_4'))
 
 
 class QuestionCreateForm(forms.ModelForm):
@@ -169,7 +204,7 @@ class QuestionCreateForm(forms.ModelForm):
     answer_4_correct = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
 
     class Meta:
-        model = Question
+        model = models.Question
         fields = ('content',
                   'answer_1', 'answer_1_correct',
                   'answer_2', 'answer_2_correct',
@@ -210,7 +245,7 @@ class ProblemCreateForm(forms.ModelForm):
     test_file = forms.FileField()
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
@@ -218,10 +253,10 @@ class ProblemCreateForm(forms.ModelForm):
     def __init__(self, teacher, *args, **kwargs):
         super(ProblemCreateForm, self).__init__(*args, **kwargs)
         self.teacher = teacher
-        self.fields['groups'].queryset = Group.objects.filter(teacher=self.teacher)
+        self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.teacher)
 
     class Meta:
-        model = Problem
+        model = models.Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file', 'groups']
 
     def save(self, **kwargs):
@@ -256,19 +291,19 @@ class ProblemUpdateForm(forms.ModelForm):
     test_file = forms.FileField()
 
     groups = forms.ModelMultipleChoiceField(
-        queryset=Group.objects.none(),
+        queryset=models.Group.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
 
     class Meta:
-        model = Problem
+        model = models.Problem
         fields = ['headline', 'content', 'max_points', 'max_execution_time', 'deadline', 'test_file', 'groups']
 
     def __init__(self, *args, **kwargs):
         super(ProblemUpdateForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['groups'].queryset = Group.objects.filter(teacher=self.instance.teacher)
+            self.fields['groups'].queryset = models.Group.objects.filter(teacher=self.instance.teacher)
 
     def save(self, **kwargs):
         instance = super(ProblemUpdateForm, self).save(commit=False)
@@ -287,7 +322,7 @@ class ProblemTakeForm(forms.ModelForm):
         self.student = student
 
     class Meta:
-        model = Solution
+        model = models.Solution
         fields = ['solution_code']
 
 
@@ -295,13 +330,13 @@ class CheckSolutionForm(forms.ModelForm):
     formatted_score = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'pretty-input', 'min': 0, 'step': 0.1}))
 
     class Meta:
-        model = Solution
+        model = models.Solution
         fields = ['formatted_score']
 
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = Comment
+        model = models.Comment
         fields = ['content', ]
         widgets = {
             'content': forms.Textarea(attrs={'class': 'pretty-textarea', 'cols': '64', 'rows': '10'}),

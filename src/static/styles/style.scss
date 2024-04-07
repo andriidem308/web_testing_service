@@ -847,6 +847,40 @@ footer {
   }
 }
 
+.question-take__header {
+  margin-bottom: 16px;
+}
+
+.question-take__answers {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  //align-items: flex-start;
+  gap: 16px;
+}
+
+.question-take__answer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+
+  input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.question-take__buttons {
+  margin: 16px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .delete-button {
   width: 30px;
   height: 30px;
