@@ -1,7 +1,9 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView as BaseLoginView, PasswordChangeView as BasePasswordChangeView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView
 
 from accounts import forms
@@ -9,6 +11,7 @@ from accounts import models
 from main import models as models_main
 
 
+@login_required
 def profile(request):
     user: models.User = request.user
     if user.is_teacher:
@@ -66,6 +69,7 @@ class SignUpView(CreateView):
             return render(request, self.template_name, context)
 
 
+@method_decorator([login_required], name='dispatch')
 class PasswordChangeView(BasePasswordChangeView):
     form_class = forms.PasswordChangeForm
     success_url = reverse_lazy('profile')

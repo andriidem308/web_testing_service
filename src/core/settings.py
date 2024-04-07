@@ -67,7 +67,7 @@ TEMPLATES = [
             BASE_DIR / 'templates',
             BASE_DIR / 'templates' / 'main',
             BASE_DIR / 'templates' / 'accounts',
-            ],
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
