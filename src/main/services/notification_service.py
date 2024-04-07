@@ -105,7 +105,7 @@ def create_new_test_notification(test):
 
 def create_solution_checked_notification(solution):
     student = solution.student
-    message = f'<b>{solution.problem.teacher}</b> checked your solution of problem <b>"{solution.problem.headline}"</b> '
+    message = f'<b>{solution.problem.teacher}</b> checked your solution of problem <b>"{solution.problem.headline}"</b>'
     object_type = 'problem'
     create_notification(student.user, message, object_type, solution.problem.id)
 
