@@ -16,11 +16,23 @@ const studentsTableOptions = {
         {data: 'last_name'},
         {data: 'score_percentage'},
         {data: 'problems_solved'},
+        {data: 'tests_solved'},
+    ],
+    columnDefs: [
+        {
+            targets: [3, 4],
+            className: "text-center",
+            width: "10%",
+        },
+        {
+            targets: [2],
+            className: "text-center",
+        },
     ],
     dom: 'Bfrtip',
     iDisplayLength: 15,
     oLanguage: {
-      sEmptyTable: 'No students in this group'
+        sEmptyTable: 'No students in this group'
     },
 };
 
@@ -30,6 +42,46 @@ const initStudentsTable = function (options) {
     $('#students-table').DataTable().clear().destroy();
     const studentsTable = $('#students-table').DataTable(options);
 };
+
+
+const testSolutionsTableOptions = {
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: $('#test-solutions-table').data('url'),
+        pagingType: "full",
+        type: 'GET'
+    },
+    columns: [
+        {data: 'student'},
+        {data: 'group'},
+        {data: 'score'},
+    ],
+    columnDefs: [
+        {
+            targets: [2],
+            className: "text-center",
+        },
+    ],
+    dom: 'Bfrtip',
+    searching: false,
+    paging: false,
+    info: false,
+    iDisplayLength: 50,
+    oLanguage: {
+        sEmptyTable: 'No one solved this test'
+    },
+    scrollY: '235px',
+    scrollCollapse: true,
+};
+
+const initTestSolutionsTable = function (options) {
+    "use strict";
+
+    $('#test-solutions-table').DataTable().clear().destroy();
+    const testSolutionsTable = $('#test-solutions-table').DataTable(options);
+};
+
 
 function showDeleteConfirmation() {
     "use strict";
@@ -138,6 +190,7 @@ testFileService();
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
     initStudentsTable(studentsTableOptions);
+    initTestSolutionsTable(testSolutionsTableOptions);
 
     let notifications = document.querySelectorAll('.notification__message');
     notifications.forEach(function (element) {

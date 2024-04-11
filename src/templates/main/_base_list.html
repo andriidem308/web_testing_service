@@ -95,6 +95,14 @@
                 </div>
             {% endif %}
 
+            {% if tests %}
+                <div class="article-values">
+                    <div class="max-points"><b>Points:</b>
+                        {{ item.score }}
+                    </div>
+                </div>
+            {% endif %}
+
             {% if problems or lectures or tests %}
                 <hr>
                 <div class="article-content">

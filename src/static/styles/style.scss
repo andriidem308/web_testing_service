@@ -553,10 +553,9 @@ main {
 
 }
 
-.dataTables_wrapper {
+#students-table_wrapper {
   width: 60rem;
   margin: 2rem auto;
-
 }
 
 .dataTables_length {
@@ -626,6 +625,8 @@ main {
     padding: 1.5rem 2rem;
     background-color: $primary;
 
+    text-align: center !important;
+
     color: $light;
 
     &:first-child {
@@ -674,6 +675,90 @@ main {
     }
   }
 
+}
+
+#test-solutions-table_wrapper {
+  width: 300px;
+}
+
+#test-solutions-table {
+  width: 292px !important;
+  //max-height: 272px !important;
+}
+
+#test-solutions-table_wrapper {
+  margin: 16px;
+}
+
+.test-solutions-table {
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
+
+  text-align: left;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 18px 0px;
+  }
+
+  background-color: $light-hover;
+
+  thead th {
+    padding: 0.8rem 0;
+    background-color: $primary;
+
+    text-align: center !important;
+
+    color: $light;
+
+    &:first-child {
+      border-radius: 12px 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 12px 0 0;
+    }
+
+    font-size: 13px;
+
+  }
+
+  tbody td {
+    padding: 0.5rem 1rem;
+
+    font-size: 12px;
+  }
+
+  tbody tr:last-child {
+    padding-bottom: 1rem;
+
+    td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+
+    td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+  }
+
+  mark {
+    background-color: $action-hover;
+    color: $dark;
+  }
+
+  th, td {
+    padding: 0.5rem 0;
+  }
+
+  tbody tr {
+
+    &.odd {
+      background-color: $light;
+    }
+
+    &:hover {
+      background-color: $grey;
+    }
+  }
 }
 
 .dataTables_info {

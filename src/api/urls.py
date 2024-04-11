@@ -18,4 +18,5 @@ router.register('solutions', views.SolutionViewSet, 'api_solutions')
 
 urlpatterns = router.urls + [
     path('group_data/<int:pk>/', views.group_data, name='group_data'),
+    path('test_solutions_data/<int:pk>/', views.test_solutions_data, name='test_solutions_data'),
 ]

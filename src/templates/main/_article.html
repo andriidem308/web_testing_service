@@ -34,6 +34,11 @@
                         <div class="max-execution-time"><b>Max execution time:</b> {{ article.max_execution_time }}ms</div>
                     </div>
                 {% endif %}
+                {% if test %}
+                    <div class="article-values">
+                        <div class="max-points"><b>Points:</b> {{ article.score }}</div>
+                    </div>
+                {% endif %}
                 <hr>
                 <div class="article-content">
                     {{ article.content|linebreaksbr }}
@@ -72,6 +77,18 @@
                 </div>
             {% endif %}
 
+            {% if teacher and test %}
+                <table id="test-solutions-table" class="test-solutions-table display" cellspacing="0" data-url="{% url 'test_solutions_data' pk=test.pk %}">
+                    <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Group</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody id="test-solutions-table-tbody"></tbody>
+                </table>
+            {% endif %}
 
             {% if student and test %}
                 {% if test_solution %}
@@ -85,7 +102,7 @@
                                 <div class="score rounded-tile success notHover">
                                     {{ test_solution.points }} / {{ test_solution.test.score }}
                                 </div>
-                            {% elif solution.score > 0.5 %}
+                            {% elif test_solution.score > 0.5 %}
                                 <div class="score rounded-tile action notHover">
                                     {{ test_solution.points }} / {{ test_solution.test.score }}
                                 </div>

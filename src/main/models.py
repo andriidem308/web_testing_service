@@ -65,12 +65,29 @@ class Student(models.Model):
     @property
     def total_score(self):
         solutions = Solution.objects.filter(student=self)
+        test_solutions = TestSolution.objects.filter(student=self)
+
+        sum_score = 0
+        print('start: ', sum_score)
+        sum_score += sum(solution.score * solution.problem.max_points for solution in solutions)
+        print('0 + solutions:', sum_score)
+        sum_score += sum(test_solution.score * test_solution.test.score for test_solution in test_solutions)
+        print('0 + solutions + test_solutions:', sum_score)
+
+        return sum_score
+
+    @property
+    def total_score_percentage(self):
+        sum_score = self.total_score
+        tests = Test.objects.filter(groups__in=[self.group])
         problems = Problem.objects.filter(groups__in=[self.group])
 
-        if problems:
-            sum_score = sum(solution.score for solution in solutions) / len(problems)
-        else:
-            sum_score = 0
+        if problems and tests:
+            sum_score /= len(problems) + len(tests)
+        elif problems:
+            sum_score /= len(problems)
+        elif tests:
+            sum_score /= len(tests)
 
         return sum_score
 
@@ -78,6 +95,11 @@ class Student(models.Model):
     def problems_solved(self):
         solutions_amount = Solution.objects.filter(student=self).count()
         return solutions_amount
+
+    @property
+    def tests_solved(self):
+        test_solutions_amount = TestSolution.objects.filter(student=self).count()
+        return test_solutions_amount
 
 
 class Article(models.Model):
