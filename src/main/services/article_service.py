@@ -84,7 +84,6 @@ def comment_method(article, request):
 
 
 def student_answer_find(test, student):
-    print(StudentAnswer.objects.all())
     student_answer = StudentAnswer.objects.filter(student=student, test=test.id)
     if student_answer:
         student_answer = student_answer[0]

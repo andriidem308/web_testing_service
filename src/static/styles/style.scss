@@ -692,14 +692,7 @@ main {
 
 .test-solutions-table {
   border-radius: 12px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px 0px;
-
   text-align: left;
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 18px 0px;
-  }
-
   background-color: $light-hover;
 
   thead th {

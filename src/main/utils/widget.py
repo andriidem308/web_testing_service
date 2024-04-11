@@ -4,7 +4,6 @@ from django.forms import DateTimeInput
 class TimePicker(DateTimeInput):
     def get_context(self, name, value, attrs):
         datetimepicker_id = 'id_{name}'.format(name=name)
-        print(datetimepicker_id)
         if attrs is None:
             attrs = dict()
         attrs['data-target'] = '#{id}'.format(id=datetimepicker_id)

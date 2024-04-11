@@ -19,7 +19,7 @@ def filter_students(request, students_list):
         Q(user__first_name__contains=params['search']) | Q(user__last_name__contains=params['search']))
 
     order_column = params['column']
-    columns = ('first_name', 'last_name', 'total_score', 'problems_solved', )
+    columns = ('first_name', 'last_name', 'total_score', 'problems_solved', 'tests_solved')
     order_column = columns[order_column]
     ordered_students = sorted(searched_students, key=lambda s: getattr(s, order_column), reverse=params['reversed'])
 
@@ -44,3 +44,20 @@ def highlight_search(text, request):
         return highlighted_text
     else:
         return text
+
+
+def order_solutions(request, solutions_list):
+    params = get_table_parameters(request)
+
+    order_column = params['column']
+    columns = ('student', 'group', 'score', )
+    order_column = columns[order_column]
+
+    if order_column == 'student':
+        return sorted(solutions_list, key=lambda s: s.student.get_full_name(), reverse=params['reversed'])
+    if order_column == 'group':
+        return sorted(solutions_list, key=lambda s: s.student.group.name, reverse=params['reversed'])
+    if order_column == 'score':
+        return sorted(solutions_list, key=lambda s: s.score, reverse=params['reversed'])
+
+    return solutions_list

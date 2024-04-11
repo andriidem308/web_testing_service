@@ -66,14 +66,9 @@ class Student(models.Model):
     def total_score(self):
         solutions = Solution.objects.filter(student=self)
         test_solutions = TestSolution.objects.filter(student=self)
-
         sum_score = 0
-        print('start: ', sum_score)
         sum_score += sum(solution.score * solution.problem.max_points for solution in solutions)
-        print('0 + solutions:', sum_score)
         sum_score += sum(test_solution.score * test_solution.test.score for test_solution in test_solutions)
-        print('0 + solutions + test_solutions:', sum_score)
-
         return sum_score
 
     @property

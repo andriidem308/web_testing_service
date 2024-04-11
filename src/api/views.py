@@ -88,12 +88,8 @@ def group_data(request, pk):
 def test_solutions_data(request, pk):
     test_solutions = TestSolution.objects.filter(test=pk)
 
-    print(test_solutions)
+    ordered_solutions = table_service.order_solutions(request, test_solutions)
 
-    # students = get_students_by_group(pk)
-    # filtered_students = table_service.filter_students(request, students)
-    # selected_students = table_service.select_students(request, filtered_students)
-    #
     result = {
         'draw': request.GET.get('draw'),
         'recordsTotal': test_solutions.count(),
@@ -101,16 +97,15 @@ def test_solutions_data(request, pk):
         'data': [],
     }
 
-    for i in range(4):
-        for test_solution in test_solutions:
+    for test_solution in ordered_solutions:
 
-            first_name = test_solution.student.first_name
-            last_name = test_solution.student.last_name
+        first_name = test_solution.student.first_name
+        last_name = test_solution.student.last_name
 
-            result['data'].append({
-                'student': f'{last_name} {first_name[:1]}.',
-                'group': test_solution.student.group.name,
-                'score': round(test_solution.score * test_solution.test.score, 3),
-            })
+        result['data'].append({
+            'student': f'{last_name} {first_name[:1]}.',
+            'group': test_solution.student.group.name,
+            'score': round(test_solution.score * test_solution.test.score, 3),
+        })
 
     return JsonResponse(result, safe=False)
