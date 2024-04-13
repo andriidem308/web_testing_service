@@ -741,7 +741,7 @@ class ProblemSolutionView(DetailView):
             return self.render_to_response(context)
 
 
-@method_decorator([login_required], name='dispatch')
+@login_required
 def view_notification(request, pk):
     notification = models.Notification.objects.get(id=pk)
     object_type = notification.object_type
