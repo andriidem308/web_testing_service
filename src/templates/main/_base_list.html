@@ -46,7 +46,6 @@
                 {% elif groups %}
                     <a href="{% url object_name pk=item.pk %}"><h2>{{ item.name }}</h2></a>
                 {% elif solutions %}
-                    <div class="solution_item__header">
                         <a href="{% url object_name pk=item.pk %}"><h2>{{ item.problem.headline }} | {{ item.student.group }}</h2></a>
                         {% if item.checked %}
                             <div class="rounded-tile success notHover">
@@ -57,7 +56,6 @@
                                 Unchecked
                             </div>
                         {% endif %}
-                    </div>
                 {% endif %}
             </div>
 
