@@ -695,7 +695,7 @@ class ProblemSolutionListView(ListView):
         return self.render_to_response(context)
 
 
-@method_decorator([login_required], name='dispatch')
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ProblemSolutionView(DetailView):
     model = models.Solution
     context_object_name = 'solution'
