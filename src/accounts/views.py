@@ -8,7 +8,7 @@ from django.views.generic import CreateView
 
 from accounts import forms
 from accounts import models
-from main import models as models_main
+from main.services.users_service import get_teacher_user, get_student_user
 
 
 @login_required
@@ -16,10 +16,10 @@ def profile(request):
     user: models.User = request.user
     if user.is_teacher:
         user_type = 'teacher'
-        person = models_main.Teacher.objects.get(user=user)
+        person = get_teacher_user(user)
     elif user.is_student:
         user_type = 'student'
-        person = models_main.Student.objects.get(user=user)
+        person = get_student_user(user)
     else:
         user_type = None
         person = None

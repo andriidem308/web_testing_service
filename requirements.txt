@@ -7,6 +7,7 @@ django-ninja==1.1.0
 django-sass-processor==1.4
 django-storages==1.14.2
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
 Faker==22.6.0
 flake8==7.0.0
 jmespath==1.0.1
@@ -16,6 +17,7 @@ psycopg2==2.9.9
 # psycopg2-binary==2.9.9
 pydantic==2.6.1
 pydantic_core==2.16.2
+PyJWT==2.1.0
 python-dateutil==2.8.2
 python-dotenv==1.0.1
 pytz==2024.1

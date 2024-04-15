@@ -1,58 +1,81 @@
 from django.http import JsonResponse
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
 
-from api import serializers
+from api import serializers, permissions
 from api.services import table_service
-from main.models import Group, Teacher, Student, Article, Problem, Lecture, Comment, Solution, Test, TestSolution
+from main import models
 from main.services.users_service import get_students_by_group
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
-    queryset = Teacher.objects.select_related('user').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Teacher.objects.select_related('user').all()
+    permission_classes = [AllowAny, ]
     serializer_class = serializers.TeacherSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.select_related('teacher').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Group.objects.select_related('teacher').all()
+    permission_classes = [permissions.TeacherOnly, ]
     serializer_class = serializers.GroupSerializer
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.select_related('user', 'group').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Student.objects.select_related('user', 'group').all()
+    permission_classes = [AllowAny, ]
     serializer_class = serializers.StudentSerializer
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.select_related('teacher').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Article.objects.select_related('teacher').all()
+    permission_classes = [permissions.IsTeacherOrReadOnly, ]
     serializer_class = serializers.ArticleSerializer
 
 
 class ProblemViewSet(viewsets.ModelViewSet):
-    queryset = Problem.objects.select_related('teacher').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Problem.objects.select_related('teacher').all()
+    permission_classes = [permissions.IsTeacherOrReadOnly, ]
     serializer_class = serializers.ProblemSerializer
 
 
 class LectureViewSet(viewsets.ModelViewSet):
-    queryset = Lecture.objects.select_related('teacher').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Lecture.objects.select_related('teacher').all()
+    permission_classes = [permissions.IsTeacherOrReadOnly, ]
     serializer_class = serializers.LectureSerializer
 
 
+class TestViewSet(viewsets.ModelViewSet):
+    queryset = models.Test.objects.select_related('teacher').all()
+    permission_classes = [permissions.IsTeacherOrReadOnly, ]
+    serializer_class = serializers.TestSerializer
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = models.Question.objects.select_related('test').all()
+    permission_classes = [permissions.IsTeacherOrReadOnly, ]
+    serializer_class = serializers.QuestionSerializer
+
+
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.select_related('user', 'article').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Comment.objects.select_related('user', 'article').all()
     serializer_class = serializers.CommentSerializer
 
 
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = models.Notification.objects.select_related('user', 'article').all()
+    serializer_class = serializers.NotificationSerializer
+
+
 class SolutionViewSet(viewsets.ModelViewSet):
-    queryset = Solution.objects.select_related('student', 'problem').all()
-    permission_classes = [permissions.AllowAny, ]
+    queryset = models.Solution.objects.select_related('student', 'problem').all()
+    permission_classes = [permissions.IsStudentOrReadOnly, ]
     serializer_class = serializers.SolutionSerializer
+
+
+class TestSolutionViewSet(viewsets.ModelViewSet):
+    queryset = models.TestSolution.objects.select_related('student', 'test').all()
+    permission_classes = [permissions.IsStudentOrReadOnly, ]
+    serializer_class = serializers.TestSolutionSerializer
 
 
 def group_data(request, pk):
@@ -69,8 +92,8 @@ def group_data(request, pk):
 
     for student in selected_students:
         score = student.total_score
-        tests = Test.objects.filter(groups__in=[student.group])
-        problems = Problem.objects.filter(groups__in=[student.group])
+        tests = models.Test.objects.filter(groups__in=[student.group])
+        problems = models.Problem.objects.filter(groups__in=[student.group])
         max_score = str(sum(problem.max_points for problem in problems) + sum(test.score for test in tests))
         max_score = max_score.replace('.0', '') if max_score.endswith('.0') else max_score
 
@@ -86,7 +109,7 @@ def group_data(request, pk):
 
 
 def test_solutions_data(request, pk):
-    test_solutions = TestSolution.objects.filter(test=pk)
+    test_solutions = models.TestSolution.objects.filter(test=pk)
 
     ordered_solutions = table_service.order_solutions(request, test_solutions)
 
@@ -98,7 +121,6 @@ def test_solutions_data(request, pk):
     }
 
     for test_solution in ordered_solutions:
-
         first_name = test_solution.student.first_name
         last_name = test_solution.student.last_name
 

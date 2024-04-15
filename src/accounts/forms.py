@@ -9,7 +9,8 @@ from django.core.validators import ValidationError
 from django.db import transaction
 
 from core.settings import SECRET_KEY_TEACHER
-from main.models import Student, Teacher, Group
+from main.models import Group
+from main.services.users_service import create_student, create_teacher
 
 User = get_user_model()
 
@@ -120,11 +121,11 @@ class SignUpForm(UserCreationForm):
         if user_type == 'student':
             user._is_student = True
             user.save()
-            Student.objects.create(user=user, group=self.cleaned_data['group'])
+            create_student(user, self.cleaned_data['group'])
         elif user_type == 'teacher':
             user._is_teacher = True
             user.save()
-            Teacher.objects.create(user=user)
+            create_teacher(user)
 
         return user
 
