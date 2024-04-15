@@ -1,17 +1,17 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from main.models import Notification, Student
-from core.settings import EMAIL_HOST_USER
-
 from accounts.models import User
+from core.settings import EMAIL_HOST_USER
+from main.models import Notification
+from main.services.users_service import get_students_by_groups
 
 
 def mail_lecture_added_notify(lecture):
     teacher = lecture.teacher
     groups = lecture.groups.all()
 
-    recipients = Student.objects.filter(group__in=groups)
+    recipients = get_students_by_groups(groups)
     recipients_email_list = [recipient.user.email for recipient in recipients]
 
     subject = f'New lecture "{lecture.headline}"'
@@ -28,7 +28,7 @@ def mail_problem_added_notify(problem):
     teacher = problem.teacher
     groups = problem.groups.all()
 
-    recipients = Student.objects.filter(group__in=groups)
+    recipients = get_students_by_groups(groups)
     recipients_email_list = [recipient.user.email for recipient in recipients]
 
     subject = f'New problem "{problem.headline}"'
@@ -45,7 +45,7 @@ def mail_test_added_notify(test):
     teacher = test.teacher
     groups = test.groups.all()
 
-    recipients = Student.objects.filter(group__in=groups)
+    recipients = get_students_by_groups(groups)
     recipients_email_list = [recipient.user.email for recipient in recipients]
 
     subject = f'New test "{test.headline}"'
@@ -78,7 +78,7 @@ def create_notification(user, message, object_type, object_id):
 
 def create_new_problem_notifications(problem):
     groups = problem.groups.all()
-    students = Student.objects.filter(group__in=groups)
+    students = get_students_by_groups(groups)
     message = f'<b>{problem.teacher}</b> created a <b>new problem</b> "{problem}"'
     object_type = 'problem'
     for student in students:
@@ -87,7 +87,7 @@ def create_new_problem_notifications(problem):
 
 def create_new_lecture_notification(lecture):
     groups = lecture.groups.all()
-    students = Student.objects.filter(group__in=groups)
+    students = get_students_by_groups(groups)
     message = f'<b>{lecture.teacher}</b> created a <b>new lecture</b> "{lecture}"'
     object_type = 'lecture'
     for student in students:
@@ -96,7 +96,7 @@ def create_new_lecture_notification(lecture):
 
 def create_new_test_notification(test):
     groups = test.groups.all()
-    students = Student.objects.filter(group__in=groups)
+    students = get_students_by_groups(groups)
     message = f'<b>{test.teacher}</b> created a <b>new test</b> "{test}"'
     object_type = 'test'
     for student in students:

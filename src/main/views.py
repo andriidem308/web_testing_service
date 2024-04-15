@@ -9,6 +9,7 @@ from accounts.decorators import student_required, teacher_required
 from core.settings import MEDIA_URL
 from main import forms, models
 from main.services import article_service, code_solver, notification_service, paginate_service, users_service
+from main.services.users_service import get_teacher, get_student_user, get_students_by_group
 
 
 def index(request):
@@ -39,7 +40,7 @@ class GroupListView(ListView):
 
         context = super().get_context_data(*args, **kwargs)
         groups = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
-        teacher = users_service.get_teacher(request.user)
+        teacher = users_service.get_teacher(request)
         context['groups'] = groups
         context['teacher'] = teacher
         return self.render_to_response(context)
@@ -54,7 +55,7 @@ class GroupView(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        students = models.Student.objects.filter(group=self.object)
+        students = get_students_by_group(self.object)
         students = paginate_service.create_paginator(request, students, limit=self.paginate_by)
         context = self.get_context_data(object=self.object, students=students)
         return self.render_to_response(context)
@@ -68,20 +69,20 @@ class GroupCreateView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        teacher = models.Teacher.objects.get(user=self.request.user)
+        teacher = get_teacher(self.request)
         kwargs['teacher'] = teacher
         return kwargs
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.GroupCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.GroupCreateForm(teacher, request.POST)
         if form.is_valid():
             form.save()
@@ -130,7 +131,7 @@ class LectureListView(ListView):
 
         context = super().get_context_data(*args, **kwargs)
         lectures = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
-        teacher = users_service.get_teacher(request.user)
+        teacher = users_service.get_teacher(request)
         context['lectures'] = lectures
         context['teacher'] = teacher
         return self.render_to_response(context)
@@ -146,8 +147,8 @@ class LectureView(DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
 
-        teacher = users_service.get_teacher(self.request.user)
-        student = users_service.get_student(self.request.user)
+        teacher = users_service.get_teacher(self.request)
+        student = users_service.get_student(self.request)
 
         comment_form, comments = article_service.comment_method(self.object, self.request)
 
@@ -184,14 +185,14 @@ class LectureCreateView(CreateView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.LectureCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.LectureCreateForm(teacher, request.POST, request.FILES)
         if form.is_valid():
             lecture = form.save()
@@ -216,8 +217,8 @@ class LectureUpdateView(UpdateView):
         context.update({
             'form': forms.LectureUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
-            'teacher': users_service.get_teacher(self.request.user),
-            'student': users_service.get_student(self.request.user),
+            'teacher': users_service.get_teacher(self.request),
+            'student': users_service.get_student(self.request),
         })
         return self.render_to_response(context)
 
@@ -234,7 +235,7 @@ class LectureUpdateView(UpdateView):
             context.update({
                 'user': self.request.user,
                 'form': form,
-                'teacher': users_service.get_teacher(self.request.user),
+                'teacher': users_service.get_teacher(self.request),
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
@@ -271,7 +272,7 @@ class TestListView(ListView):
 
         context = super().get_context_data(*args, **kwargs)
         tests = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
-        teacher = users_service.get_teacher(request.user)
+        teacher = users_service.get_teacher(request)
         context['tests'] = tests
         context['teacher'] = teacher
         return self.render_to_response(context)
@@ -287,8 +288,8 @@ class TestView(DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
 
-        teacher = users_service.get_teacher(self.request.user)
-        student = users_service.get_student(self.request.user)
+        teacher = users_service.get_teacher(self.request)
+        student = users_service.get_student(self.request)
         # student_answer = article_service.student_answer_find(self.object, student) if student else None
         test_solution = models.TestSolution.objects.filter(student=student, test=self.object)
         test_solution = test_solution[0] if test_solution else None
@@ -312,14 +313,14 @@ class TestCreateView(CreateView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.TestCreateForm(teacher=teacher)
         context = {'form': form, 'teacher': teacher}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
-        teacher = models.Teacher.objects.get(user=user)
+        teacher = models.get_teacher_user(user)
         form = forms.TestCreateForm(teacher, request.POST, request.FILES)
         if form.is_valid():
             test = form.save()
@@ -344,8 +345,8 @@ class TestUpdateView(UpdateView):
         context.update({
             'form': forms.TestUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
-            'teacher': users_service.get_teacher(self.request.user),
-            'student': users_service.get_student(self.request.user),
+            'teacher': users_service.get_teacher(self.request),
+            'student': users_service.get_student(self.request),
         })
         return self.render_to_response(context)
 
@@ -362,7 +363,7 @@ class TestUpdateView(UpdateView):
             context.update({
                 'user': self.request.user,
                 'form': form,
-                'teacher': users_service.get_teacher(self.request.user),
+                'teacher': users_service.get_teacher(self.request),
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
@@ -413,7 +414,7 @@ def test_take(request, **kwargs):
     test = models.Test.objects.get(pk=kwargs.get('pk'))
 
     questions = models.Question.objects.filter(test=test).order_by('?')
-    student = models.Student.objects.get(user=user)
+    student = get_student_user(user)
 
     found_test_solution = models.TestSolution.objects.filter(test=test, student=student)
     if found_test_solution:
@@ -483,9 +484,7 @@ class ProblemListView(ListView):
         self.object_list = users_service.filter_common_queryset(queryset, user, show_all)
         context = super().get_context_data(*args, **kwargs)
 
-        user = request.user
-
-        teacher = users_service.get_teacher(user)
+        teacher = users_service.get_teacher(request)
         problems = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
 
         context.update({
@@ -513,10 +512,10 @@ class ProblemView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        teacher = users_service.get_teacher(self.request.user)
+        teacher = users_service.get_teacher(self.request)
         solutions = article_service.solutions_by_problem(self.object).order_by('checked')
 
-        student = users_service.get_student(self.request.user)
+        student = users_service.get_student(self.request)
         solution = article_service.solution_find(self.object, student) if student else None
 
         context = self.get_context_data(object=self.object)
@@ -561,12 +560,12 @@ class ProblemCreateView(CreateView):
     template_name = 'problems/problem_add.html'
 
     def get(self, request, *args, **kwargs):
-        teacher = models.Teacher.objects.get(user=self.request.user)
+        teacher = get_teacher(self.request)
         context = {'form': forms.ProblemCreateForm(teacher)}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        teacher = models.Teacher.objects.get(user=self.request.user)
+        teacher = get_teacher(self.request)
         form = forms.ProblemCreateForm(teacher, request.POST, request.FILES)
 
         if form.is_valid():
@@ -593,8 +592,8 @@ class ProblemUpdateView(UpdateView):
             'form': forms.ProblemUpdateForm(instance=self.object),
             'date_created': self.object.date_created,
             'deadline': self.object.deadline,
-            'teacher': users_service.get_teacher(self.request.user),
-            'student': users_service.get_student(self.request.user),
+            'teacher': users_service.get_teacher(self.request),
+            'student': users_service.get_student(self.request),
         })
 
         return self.render_to_response(context)
@@ -612,7 +611,7 @@ class ProblemUpdateView(UpdateView):
             context.update({
                 'user': self.request.user,
                 'form': form,
-                'teacher': users_service.get_teacher(self.request.user),
+                'teacher': users_service.get_teacher(self.request),
                 'errors': form.errors,
             })
             return render(request, self.template_name, context)
@@ -635,7 +634,7 @@ class ProblemTakeView(CreateView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        student = models.Student.objects.get(user=user)
+        student = get_student_user(user)
         problem = models.Problem.objects.get(id=kwargs.get('pk'))
 
         form = forms.ProblemTakeForm(problem=problem, student=student)
@@ -647,7 +646,7 @@ class ProblemTakeView(CreateView):
         problem = models.Problem.objects.get(id=problem_id)
 
         user = self.request.user
-        student = models.Student.objects.get(user=user)
+        student = get_student_user(user)
 
         form = forms.ProblemTakeForm(problem, student, request.POST)
         if form.is_valid():
@@ -677,12 +676,10 @@ class ProblemSolutionListView(ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        user = request.user
-
         self.object_list = self.get_queryset()
         context = super().get_context_data(*args, **kwargs)
 
-        teacher = users_service.get_teacher(user)
+        teacher = users_service.get_teacher(request)
         problem = models.Problem.objects.get(id=self.kwargs.get('pk'))
         solutions = paginate_service.create_paginator(request, self.object_list, limit=self.paginate_by)
 
@@ -708,7 +705,7 @@ class ProblemSolutionView(DetailView):
         context = super().get_context_data(**kwargs)
         context['solution_code'] = solution_code
 
-        teacher = users_service.get_teacher(request.user)
+        teacher = users_service.get_teacher(request)
         if teacher and not self.object.checked:
             form = forms.CheckSolutionForm(instance=self.object)
             form.fields['formatted_score'].initial = self.object.points

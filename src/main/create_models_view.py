@@ -9,8 +9,9 @@ from django.http import JsonResponse
 from django.utils import timezone
 from faker import Faker
 
-from main.models import Teacher, Student, Group, Problem, Lecture
+from main.models import Group, Problem, Lecture
 from main.services.logging_service import log_user
+from main.services.users_service import get_teachers, create_student, create_teacher, get_students_by_group
 
 User = get_user_model()
 
@@ -32,7 +33,7 @@ def create_teachers(request):
 
         user = User.objects.create_teacher_user(username, email, password, first_name, last_name)
 
-        teacher = Teacher.objects.create(user=user)
+        teacher = create_teacher(user)
         teacher.save()
 
         log_user(teacher, password)
@@ -48,7 +49,7 @@ def create_groups(request):
     config = yaml.safe_load(open('bot_config.yml').read())
     group_names = config.get('group_names', [])
 
-    teachers = Teacher.objects.all()
+    teachers = get_teachers()
 
     for group_name in group_names:
         teacher = random.choice(teachers)
@@ -74,7 +75,7 @@ def create_students(request):
     groups = Group.objects.all()
 
     for group in groups:
-        current_amount_of_students = len(Student.objects.filter(group=group) or [])
+        current_amount_of_students = len(get_students_by_group(group) or [])
         if current_amount_of_students < max_students_per_group:
             students_amount_to_add = random.randint(1, max_students_per_group - current_amount_of_students)
             for _ in range(students_amount_to_add):
@@ -86,7 +87,7 @@ def create_students(request):
 
                 if not (User.objects.filter(email=email).exists() or User.objects.filter(username=username).exists()):
                     user = User.objects.create_student_user(username, email, password, first_name, last_name)
-                    student = Student.objects.create(user=user, group=group)
+                    student = create_student(user, group)
                     student.save()
 
                     log_user(student, password)
@@ -112,7 +113,7 @@ def create_problems(request):
         os.mkdir('media/problems/test_files')
         response_log.append('Created test_files directory')
 
-    teachers = Teacher.objects.all()
+    teachers = get_teachers()
     for teacher in teachers:
         groups = Group.objects.filter(teacher=teacher)
 
@@ -165,7 +166,7 @@ def create_lectures(request):
         os.mkdir('media/lectures')
         response_log.append('Created lectures directory')
 
-    teachers = Teacher.objects.all()
+    teachers = get_teachers()
     for teacher in teachers:
         groups = Group.objects.filter(teacher=teacher)
 
