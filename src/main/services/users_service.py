@@ -52,11 +52,11 @@ def get_group(user):
     return None
 
 
-def filter_common_queryset(queryset, user, show_all=False):
+def filter_common_queryset(queryset, request, show_all=False):
     result = queryset
 
-    teacher = get_teacher_user(user)
-    student = get_student_user(user)
+    teacher = get_teacher(request)
+    student = get_student(request)
     if teacher:
         if show_all == '1':
             result = queryset
