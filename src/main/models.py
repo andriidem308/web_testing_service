@@ -4,11 +4,14 @@ from accounts.models import User
 
 
 class Teacher(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teacher')
     user._is_teacher = True
 
     class Meta:
         ordering = ('user__first_name', 'user__last_name',)
+        indexes = [
+            models.Index(fields=['user',]),
+        ]
 
     def __str__(self):
         return self.user.get_full_name()
@@ -23,7 +26,7 @@ class Teacher(models.Model):
 
 
 class Group(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='groups')
     name = models.CharField(max_length=255, unique=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -31,18 +34,26 @@ class Group(models.Model):
 
     class Meta:
         ordering = ('name',)
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['teacher']),
+        ]
 
     def __str__(self):
         return self.name
 
 
 class Student(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='student')
     user._student = True
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='students')
 
     class Meta:
         ordering = ('user__first_name', 'user__last_name',)
+        indexes = [
+            models.Index(fields=['user']),
+            models.Index(fields=['group']),
+        ]
 
     def __str__(self):
         return self.user.get_full_name()
@@ -110,6 +121,13 @@ class Article(models.Model):
     def __str__(self):
         return self.headline
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['headline']),
+            models.Index(fields=['content']),
+            models.Index(fields=['teacher']),
+        ]
+
 
 class Problem(Article):
     max_points = models.FloatField()
@@ -117,6 +135,11 @@ class Problem(Article):
     deadline = models.DateTimeField()
 
     test_file = models.FileField(upload_to='problems/test_files/', null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['max_points'])
+        ]
 
     @property
     def filename(self):
@@ -140,21 +163,27 @@ class Lecture(Article):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
     content = models.TextField()
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+            models.Index(fields=['article']),
+        ]
+
     def __str__(self):
         return f'{self.article} | {self.user.get_full_name()} | {self.date_created}'
 
 
 class Solution(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='solutions')
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='solutions')
     solution_code = models.TextField()
     score = models.FloatField()
     date_solved = models.DateTimeField(auto_now=True)
@@ -162,6 +191,12 @@ class Solution(models.Model):
 
     class Meta:
         ordering = ['date_solved']
+        indexes = [
+            models.Index(fields=['student']),
+            models.Index(fields=['problem']),
+            models.Index(fields=['score']),
+            models.Index(fields=['checked']),
+        ]
 
     def get_owner(self):
         return self.student
@@ -175,7 +210,7 @@ class Solution(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.CharField(max_length=255)
 
     object_type = models.CharField(max_length=50, null=True, blank=True)
@@ -184,13 +219,25 @@ class Notification(models.Model):
     is_seen = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+            models.Index(fields=['object_type']),
+            models.Index(fields=['is_seen']),
+        ]
+
 
 class Test(Article):
     score = models.FloatField(null=True, blank=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['score']),
+        ]
+
 
 class Question(models.Model):
-    test = models.ForeignKey(Test, related_name='test_question', on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, related_name='questions', on_delete=models.CASCADE)
     content = models.CharField(max_length=255)
 
     answer_1 = models.CharField(max_length=255)
@@ -202,6 +249,11 @@ class Question(models.Model):
     answer_2_correct = models.BooleanField(default=False)
     answer_3_correct = models.BooleanField(default=False)
     answer_4_correct = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['test']),
+        ]
 
     def __str__(self):
         return self.content
@@ -225,12 +277,17 @@ class Question(models.Model):
 
 
 class TestSolution(models.Model):
-    test = models.ForeignKey(Test, related_name='test_solution', on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, related_name='solutions', on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     score = models.FloatField()
 
     class Meta:
         unique_together = ('test', 'student',)
+        indexes = [
+            models.Index(fields=['test']),
+            models.Index(fields=['student']),
+            models.Index(fields=['score']),
+        ]
 
     @property
     def points(self):
@@ -238,10 +295,16 @@ class TestSolution(models.Model):
 
 
 class StudentAnswer(models.Model):
-    test_solution = models.ForeignKey(TestSolution, related_name='student_answer', on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, related_name='student_answer', on_delete=models.CASCADE)
+    test_solution = models.ForeignKey(TestSolution, related_name='student_answers', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='student_answers', on_delete=models.CASCADE)
 
     answer_1 = models.BooleanField(default=False)
     answer_2 = models.BooleanField(default=False)
     answer_3 = models.BooleanField(default=False)
     answer_4 = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['test_solution']),
+            models.Index(fields=['question']),
+        ]

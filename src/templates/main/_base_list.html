@@ -1,22 +1,18 @@
-<div class="filter"></div>
-
 <div class="items-header">
     <h1 class="items-header__headline">{{ list_name }}</h1>
     {% if teacher %}
         {% if add_url %}
             <a class='add-item pretty-button primary' href="{% url add_url %}">
-                <i class="fa-solid fa-plus"></i>New {{ object_name }}
+                <i class="fa-solid fa-plus"></i> New {{ object_name }}
             </a>
         {% endif %}
         {% if base_url %}
             <div class="items-header__filters">
-                <a id="filter-teacher" class="button-bordered filter-teacher" href="{% url base_url %}">My</a>
-                <a id="filter-all" class="button-bordered filter-all" href="{% url base_url %}?show_all=1">All</a>
+                <a id="filter-teacher" class="button-bordered filter-teacher text-semibold" href="{% url base_url %}">My</a>
+                <a id="filter-all" class="button-bordered filter-all text-semibold" href="{% url base_url %}?show_all=1">All</a>
             </div>
         {% endif %}
     {% endif %}
-
-
 </div>
 
 <div class="items-list">
@@ -88,7 +84,7 @@
                         {{ item.max_points }}
                     </div>
                     <div class="max-execution-time"><b>Max execution time:</b>
-                        {{ item.max_execution_time }}
+                        {{ item.max_execution_time }} ms
                     </div>
                 </div>
             {% endif %}
@@ -103,7 +99,7 @@
 
             {% if problems or lectures or tests %}
                 <hr>
-                <div class="article-content">
+                <div class="article-content text-light">
                     {{ item.content }}
                 </div>
             {% elif groups %}

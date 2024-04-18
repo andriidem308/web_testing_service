@@ -19,31 +19,41 @@
 {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">#}
 
     <!-- ***** ***** ***** ***** ***** ***** ***** jQuery scripts ***** ***** ***** ***** ***** ***** ***** ***** -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>     #}
+{#    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script> #}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
 
     <!-- ***** ***** ***** ***** ***** ***** ***** jQuery DataTable ***** ***** ***** ***** ***** ***** ***** ***** -->
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bulma.min.css">
+{#    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>#}
+{#    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bulma.min.css">#}
+
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'styles/dataTables.bulma.min.css' %}">
 
     <!-- ***** ***** ***** ***** ***** ***** ***** Pretty Calendar ***** ***** ***** ***** ***** ***** ***** ***** -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous"/>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>#}
+
+    <link rel="stylesheet" href="{% static 'styles/jquery.datetimepicker.min.css' %}">
+    <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
 
     <!-- ***** ***** ***** ***** ***** ***** ***** Font Awesome Icons ***** ***** ***** ***** ***** ***** ***** -->
-    <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>
+{#    <script src="https://kit.fontawesome.com/f514e78ecc.js" crossorigin="anonymous"></script>#}
+    <script src="{% static 'js/f514e78ecc.js' %}" crossorigin="anonymous"></script>
 
     <!-- ***** ***** ***** ***** ***** ***** ***** Fonts ***** ***** ***** ***** ***** ***** ***** ***** ***** -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&display=swap" rel="stylesheet">
+{#    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- +++ -->#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&display=swap" rel="stylesheet">#}
 
     <!-- ***** ***** ***** ***** ***** ***** ***** Custom Styles ***** ***** ***** ***** ***** ***** ***** ***** -->
     <link href="{% sass_src 'styles/style.scss' %}" rel="stylesheet" type="text/css">
 
     <!-- ***** ***** ***** ***** ***** ***** ***** Django HTMX ***** ***** ***** ***** ***** ***** ***** ***** -->
-    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+{#    <script src="https://unpkg.com/htmx.org@1.9.9"></script>#}
+    <script src="{% static 'js/htmx.min.js' %}"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% if user.is_authenticated %}
