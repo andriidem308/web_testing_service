@@ -65,6 +65,7 @@
 
 }
 
+
 .notification-menu {
   padding: 0;
   display: none;
@@ -622,6 +623,8 @@ main {
   background-color: $light-hover;
 
   thead th {
+    @extend .text-semibold;
+
     padding: 1.5rem 2rem;
     background-color: $primary;
 
@@ -815,6 +818,11 @@ main {
 
   margin: 0 12px;
   padding: 4px 12px;
+
+}
+
+.paginate_button.disabled, {
+  @extend .pretty-button.grey;
 }
 
 footer {

@@ -1,8 +1,93 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter-ExtraLight'), url('../fonts/Inter-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+// SOURCE CODE PRO FONT
+@font-face {
+  font-family: 'Source Code Pro', monospace;
+  src: url('../fonts/SourceCodePro-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+.text-thin { font-weight: 100 !important; }
+.text-extralight { font-weight: 200 !important; }
+.text-light { font-weight: 300 !important; }
+.text-regular { font-weight: 400 !important; }
+.text-medium { font-weight: 500 !important; }
+.text-semibold { font-weight: 600 !important; }
+.text-bold { font-weight: 700 !important; }
+.text-extrabold { font-weight: 800 !important; }
+.text-black { font-weight: 900 !important; }
+
+
+.text-thin-inner { * {font-weight: 100 !important;} }
+.text-extralight-inner { * {font-weight: 200 !important;} }
+.text-light-inner { * {font-weight: 300 !important;} }
+.text-regular-inner { * {font-weight: 400 !important;} }
+.text-medium-inner { * {font-weight: 500 !important;} }
+.text-semibold-inner { * {font-weight: 600 !important;} }
+.text-bold-inner { * {font-weight: 700 !important;} }
+.text-extrabold-inner { * {font-weight: 800 !important;} }
+.text-black-inner { * {font-weight: 900 !important;} }
+
 $light: #f2f2f2;
 $light-hover: #ebebeb;
 
 $grey: #c5c5c5;
 $grey-hover: #989898;
+$grey-void-hover: #989898 ;
 
 $dark: #363636;
 $dark-hover: #4d4d4d;
@@ -37,6 +122,10 @@ $footer-height: 80px;
   box-sizing: border-box;
   text-decoration: none;
   list-style: none;
+
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: never;
 }
 
 @mixin common-style($bg-color, $hover-color, $void-hover-color, $text-color: $light) {
@@ -85,6 +174,10 @@ $footer-height: 80px;
 
 .dark {
   @include common-style($dark, $dark-hover, $dark-void-hover);
+}
+
+.grey {
+  @include common-style($grey, $grey-hover, $grey-void-hover);
 }
 
 .light {
@@ -162,10 +255,16 @@ $footer-height: 80px;
 body {
   background-color: $light;
   min-width: 320px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
+  font-weight: 400;
 
   * {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter';
+    font-weight: 400;
+  }
+
+  b {
+    font-weight: bold;
   }
 }
 
@@ -183,7 +282,7 @@ p {
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, {
-  font-weight: 700;
+  font-weight: bold;
   margin: 0;
   padding: 0;
 }
@@ -234,6 +333,10 @@ mark {
 
   &.dark {
     border-color: $dark;
+  }
+
+  &.grey {
+    border-color: $grey;
   }
 
   &.danger {
