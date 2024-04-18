@@ -123,7 +123,8 @@ def create_article_commented_notification(comment):
 
     recipients = list(User.objects.filter(student__group__in=groups))
     recipients.append(comment.article.teacher.user)
-    recipients.remove(user)
+    if user in recipients:
+        recipients.remove(user)
 
     object_type = comment.article.__class__.__name__.lower()
     message = f'<b>{user}</b> left a comment on <b>"{comment.article.headline}"</b>'
